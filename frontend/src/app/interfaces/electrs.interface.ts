@@ -107,6 +107,7 @@ export interface Block {
   size: number;
   weight: number;
   previousblockhash: string;
+  chainwork: string;
 
   // Custom properties
   medianFee?: number;
