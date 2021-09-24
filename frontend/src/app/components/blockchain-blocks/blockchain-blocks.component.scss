@@ -1,6 +1,6 @@
 .bitcoin-block {
   width: 125px;
-  height: 125px;
+  height: 145px;
 }
 
 .blockLink {
@@ -86,7 +86,7 @@
 .bitcoin-block::before {
   content: '';
   width: 20px;
-  height: 125px;
+  height: 145px;
   position: absolute;
   top: -12px;
   left: -20px;

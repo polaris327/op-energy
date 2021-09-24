@@ -86,6 +86,7 @@ export namespace IEsploraApi {
     size: number;
     weight: number;
     previousblockhash: string;
+    chainwork: string;
   }
 
   export interface Address {

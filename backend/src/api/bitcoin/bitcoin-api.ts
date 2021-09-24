@@ -192,6 +192,7 @@ class BitcoinApi implements AbstractBitcoinApi {
       size: block.size,
       weight: block.weight,
       previousblockhash: block.previousblockhash,
+      chainwork: block.chainwork,
     };
   }
 

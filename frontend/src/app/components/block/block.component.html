@@ -151,6 +151,10 @@
                   <td i18n="block.header">Block Header Hex</td>
                   <td><a target="_blank" href="{{ network === '' ? '' : '/' + network }}/api/block/{{block.id}}/header"><fa-icon [icon]="['fas', 'external-link-alt']" [fixedWidth]="true"></fa-icon></a></td>
                 </tr>
+                <tr>
+                  <td i18n="block.chainwork">Chainwork</td>
+                  <td>{{ block.chainwork | shortenString : 13 }} <app-clipboard class="d-none d-sm-inline-block" [text]="block.chainwork"></app-clipboard> </td>
+                </tr>
               </tbody>
             </table>
           </div>
