@@ -7,6 +7,9 @@
       </div>
       <div class="block-body">
         <div class="fees">
+          {{ block.chainwork }}
+        </div>
+        <div class="fees">
           ~{{ block.medianFee | number:feeRounding }} <ng-container i18n="shared.sat-vbyte|sat/vB">sat/vB</ng-container>
         </div>
         <div class="fee-span">
