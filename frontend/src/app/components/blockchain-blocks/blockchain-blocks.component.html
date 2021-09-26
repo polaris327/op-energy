@@ -7,7 +7,7 @@
       </div>
       <div class="block-body">
         <div class="fees">
-          {{ block.chainwork }}
+          {{ block.chainwork | shortenString : 13 }}
         </div>
         <div class="fees">
           ~{{ block.medianFee | number:feeRounding }} <ng-container i18n="shared.sat-vbyte|sat/vB">sat/vB</ng-container>
