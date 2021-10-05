@@ -155,6 +155,10 @@
                   <td i18n="block.chainwork">Chainwork</td>
                   <td>{{ block.chainwork | shortenString : 13 }} <app-clipboard class="d-none d-sm-inline-block" [text]="block.chainwork"></app-clipboard> </td>
                 </tr>
+                <tr>
+                  <td i18n="block.mediantime">Mediantime</td>
+                  <td>{{ block.mediantime }}</td>
+                </tr>
               </tbody>
             </table>
           </div>
