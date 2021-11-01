@@ -1,10 +1,9 @@
 { stdenv, pkgs, fetchzip, fetchpatch, fetchgit, fetchurl }:
 let
-  mempool-sources-set = import ./mempool-sources-set.nix;
   server-config = stdenv.mkDerivation {
     name = "mempool-frontend-nginx-server-config";
   
-    src = fetchzip mempool-sources-set;
+    src = ../.;
     buildInputs = with pkgs;
     [ gnused
     ];
@@ -24,9 +23,9 @@ let
 
   # the result of this derivation contains the 'events' part of original config
   events-config = stdenv.mkDerivation {
-    name = "mempool-frontend-nginx-events-config";
+    name = "op-energy-frontend-nginx-events-config";
 
-    src = fetchzip mempool-sources-set;
+    src = ../.;
     buildInputs = with pkgs;
     [ gnused
     ];
@@ -39,9 +38,9 @@ let
 
   # the result of this derivation contains the 'events' part of original config
   append-config = stdenv.mkDerivation {
-    name = "mempool-frontend-nginx-append-config";
+    name = "op-energy-frontend-nginx-append-config";
 
-    src = fetchzip mempool-sources-set;
+    src = ../.;
     buildInputs = with pkgs;
     [ gnused
     ];
@@ -59,9 +58,9 @@ let
 
   # the result of this derivation contains the 'http' part (except 'server' part) of the original config
   common-config = stdenv.mkDerivation {
-    name = "mempool-frontend-nginx-common-config";
+    name = "op-energy-frontend-nginx-common-config";
 
-    src = fetchzip mempool-sources-set;
+    src = ../.;
     buildInputs = with pkgs;
     [ gnused
     ];
@@ -84,9 +83,9 @@ let
 
   # the result of this derivation contains the 'http' part (except 'server' part) of the original config
   all-config = stdenv.mkDerivation {
-    name = "mempool-frontend-nginx-config";
+    name = "op-energy-frontend-nginx-config";
 
-    src = fetchzip mempool-sources-set;
+    src = ../.;
     buildInputs = with pkgs;
     [ gnused
       gawk
@@ -102,9 +101,9 @@ let
     '';
   };
 in {
-  mempool-frontend-nginx-server-config = server-config;
-  mempool-frontend-nginx-events-config = events-config;
-  mempool-frontend-nginx-append-config = append-config;
-  mempool-frontend-nginx-common-config = common-config;
-  mempool-frontend-nginx-config = all-config;
+  op-energy-frontend-nginx-server-config = server-config;
+  op-energy-frontend-nginx-events-config = events-config;
+  op-energy-frontend-nginx-append-config = append-config;
+  op-energy-frontend-nginx-common-config = common-config;
+  op-energy-frontend-nginx-config = all-config;
 }

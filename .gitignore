@@ -2,3 +2,6 @@ sitemap
 data
 docker-compose.yml
 backend/mempool-config.json
+nix/development/.state
+nix/production/.state
+DO_TOKEN
