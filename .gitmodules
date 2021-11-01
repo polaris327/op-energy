@@ -1,0 +1,3 @@
+[submodule "nix/overlays/electrs-overlay"]
+	path = nix/overlays/electrs-overlay
+	url = https://github.com/dambaev/electrs-overlay.git

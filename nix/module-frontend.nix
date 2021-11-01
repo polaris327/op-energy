@@ -1,19 +1,18 @@
 {config, pkgs, options, lib, ...}@args:
 let
-  mempool-source-set = import ./mempool-sources-set.nix;
-  mempool-source = pkgs.fetchzip mempool-source-set;
-  mempool-frontend-nginx-configs-overlay = import ./mempool-frontend-nginx-configs-overlay.nix; # this overlay contains nginx configs provided by mempool developers, but prepared to be used in nixos
-  mempool-overlay = import ./overlay.nix;
+  op-energy-source = ../.;
+  op-energy-frontend-nginx-configs-overlay = import ./op-energy-frontend-nginx-configs-overlay.nix; # this overlay contains nginx configs provided by mempool developers, but prepared to be used in nixos
+  op-energy-overlay = import ./overlay.nix;
 
-  cfg = config.services.mempool-frontend;
+  cfg = config.services.op-energy-frontend;
   frontend_args = {
     testnet_enabled = cfg.testnet_enabled;
     signet_enabled = cfg.signet_enabled;
   };
 in
 {
-  options.services.mempool-frontend = {
-    enable = lib.mkEnableOption "Mempool service";
+  options.services.op-energy-frontend = {
+    enable = lib.mkEnableOption "op-energy service";
     testnet_enabled = lib.mkOption {
       type = lib.types.bool;
       example = false;
@@ -34,16 +33,16 @@ in
 
   config = lib.mkIf cfg.enable {
     nixpkgs.overlays = [
-      mempool-frontend-nginx-configs-overlay # bring nginx-mempool-configs into the context
-      mempool-overlay # add mempool-frontend into context
+      op-energy-frontend-nginx-configs-overlay # bring nginx-op-energy-configs into the context
+      op-energy-overlay # add op-energy-frontend into context
     ];
     environment.systemPackages = with pkgs; [
-      mempool-frontend-nginx-server-config
-      mempool-frontend-nginx-events-config
-      mempool-frontend-nginx-append-config
-      mempool-frontend-nginx-common-config
-      mempool-frontend-nginx-config
-      (mempool-frontend frontend_args)
+      op-energy-frontend-nginx-server-config
+      op-energy-frontend-nginx-events-config
+      op-energy-frontend-nginx-append-config
+      op-energy-frontend-nginx-common-config
+      op-energy-frontend-nginx-config
+      (op-energy-frontend frontend_args)
     ];
     services.nginx =
       let
@@ -99,20 +98,20 @@ in
         '';
       in {
       enable = true;
-      appendConfig = "include ${pkgs.mempool-frontend-nginx-append-config}/nginx.conf;";
-      eventsConfig = "include ${pkgs.mempool-frontend-nginx-events-config}/nginx.conf;";
+      appendConfig = "include ${pkgs.op-energy-frontend-nginx-append-config}/nginx.conf;";
+      eventsConfig = "include ${pkgs.op-energy-frontend-nginx-events-config}/nginx.conf;";
       serverTokens =
         let
-          server_tokens_str = builtins.readFile "${pkgs.mempool-frontend-nginx-config}/server_tokens.txt";
+          server_tokens_str = builtins.readFile "${pkgs.op-energy-frontend-nginx-config}/server_tokens.txt";
         in
         if server_tokens_str == "on" then true else false;
-      clientMaxBodySize = builtins.readFile "${pkgs.mempool-frontend-nginx-config}/client_max_body_size.txt";
-      commonHttpConfig = "include ${pkgs.mempool-frontend-nginx-common-config}/nginx.conf;";
-      virtualHosts.mempool = {
-        root = "${pkgs.mempool-frontend frontend_args}";
+      clientMaxBodySize = builtins.readFile "${pkgs.op-energy-frontend-nginx-config}/client_max_body_size.txt";
+      commonHttpConfig = "include ${pkgs.op-energy-frontend-nginx-common-config}/nginx.conf;";
+      virtualHosts.op-energy = {
+        root = "${pkgs.op-energy-frontend frontend_args}";
         extraConfig = ''
           # include the nginx config, which had been adopted to fit nixos-based nginx config
-          include ${pkgs.mempool-frontend-nginx-server-config}/nginx.conf;
+          include ${pkgs.op-energy-frontend-nginx-server-config}/nginx.conf;
           # here we include possible options to route testnet-related requests.
           ${testnet_locations}
           # here we include possible options to route signet-related requests.

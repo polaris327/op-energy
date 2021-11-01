@@ -1,12 +1,12 @@
 self: super:
 let
-  mempool-frontend-nginx-configs = self.callPackage ./mempool-frontend-nginx-configs.nix {};
+  op-energy-frontend-nginx-configs = self.callPackage ./op-energy-frontend-nginx-configs.nix {};
 in
 {
-  mempool-frontend-nginx-common-config = mempool-frontend-nginx-configs.mempool-frontend-nginx-common-config;
-  mempool-frontend-nginx-append-config = mempool-frontend-nginx-configs.mempool-frontend-nginx-append-config;
-  mempool-frontend-nginx-events-config = mempool-frontend-nginx-configs.mempool-frontend-nginx-events-config;
-  mempool-frontend-nginx-server-config = mempool-frontend-nginx-configs.mempool-frontend-nginx-server-config;
-  mempool-frontend-nginx-config = mempool-frontend-nginx-configs.mempool-frontend-nginx-config;
+  op-energy-frontend-nginx-common-config = op-energy-frontend-nginx-configs.op-energy-frontend-nginx-common-config;
+  op-energy-frontend-nginx-append-config = op-energy-frontend-nginx-configs.op-energy-frontend-nginx-append-config;
+  op-energy-frontend-nginx-events-config = op-energy-frontend-nginx-configs.op-energy-frontend-nginx-events-config;
+  op-energy-frontend-nginx-server-config = op-energy-frontend-nginx-configs.op-energy-frontend-nginx-server-config;
+  op-energy-frontend-nginx-config = op-energy-frontend-nginx-configs.op-energy-frontend-nginx-config;
 }
 
