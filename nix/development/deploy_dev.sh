@@ -67,12 +67,12 @@ ln -svf ../main.tf .state/
 ln -svf ../versions.tf .state/
 
 pushd .state
-ter init
+terraform init
 TF_VAR_DROPLET_NAME="$DROPLET_NAME" \
     TF_VAR_SSH_KEYS_IDS="[ $SSH_KEYS_IDS ]" \
     TF_VAR_DO_REGION="$DO_REGION" \
     TF_VAR_DO_TOKEN="$DO_TOKEN" \
-    ter apply -auto-approve
+    terraform apply -auto-approve
 popd
 
 # now wait until droplet will reboot and become NixOS
