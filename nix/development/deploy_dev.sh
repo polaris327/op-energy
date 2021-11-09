@@ -82,6 +82,7 @@ TF_VAR_DROPLET_NAME="$DROPLET_NAME" \
     TF_VAR_DO_REGION="$DO_REGION" \
     TF_VAR_DO_TOKEN="$DO_TOKEN" \
     terraform apply -auto-approve
+terraform show -json > show.json
 popd
 
 # now wait until droplet will reboot and become NixOS
@@ -97,7 +98,7 @@ echo "probe SSH keys"
 ssh-keyscan "$DROPLET_IP" >> ~/.ssh/known_hosts
 
 echo "waiting for droplet to become NixOS..."
-ssh -A "root@$DROPLET_IP" 'while [ "$(cat /etc/os-release | grep NixOS || echo "")" == "" ]; do echo "still not NixOS, waiting ..."; sleep 10s; done;' || true # ssh can return non-zero code on reboot
+ssh -A "root@$DROPLET_IP" 'while [ "$(cat /etc/os-release | grep NixOS || echo "")" == "" ]; do tail -f /tmp/infect.log || echo "still not NixOS, waiting..."; sleep 10s; done;' || true # ssh can return non-zero code on reboot
 
 echo "removing old SSH public key"
 ssh-keygen -R "$DROPLET_IP"
@@ -111,5 +112,5 @@ done
 echo "probe SSH keys"
 ssh-keyscan "$DROPLET_IP" >> ~/.ssh/known_hosts
 
-echo "droplet IP: $DROPLET_IP, now you can ssh into it with \"ssh -A root@$DROPLET_IP\" or access with browser with \"http://$DROPLET_IP\" "
+echo "droplet IP: $DROPLET_IP, now you can ssh into it with \"ssh -A root@$DROPLET_IP\" or access with browser with \"http://$DROPLET_IP/signet\" "
 

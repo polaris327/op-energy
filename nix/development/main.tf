@@ -28,14 +28,14 @@ variable "SSH_KEYS_IDS" {
   type = list( string)
 }
 
-resource "digitalocean_volume" "bitcoind_signet" {
+resource "digitalocean_volume" "dev_bitcoind_signet" {
   region                  = var.DO_REGION
   name                    = "${var.DROPLET_NAME}-bitcoind-signet"
   size                    = 1
   initial_filesystem_type = "xfs"
   description             = "volume for blockchain"
 }
-resource "digitalocean_volume" "electrs_signet" {
+resource "digitalocean_volume" "dev_electrs_signet" {
   region                  = var.DO_REGION
   name                    = "${var.DROPLET_NAME}-electrs-signet"
   size                    = 1
@@ -43,13 +43,13 @@ resource "digitalocean_volume" "electrs_signet" {
   description             = "volume for index"
 }
 
-resource "digitalocean_droplet" "droplet_instance" {
+resource "digitalocean_droplet" "dev_droplet_instance" {
   name   = var.DROPLET_NAME
   size   = "s-1vcpu-2gb"
   image  = "centos-8-x64"
   region = var.DO_REGION
   ssh_keys = var.SSH_KEYS_IDS
-  volume_ids = [ digitalocean_volume.bitcoind_signet.id, digitalocean_volume.electrs_signet.id ]
+  volume_ids = [ digitalocean_volume.dev_bitcoind_signet.id, digitalocean_volume.dev_electrs_signet.id ]
   user_data = <<-EOT
     #cloud-config
           write_files:
