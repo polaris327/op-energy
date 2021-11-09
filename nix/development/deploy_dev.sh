@@ -6,11 +6,15 @@ DEFAULT_SSH_KEYS_IDS=""
 DEFAULT_DO_REGION="nyc1"
 
 usage(){
-    echo "DO_TOKEN=<DO_API_TOKEN_HERE> DROPLET_NAME=<DROPLET_NAME_HERE> SSH_KEYS_IDS=<> SSH_KEYS_BY_NAMES=<> DO_REGION=<> ./$0
+    echo "DO_TOKEN=<DO_API_TOKEN_HERE> [DROPLET_NAME=<DROPLET_NAME_HERE>] SSH_KEYS_IDS=<> SSH_KEYS_BY_NAMES=<> [DO_REGION=<>] ./$0
   where
+  required variables
+    DO_TOKEN - token from DigitalOcean API with write access
     SSH_KEYS_IDS - COMMA-separated list of ssh-keys ids, which should be added to droplet. If you don't have such ids, use SSH_KEYS_BY_NAMES.
     SSH_KEYS_BY_NAMES - SPACE-separated list of user-names, which ssh-keys should be added to droplet
+  optional variables:
     DO_REGION - region for droplet. Default is 'nyc1'
+    DROPLET_NAME - name of the droplet to use
 "
 }
 
@@ -57,6 +61,11 @@ if [ "$SSH_KEYS_BY_NAMES" != "" ]; then
             } || true
         done
     done
+fi
+
+if [ "$SSH_KEYS_IDS" == "" ]; then
+    echo "SSH_KEYS_IDS is empty. You need to provide at least 1 existing SSH key from DO account either by using SSH_KEYS_IDS or SSH_KEYS_BY_NAMES"
+    exit 1
 fi
 
 echo "creating .state"
