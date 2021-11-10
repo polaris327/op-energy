@@ -28,28 +28,28 @@ variable "SSH_KEYS_IDS" {
   type = list( string)
 }
 
-resource "digitalocean_volume" "dev_bitcoind_signet" {
+resource "digitalocean_volume" "bitcoind_mainnet" {
   region                  = var.DO_REGION
-  name                    = "${var.DROPLET_NAME}-bitcoind-signet"
-  size                    = 1
+  name                    = "${var.DROPLET_NAME}-bitcoind-mainnet"
+  size                    = 440
   initial_filesystem_type = "xfs"
   description             = "volume for blockchain"
 }
-resource "digitalocean_volume" "dev_electrs_signet" {
+resource "digitalocean_volume" "electrs_mainnet" {
   region                  = var.DO_REGION
-  name                    = "${var.DROPLET_NAME}-electrs-signet"
-  size                    = 1
+  name                    = "${var.DROPLET_NAME}-electrs-mainnet"
+  size                    = 85
   initial_filesystem_type = "xfs"
   description             = "volume for index"
 }
 
-resource "digitalocean_droplet" "dev_droplet_instance" {
+resource "digitalocean_droplet" "droplet_instance" {
   name   = var.DROPLET_NAME
-  size   = "s-1vcpu-2gb"
+  size   = "s-4vcpu-8gb"
   image  = "centos-8-x64"
   region = var.DO_REGION
   ssh_keys = var.SSH_KEYS_IDS
-  volume_ids = [ digitalocean_volume.dev_bitcoind_signet.id, digitalocean_volume.dev_electrs_signet.id ]
+  volume_ids = [ digitalocean_volume.bitcoind_mainnet.id, digitalocean_volume.electrs_mainnet.id ]
   user_data = <<-EOT
     #cloud-config
           write_files:
@@ -60,10 +60,10 @@ resource "digitalocean_droplet" "dev_droplet_instance" {
               let
                 # import psk from out-of-git file
                 # TODO: switch to secrets-manager and change to make it more secure
-                bitcoind-signet-rpc-psk = builtins.readFile ( "/etc/nixos/private/bitcoind-signet-rpc-psk.txt");
+                bitcoind-mainnet-rpc-psk = builtins.readFile ( "/etc/nixos/private/bitcoind-mainnet-rpc-psk.txt");
                 # TODO: refactor to autogenerate HMAC from the password above
-                bitcoind-signet-rpc-pskhmac = builtins.readFile ( "/etc/nixos/private/bitcoind-signet-rpc-pskhmac.txt");
-                op-energy-db-psk-signet = builtins.readFile ( "/etc/nixos/private/op-energy-db-psk-signet.txt");
+                bitcoind-mainnet-rpc-pskhmac = builtins.readFile ( "/etc/nixos/private/bitcoind-mainnet-rpc-pskhmac.txt");
+                op-energy-db-psk-mainnet = builtins.readFile ( "/etc/nixos/private/op-energy-db-psk-mainnet.txt");
               in
               {
                 imports = [
@@ -77,8 +77,8 @@ resource "digitalocean_droplet" "dev_droplet_instance" {
                 # hardware related part
                 # those mount points' options belong to hardware-configuration.nix, but patching it is much harder, than just importing another module
                 fileSystems."/" = { device = "/dev/vda1"; options = [ "noatime" "discard"]; };
-                fileSystems."/mnt/bitcoind-signet" = { device = "/dev/disk/by-id/scsi-0DO_Volume_${var.DROPLET_NAME}-bitcoind-signet"; fsType = "xfs"; options = [ "noatime" "discard"]; };
-                fileSystems."/mnt/electrs-signet" = { device = "/dev/disk/by-id/scsi-0DO_Volume_${var.DROPLET_NAME}-electrs-signet"; fsType = "xfs"; options = [ "noatime" "discard"]; };
+                fileSystems."/mnt/bitcoind-mainnet" = { device = "/dev/disk/by-id/scsi-0DO_Volume_${var.DROPLET_NAME}-bitcoind-mainnet"; fsType = "xfs"; options = [ "noatime" "discard"]; };
+                fileSystems."/mnt/electrs-mainnet" = { device = "/dev/disk/by-id/scsi-0DO_Volume_${var.DROPLET_NAME}-electrs-mainnet"; fsType = "xfs"; options = [ "noatime" "discard"]; };
                 swapDevices = [
                   { device = "/tmp/swap";
                     size = 2048;
@@ -86,75 +86,35 @@ resource "digitalocean_droplet" "dev_droplet_instance" {
                 ];
                 # op-energy part
                 services.op-energy-backend = {
-                # keeping testnet commented to have testnet ports in quick access
-                #  testnet = {
-                #    db_user = "topenergy";
-                #    db_name = "topenergy";
-                #    db_psk = op-energy-db-psk-testnet;
-                #    config = ''
-                #      {
-                #        "MEMPOOL": {
-                #          "NETWORK": "testnet",
-                #          "BACKEND": "electrum",
-                #          "HTTP_PORT": 8997,
-                #          "API_URL_PREFIX": "/api/v1/",
-                #          "POLL_RATE_MS": 2000
-                #        },
-                #        "CORE_RPC": {
-                #          "USERNAME": "top-energy",
-                #          "PASSWORD": "$${bitcoind-testnet-rpc-psk}",
-                #          "PORT": 18332
-                #        },
-                #        "ELECTRUM": {
-                #          "HOST": "127.0.0.1",
-                #          "PORT": 60001,
-                #          "TLS_ENABLED": false
-                #        },
-                #        "DATABASE": {
-                #          "ENABLED": true,
-                #          "HOST": "127.0.0.1",
-                #          "PORT": 3306,
-                #          "DATABASE": "topenergy",
-                #          "USERNAME": "topenergy",
-                #          "PASSWORD": "$${op-energy-db-psk-testnet}"
-                #        },
-                #        "STATISTICS": {
-                #          "ENABLED": true,
-                #          "TX_PER_SECOND_SAMPLE_PERIOD": 150
-                #        }
-                #      }
-                #    '';
-                #  };
-                  signet = {
-                    db_user = "sopenergy";
-                    db_name = "sopenergy";
-                    db_psk = op-energy-db-psk-signet;
+                  mainnet = {
+                    db_user = "openergy";
+                    db_name = "openergy";
+                    db_psk = op-energy-db-psk-mainnet;
                     config = ''
                       {
                         "MEMPOOL": {
-                          "NETWORK": "signet",
+                          "NETWORK": "mainnet",
                           "BACKEND": "electrum",
-                          "HTTP_PORT": 8995,
+                          "HTTP_PORT": 8999,
                           "API_URL_PREFIX": "/api/v1/",
                           "POLL_RATE_MS": 2000
                         },
                         "CORE_RPC": {
-                          "USERNAME": "sop-energy",
-                          "PASSWORD": "$${bitcoind-signet-rpc-psk}",
-                          "PORT": 38332
+                          "USERNAME": "op-energy",
+                          "PASSWORD": "$${bitcoind-mainnet-rpc-psk}"
                         },
                         "ELECTRUM": {
                           "HOST": "127.0.0.1",
-                          "PORT": 60601,
+                          "PORT": 50001,
                           "TLS_ENABLED": false
                         },
                         "DATABASE": {
                           "ENABLED": true,
                           "HOST": "127.0.0.1",
                           "PORT": 3306,
-                          "DATABASE": "sopenergy",
-                          "USERNAME": "sopenergy",
-                          "PASSWORD": "$${op-energy-db-psk-signet}"
+                          "DATABASE": "openergy",
+                          "USERNAME": "openergy",
+                          "PASSWORD": "$${op-energy-db-psk-mainnet}"
                         },
                         "STATISTICS": {
                           "ENABLED": true,
@@ -167,25 +127,21 @@ resource "digitalocean_droplet" "dev_droplet_instance" {
                 # enable op-energy-frontend service
                 services.op-energy-frontend = {
                   enable = true;
-                  signet_enabled = true;
                 };
 
                 # enable electrs service
                 services.electrs = {
-                  signet = { # signet instance
-                    db_dir = "/mnt/electrs-signet";
-                    cookie_file = "/mnt/bitcoind-signet/signet/.cookie";
-                    blocks_dir = "/mnt/bitcoind-signet/signet/blocks";
-                    network = "signet";
-                    rpc_listen = "127.0.0.1:60601";
-                    daemon_rpc_addr = "127.0.0.1:38332";
+                  mainnet = { # signet instance
+                    db_dir = "/mnt/electrs-mainnet";
+                    cookie_file = "/mnt/bitcoind-mainnet/.cookie";
+                    blocks_dir = "/mnt/bitcoind-mainnet/blocks";
                   };
                 };
 
-                # bitcoind signet instance
-                services.bitcoind.signet = {
+                # bitcoind mainnet instance
+                services.bitcoind.mainnet = {
                   enable = true;
-                  dataDir = "/mnt/bitcoind-signet";
+                  dataDir = "/mnt/bitcoind-mainnet";
                   extraConfig = ''
                     txindex = 1
                     server=1
@@ -198,13 +154,11 @@ resource "digitalocean_droplet" "dev_droplet_instance" {
                     # dbcache=3700
                     # default value is 125, affects RAM occupation
                     # maxconnections=1337
-                    signet = 1
-                    [signet]
                   '';
                   rpc.users = {
-                    sop-energy = {
-                      name = "sop-energy";
-                      passwordHMAC = "$${bitcoind-signet-rpc-pskhmac}";
+                    op-energy = {
+                      name = "op-energy";
+                      passwordHMAC = "$${bitcoind-mainnet-rpc-pskhmac}";
                     };
                   };
                 };
@@ -235,7 +189,7 @@ resource "digitalocean_droplet" "dev_droplet_instance" {
             - dnf install -y git python3
             - git clone https://github.com/dambaev/electrs-overlay.git /etc/nixos/overlays/electrs-overlay
             - git clone -b op-energy-master https://github.com/dambaev/op-energy.git /etc/nixos/overlays/op-energy
-            - /etc/nixos/overlays/op-energy/nix/gen-psk.sh /etc/nixos/private/ signet
+            - /etc/nixos/overlays/op-energy/nix/gen-psk.sh /etc/nixos/private/ mainnet
             - dd if=/dev/zero of=/tmp/swap bs=1M count=2048
             - mkswap /tmp/swap
             - swapon /tmp/swap
