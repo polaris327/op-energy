@@ -216,6 +216,7 @@ resource "digitalocean_droplet" "dev_droplet_instance" {
                   atop # process monitor
                   tcpdump # traffic sniffer
                   iftop # network usage monitor
+                  git
                 ];
                 # Enable the OpenSSH daemon.
                 services.openssh.enable = true;
