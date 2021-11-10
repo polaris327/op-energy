@@ -37,7 +37,7 @@ export class SeoService {
       return 'mempool - Liquid Testnet';
     if (this.network === 'bisq')
       return 'mempool - Bisq Markets';
-    return 'mempool - ' + (this.network ? this.ucfirst(this.network) : 'Bitcoin') + ' Explorer';
+    return 'op-energy exchange';
   }
 
   ucfirst(str: string) {
