@@ -52,20 +52,25 @@ At the end, script will show you an IP address of the new droplet to which you w
 
 ```
 ssh -A root@<dropletIP>
-cd /etc/nixos/overlays/op-energy
-git pull
-git checkout op-energy-new-feature
+cd /etc/nixos
+git pull && git submodule update --remote
+git checkout -b op-energy-new-feature # set parent repo into a new branch, which will not be pushed into repo and exist only to keep op-energy overlay with non-standard branch
+git submodule set-branch -b op-energy-new-feature overlays/op-energy # now switch to new branch
+git submodule update --remote
+git commit overlays/op-energy -m "overlays/op-energy: switch to op-energy-new-feature"
 ```
 
 5 rebuild config with your new branch:
 
 ```
-nix-rebuild switch
+nixos-rebuild switch
 ```
 
 6 test your changes by navigating with your browser to http://dropletIP/signet
 
 7 when you will be ready, create pull request to merge your changes into op-energy-master branch. After the merge, production instances will switch to the new version.
+
+Development instances will perform periodical fetching of configurations from git repo and will try to apply them. So `nixos-rebuild switch` happen automatically within 10 minutes period.
 
 ## Production deployment
 
