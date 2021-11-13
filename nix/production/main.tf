@@ -38,7 +38,7 @@ resource "digitalocean_volume" "bitcoind_mainnet" {
 resource "digitalocean_volume" "electrs_mainnet" {
   region                  = var.DO_REGION
   name                    = "${var.DROPLET_NAME}-electrs-mainnet"
-  size                    = 100
+  size                    = 110
   initial_filesystem_type = "xfs"
   description             = "volume for index"
 }
