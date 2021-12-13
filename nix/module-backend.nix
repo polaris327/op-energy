@@ -123,8 +123,12 @@ in
         wantedBy = [ "multi-user.target" ];
         after = [
           "network-setup.service"
+          "mysql.service"
         ];
-        requires = [ "network-setup.service" ];
+        requires = [
+          "network-setup.service"
+          "mysql.service"
+          ];
         serviceConfig = {
           Type = "simple";
         };
