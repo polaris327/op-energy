@@ -2,13 +2,16 @@
 
 {pkgs ? import <nixpkgs> {
     inherit system;
-  }, system ? builtins.currentSystem, nodejs ? pkgs."nodejs-12_x"}:
+  }
+, lib
+, system ? builtins.currentSystem, nodejs ? pkgs."nodejs-12_x"}:
 
 let
   nodeEnv = import ./node-env.nix {
     inherit (pkgs) stdenv python2 utillinux runCommand writeTextFile;
     inherit nodejs;
     libtool = if pkgs.stdenv.isDarwin then pkgs.darwin.cctools else null;
+    lib = lib;
   };
 in
 import ./node-packages.nix {
