@@ -43,6 +43,7 @@ let
       cp package.json $out/backend/ # needed for `npm run start`
       cp ../mariadb-structure.sql $out/backend # this schema will be useful for a module.nix file, which will populate the db from it.
       cp ${initial_script} $out/backend/initial_script.sql # script, which should setup DB user
+      cp -r db_migrations $out/backend/
     '';
     patches = [
       ./start_with_config_argument.patch # this patch adds support for '-c'/'--config' argument, so we can run `npm run start -- -c /path/to/config` later.

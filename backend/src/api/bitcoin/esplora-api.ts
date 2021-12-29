@@ -64,6 +64,11 @@ class ElectrsApi implements AbstractBitcoinApi {
   $getOutspends(): Promise<IEsploraApi.Outspend[]> {
     throw new Error('Method not implemented.');
   }
+
+  $getBlockStats( hash: string): Promise< IEsploraApi.BlockStats> {
+    return axios.get<IEsploraApi.BlockStats>(config.ESPLORA.REST_API_URL + '/blockstats/' + hash, this.axiosConfig)
+      .then((response) => response.data);
+  }
 }
 
 export default ElectrsApi;

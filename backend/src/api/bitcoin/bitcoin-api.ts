@@ -60,6 +60,9 @@ class BitcoinApi implements AbstractBitcoinApi {
   $getBlockHeader(hash: string): Promise<string> {
     return this.bitcoindClient.getBlockHeader(hash, false);
   }
+  $getBlockStats( hash: string): Promise<IEsploraApi.BlockStats> {
+    return this.bitcoindClient.getBlockStats( hash, []);
+  }
 
   async $getBlock(hash: string): Promise<IEsploraApi.Block> {
     const foundBlock = blocks.getBlocks().find((block) => block.id === hash);

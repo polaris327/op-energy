@@ -27,6 +27,8 @@ import syncAssets from './sync-assets';
 import icons from './api/liquid/icons';
 import { Common } from './api/common';
 
+import chainStats from './chainstats';
+
 class Server {
   private wss: WebSocket.Server | undefined;
   private server: http.Server | undefined;
@@ -140,6 +142,11 @@ class Server {
       await memPool.$updateMempool();
       blocks.$generateBlockDatabase();
 
+      try {
+        await chainStats.$updateChainstats();
+      } catch (e) {
+        logger.debug( '$updateChainstats error ' + e.message || e);
+      }
       setTimeout(this.runMainUpdateLoop.bind(this), config.MEMPOOL.POLL_RATE_MS);
       this.currentBackendRetryInterval = 5;
     } catch (e) {

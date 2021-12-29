@@ -18,6 +18,7 @@ interface IConfig {
     PRICE_FEED_UPDATE_INTERVAL: number;
     USE_SECOND_NODE_FOR_MINFEE: boolean;
     EXTERNAL_ASSETS: string[];
+    CHAINSTAT_BATCH_SIZE: number;
   };
   ESPLORA: {
     REST_API_URL: string;
@@ -84,6 +85,7 @@ const defaults: IConfig = {
     'EXTERNAL_ASSETS': [
       'https://mempool.space/resources/pools.json'
     ]
+    'CHAINSTAT_BATCH_SIZE': 10000,
   },
   'ESPLORA': {
     'REST_API_URL': 'http://127.0.0.1:3000',

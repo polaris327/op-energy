@@ -90,6 +90,43 @@ in
       ) eachInstance;
     };
     systemd.services = {
+      mysql-op-energy-db-migrate = {
+        wantedBy = [ "multi-user.target" ];
+        after = [
+          "mysql.service"
+          "mysql-op-energy-users.service"
+        ];
+        requires = [
+          "mysql.service"
+          "mysql-op-energy-users.service"
+        ];
+        serviceConfig = {
+          Type = "simple";
+        };
+        path = with pkgs; [
+          mariadb
+        ];
+        script = lib.foldl' (acc: i: acc + i) '''' ( lib.mapAttrsToList (name: cfg: ''
+          REVISION=$(
+            (( echo 'use `${cfg.db_name}`;';
+              echo 'select revision from version limit 1;';
+            ) | mysql -uroot || (echo 0; echo 0)) | tail -n 1
+          )
+          echo "current DB revision is $REVISION"
+          FOUND=1;
+          while [ "$FOUND" == "1" ]; do
+            REVISION=$(( $REVISION + 1))
+            FOUND=0;
+            for script in $(find ${pkgs.op-energy-backend}/backend/db_migrations/ -name '*.sql' | grep -E "/''${REVISION}_.*.sql$"); do
+              FOUND=1;
+              echo "applying $script";
+              ( echo 'use `${cfg.db_name}`;'
+                cat $script
+              ) | mysql -uroot
+            done;
+          done;
+        '') eachInstance);
+      };
       mysql-op-energy-users = {
         wantedBy = [ "multi-user.target" ];
         after = [
@@ -124,10 +161,12 @@ in
         after = [
           "network-setup.service"
           "mysql.service"
+          "mysql-op-energy-db-migrate.service"
         ];
         requires = [
           "network-setup.service"
           "mysql.service"
+          "mysql-op-energy-db-migrate.service"
           ];
         serviceConfig = {
           Type = "simple";

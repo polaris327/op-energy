@@ -90,6 +90,11 @@ export namespace IEsploraApi {
     mediantime: number;
   }
 
+  export interface BlockStats {
+    subsidy: number;
+    totalfee: number;
+  }
+
   export interface Address {
     address: string;
     chain_stats: ChainStats;
