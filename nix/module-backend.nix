@@ -78,7 +78,6 @@ in
       package = pkgs.mariadb; # there is no default value for this option, so we define one
       initialDatabases = lib.mapAttrsToList (name: cfg:
         { name = "${cfg.db_name}";
-          schema = "${op-energy-source}/mariadb-structure.sql";
         }
       ) eachInstance;
       ensureUsers = lib.mapAttrsToList (name: cfg:
@@ -147,7 +146,6 @@ in
           if [ ! -d "${config.services.mysql.dataDir}/${cfg.db_name}" ]; then
             ( echo 'CREATE DATABASE `${cfg.db_name}`;'
               echo 'use `${cfg.db_name}`;'
-              cat "${op-energy-source}/mariadb-structure.sql"
             ) | mysql -uroot
           fi
           cat "${initial_script cfg}" | mysql -uroot

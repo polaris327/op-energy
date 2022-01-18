@@ -145,7 +145,7 @@ class Server {
       try {
         await chainStats.$updateChainstats();
       } catch (e) {
-        logger.debug( '$updateChainstats error ' + e.message || e);
+        logger.debug( '$updateChainstats error: ${( e instanceof Error ? e.message : e)}');
       }
       setTimeout(this.runMainUpdateLoop.bind(this), config.MEMPOOL.POLL_RATE_MS);
       this.currentBackendRetryInterval = 5;

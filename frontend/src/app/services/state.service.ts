@@ -36,6 +36,7 @@ export interface Env {
   MEMPOOL_WEBSITE_URL: string;
   LIQUID_WEBSITE_URL: string;
   BISQ_WEBSITE_URL: string;
+  LAST_EPOCH_END_BLOCKS_AMOUNT: number;
 }
 
 const defaultEnv: Env = {
@@ -59,6 +60,7 @@ const defaultEnv: Env = {
   'MEMPOOL_WEBSITE_URL': 'https://mempool.space',
   'LIQUID_WEBSITE_URL': 'https://liquid.network',
   'BISQ_WEBSITE_URL': 'https://bisq.markets',
+  'LAST_EPOCH_END_BLOCKS_AMOUNT': 30,
 };
 
 @Injectable({

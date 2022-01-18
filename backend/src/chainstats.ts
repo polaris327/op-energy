@@ -2,7 +2,7 @@ import config from './config';
 import bitcoinApi from './api/bitcoin/bitcoin-api-factory';
 import logger from './logger';
 import { IBitcoinApi } from './api/bitcoin/bitcoin-api.interface';
-import bitcoinBaseApi from './api/bitcoin/bitcoin-base.api';
+import bitcoinClient from './api/bitcoin/bitcoin-client';
 import blocks from './api/blocks';
 
 import { DB } from './database';
@@ -35,7 +35,7 @@ class Chainstats {
       const [result] = await connection.query<any>(query, [chainstat.blockHeight, chainstat.chainRevenue, chainstat.chainFee, chainstat.chainSubsidy, chainstat.chainWork]);
       connection.release();
     } catch(e) {
-      logger.err( '$insertChainStat error' + e.message || e);
+      logger.err( '$insertChainStat error ${( e instanceof Error ? e.message : e)}');
     }
   }
   private async $getLastChainStat(): Promise< IChainStat | undefined> {
@@ -54,7 +54,7 @@ class Chainstats {
         };
       }
     } catch(e) {
-      logger.err( '$getKastChainStat() error: ' + e.message || e );
+      logger.err( '$getKastChainStat() error: ${(e instanceof Error? e.message : e)}' );
     }
   }
 

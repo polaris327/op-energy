@@ -31,6 +31,7 @@ let
 
       # copy contents of the node_modules, following symlinks, such that current build/install will be able to modify local copies
       cp -r ${nodeDependencies}/lib/node_modules ./node_modules
+      patchShebangs ./node_modules/typescript/bin/tsc
       # allow user to write. the build will try to write into ./node_modules/@types/node
       chmod -R u+w ./node_modules
       # we already have populated node_modules dir, so we don't need to run `npm install`
@@ -41,7 +42,6 @@ let
       cp -r ./node_modules $out/backend
       cp -r dist $out/backend
       cp package.json $out/backend/ # needed for `npm run start`
-      cp ../mariadb-structure.sql $out/backend # this schema will be useful for a module.nix file, which will populate the db from it.
       cp ${initial_script} $out/backend/initial_script.sql # script, which should setup DB user
       cp -r db_migrations $out/backend/
     '';
@@ -60,6 +60,14 @@ let
     assetsJsonUrl = fetchzip {
       url = "https://github.com/mempool/asset_registry_db/archive/689456ad4d653055eb690dca282b9f8faab1e873.zip";
       sha256 = "0lk377a9kdciwj1w6aik3307zmp64i0sc8g26fmqzm4wfn198n8j";
+    };
+    assetsTestnet = fetchurl {
+      url = "https://raw.githubusercontent.com/Blockstream/asset_registry_testnet_db/master/index.json";
+      sha256 = "1wc8vhlmsn0kh814bh2fa1y4z3wwh2xpywqv6kmhlk2h0s6lln8r";
+    };
+    assetsTestnetMinimal = fetchurl {
+      url = "https://raw.githubusercontent.com/Blockstream/asset_registry_testnet_db/master/index.minimal.json";
+      sha256 = "1q3q9rrl3p4pg36vpadqys19547yrddskvp6aj3ia3g9xjx957ix";
     };
 
     nodeDependencies = ( pkgs.callPackage ./frontend/op-energy-frontend.nix {}).shell.nodeDependencies;
@@ -103,6 +111,8 @@ let
       cp ${poolsJsonUrl}/pools.json src/resources
       cp ${assetsJsonUrl}/index.json src/resources/assets.json
       cp ${assetsJsonUrl}/index.minimal.json src/resources/assets.minimal.json
+      cp ${assetsTestnet} src/resources/assets-testnet.json
+      cp ${assetsTestnetMinimal} src/resources/assets-testnet.minimal.json
     '';
     buildPhase = ''
       export PATH="${nodeDependencies}/bin:$PATH"
@@ -113,7 +123,6 @@ let
       mkdir $HOME
 
       # without overriding this env var, build will try to ask for some input.
-      export NG_CLI_ANALYTICS=off
       # copy contents of the node_modules, following symlinks, such that current build/install will be able to modify local copies
       cp -r ${nodeDependencies}/lib/node_modules ./node_modules
       # allow user to write

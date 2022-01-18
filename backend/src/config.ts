@@ -84,8 +84,7 @@ const defaults: IConfig = {
     'PRICE_FEED_UPDATE_INTERVAL': 3600,
     'USE_SECOND_NODE_FOR_MINFEE': false,
     'EXTERNAL_ASSETS': [
-      'https://mempool.space/resources/pools.json'
-    ]
+    ],
     'CHAINSTAT_BATCH_SIZE': 10000,
     'LAST_EPOCH_END_BLOCKS_AMOUNT': 30,
   },

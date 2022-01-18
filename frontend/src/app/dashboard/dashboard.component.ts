@@ -46,7 +46,7 @@ export class DashboardComponent implements OnInit {
   latestBlockHeight: number;
   mempoolTransactionsWeightPerSecondData: any;
   mempoolStats$: Observable<MempoolStatsData>;
-  transactionsWeightPerSecondOptions: any;
+  difficultyChartOptions: any;
   isLoadingWebSocket$: Observable<boolean>;
   liquidPegsMonth$: Observable<any>;
 
