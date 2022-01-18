@@ -178,12 +178,14 @@ class WebsocketHandler {
     if (!_blocks) {
       _blocks = blocks.getBlocks().slice(-config.MEMPOOL.INITIAL_BLOCKS_AMOUNT);
     }
+    const _lastDifficultyEpochEndBlocks = blocks.getDifficultyEpochEndBlocks().slice(-config.MEMPOOL.LAST_EPOCH_END_BLOCKS_AMOUNT);
     return {
       'mempoolInfo': memPool.getMempoolInfo(),
       'vBytesPerSecond': memPool.getVBytesPerSecond(),
       'lastDifficultyAdjustment': blocks.getLastDifficultyAdjustmentTime(),
       'previousRetarget': blocks.getPreviousDifficultyRetarget(),
       'blocks': _blocks,
+      'lastDifficultyEpochEndBlocks': _lastDifficultyEpochEndBlocks,
       'conversions': fiatConversion.getConversionRates(),
       'mempool-blocks': mempoolBlocks.getMempoolBlocks(),
       'transactions': memPool.getLatestTransactions(),

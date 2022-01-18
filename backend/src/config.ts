@@ -19,6 +19,7 @@ interface IConfig {
     USE_SECOND_NODE_FOR_MINFEE: boolean;
     EXTERNAL_ASSETS: string[];
     CHAINSTAT_BATCH_SIZE: number;
+    LAST_EPOCH_END_BLOCKS_AMOUNT: number;
   };
   ESPLORA: {
     REST_API_URL: string;
@@ -86,6 +87,7 @@ const defaults: IConfig = {
       'https://mempool.space/resources/pools.json'
     ]
     'CHAINSTAT_BATCH_SIZE': 10000,
+    'LAST_EPOCH_END_BLOCKS_AMOUNT': 30,
   },
   'ESPLORA': {
     'REST_API_URL': 'http://127.0.0.1:3000',

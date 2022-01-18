@@ -70,9 +70,11 @@ export class StateService {
   blockVSize: number;
   env: Env;
   latestBlockHeight = 0;
+  lastDifficultyEpochEndBlockHeight = 0;
 
   networkChanged$ = new ReplaySubject<string>(1);
   blocks$: ReplaySubject<[Block, boolean]>;
+  lastDifficultyEpochEndBlocks$: ReplaySubject<[Block, boolean]>;
   transactions$ = new ReplaySubject<TransactionStripped>(6);
   conversions$ = new ReplaySubject<any>(1);
   bsqPrice$ = new ReplaySubject<number>(1);
@@ -123,6 +125,7 @@ export class StateService {
     });
 
     this.blocks$ = new ReplaySubject<[Block, boolean]>(this.env.KEEP_BLOCKS_AMOUNT);
+    this.lastDifficultyEpochEndBlocks$ = new ReplaySubject<[Block, boolean]>(this.env.KEEP_BLOCKS_AMOUNT);
 
     if (this.env.BASE_MODULE === 'bisq') {
       this.network = this.env.BASE_MODULE;

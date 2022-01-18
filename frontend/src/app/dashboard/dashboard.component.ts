@@ -38,6 +38,7 @@ export class DashboardComponent implements OnInit {
   network$: Observable<string>;
   mempoolBlocksData$: Observable<MempoolBlocksData>;
   mempoolInfoData$: Observable<MempoolInfoData>;
+  lastDifficultyEpochEndBlocks$: Observable<any>;
   mempoolLoadingStatus$: Observable<number>;
   vBytesPerSecondLimit = 1667;
   blocks$: Observable<Block[]>;
@@ -135,6 +136,25 @@ export class DashboardComponent implements OnInit {
           acc = acc.slice(0, 6);
           return acc;
         }, []),
+      );
+    this.lastDifficultyEpochEndBlocks$ = this.stateService.lastDifficultyEpochEndBlocks$
+      .pipe(
+        map(([block, txConfirmed]) => block),
+        scan((acc, block) => {
+          acc.push(block);
+          return acc;
+        }, []),
+        map((blocks) => {
+          return {
+            labels: blocks.map((block) => {
+              return String(block.height);
+            }),
+            series: [blocks.map((block) => {
+              return block.difficulty;
+            })]
+          }
+        }),
+        share()
       );
 
     this.transactions$ = this.stateService.transactions$

@@ -13,12 +13,58 @@ import blocksRepository from '../repositories/BlocksRepository';
 
 class Blocks {
   private blocks: BlockExtended[] = [];
+  private difficultyEpochEndBlocks: BlockExtended[] = [];
   private currentBlockHeight = 0;
   private currentDifficulty = 0;
   private lastDifficultyAdjustmentTime = 0;
   private previousDifficultyRetarget = 0;
   private newBlockCallbacks: ((block: BlockExtended, txIds: string[], transactions: TransactionExtended[]) => void)[] = [];
   private blockIndexingStarted = false;
+
+  private async getExtendedBlocktxIdsTransactionsByBlockHeight$( height: number): Promise<[BlockExtended, string[], TransactionExtended[] ] | undefined> {
+    const blockHeightTip = await bitcoinApi.$getBlockHeightTip();
+    if( height > blockHeightTip){
+      return;
+    }
+    const blockHash = await bitcoinApi.$getBlockHash(height);
+    const block = await bitcoinApi.$getBlock(blockHash);
+
+    const transactions: TransactionExtended[] = [];
+
+    const txIds: string[] = await bitcoinApi.$getTxIdsForBlock(blockHash);
+
+    const mempool = memPool.getMempool();
+    let transactionsFound = 0;
+
+    for (let i = 0; i < txIds.length; i++) {
+      if (mempool[txIds[i]]) {
+        transactions.push(mempool[txIds[i]]);
+        transactionsFound++;
+      } else if (config.MEMPOOL.BACKEND === 'esplora' || memPool.isInSync() || i === 0) {
+        logger.debug(`Fetching block tx ${i} of ${txIds.length}`);
+        try {
+          const tx = await transactionUtils.$getTransactionExtended(txIds[i]);
+          transactions.push(tx);
+        } catch (e) {
+          logger.debug('Error fetching block tx: ' + e.message || e);
+          if (i === 0) {
+            throw new Error('Failed to fetch Coinbase transaction: ' + txIds[i]);
+          }
+        }
+      }
+    }
+
+    transactions.forEach((tx) => {
+      if (!tx.cpfpChecked) {
+        Common.setRelativesAndGetCpfpInfo(tx, mempool);
+      }
+    });
+
+    logger.debug(`${transactionsFound} of ${txIds.length} found in mempool. ${txIds.length - transactionsFound} not found.`);
+
+    const blockExtended: BlockExtended = this.getBlockExtended( block, transactions);
+    return [ blockExtended, txIds, transactions ];
+  }
 
   constructor() { }
 
@@ -28,6 +74,9 @@ class Blocks {
 
   public setBlocks(blocks: BlockExtended[]) {
     this.blocks = blocks;
+  }
+  public getDifficultyEpochEndBlocks(): BlockExtended[] {
+    return this.difficultyEpochEndBlocks;
   }
 
   public setNewBlockCallback(fn: (block: BlockExtended, txIds: string[], transactions: TransactionExtended[]) => void) {
@@ -222,6 +271,24 @@ class Blocks {
     } else {
       this.currentBlockHeight = this.blocks[this.blocks.length - 1].height;
     }
+    const lastDifficultyEpochEndBlockHeight = blockHeightTip - (blockHeightTip % 2016);
+    let firstDifficultyEpochEndBlockHeight = ((lastDifficultyEpochEndBlockHeight - config.MEMPOOL.LAST_EPOCH_END_BLOCKS_AMOUNT  * 2016) < 0) ? 0 : (lastDifficultyEpochEndBlockHeight - config.MEMPOOL.LAST_EPOCH_END_BLOCKS_AMOUNT  * 2016);
+    if( this.difficultyEpochEndBlocks.length > 0) {
+      firstDifficultyEpochEndBlockHeight = this.difficultyEpochEndBlocks[ this.difficultyEpochEndBlocks.length - 1].height + 2016;
+    }
+    if ( lastDifficultyEpochEndBlockHeight >= firstDifficultyEpochEndBlockHeight) {
+      logger.debug('populating difficultyEpochEndBlocks, starting from block ' + lastDifficultyEpochEndBlockHeight);
+    }
+    for( let i = firstDifficultyEpochEndBlockHeight; i <= lastDifficultyEpochEndBlockHeight; i += 2016) {
+      const result = await this.getExtendedBlocktxIdsTransactionsByBlockHeight$(i);
+      if (typeof(result) !== 'undefined' ) {
+        const [ blockExtended, txIds, transactions ] = result
+        this.difficultyEpochEndBlocks.push( blockExtended);
+      }
+    }
+    if (this.difficultyEpochEndBlocks.length > config.MEMPOOL.LAST_EPOCH_END_BLOCKS_AMOUNT) {
+      this.difficultyEpochEndBlocks.slice( -config.MEMPOOL.LAST_EPOCH_END_BLOCKS_AMOUNT);
+    }
 
     if (blockHeightTip - this.currentBlockHeight > config.MEMPOOL.INITIAL_BLOCKS_AMOUNT * 2) {
       logger.info(`${blockHeightTip - this.currentBlockHeight} blocks since tip. Fast forwarding to the ${config.MEMPOOL.INITIAL_BLOCKS_AMOUNT} recent blocks`);
@@ -254,31 +321,30 @@ class Blocks {
         logger.debug(`New block found (#${this.currentBlockHeight})!`);
       }
 
-      const blockHash = await bitcoinApi.$getBlockHash(this.currentBlockHeight);
-      const block = await bitcoinApi.$getBlock(blockHash);
-      const txIds: string[] = await bitcoinApi.$getTxIdsForBlock(blockHash);
-      const transactions = await this.$getTransactionsExtended(blockHash, block.height, false);
-      const blockExtended: BlockExtended = this.getBlockExtended(block, transactions);
-      const coinbase: IEsploraApi.Transaction = await bitcoinApi.$getRawTransaction(transactions[0].txid, true);
+      let result = await this.getExtendedBlocktxIdsTransactionsByBlockHeight$( this.currentBlockHeight);
+      if ( typeof(result) !== 'undefined') {
+        let [ blockExtended, txIds, transactions ] = result
+        if (blockExtended.height % 2016 === 0) {
+          this.previousDifficultyRetarget = (blockExtended.difficulty - this.currentDifficulty) / this.currentDifficulty * 100;
+          this.lastDifficultyAdjustmentTime = blockExtended.timestamp;
+          this.currentDifficulty = blockExtended.difficulty;
+        }
 
-      if (['mainnet', 'testnet', 'signet'].includes(config.MEMPOOL.NETWORK) === true) {
-        const miner = await this.$findBlockMiner(blockExtended.coinbaseTx);
-        await blocksRepository.$saveBlockInDatabase(blockExtended, blockHash, coinbase.hex, miner);
-      }
+        const coinbase: IEsploraApi.Transaction = await bitcoinApi.$getRawTransaction(transactions[0].txid, true);
+        const blockHash = await bitcoinApi.$getBlockHash(this.currentBlockHeight);
 
-      if (block.height % 2016 === 0) {
-        this.previousDifficultyRetarget = (block.difficulty - this.currentDifficulty) / this.currentDifficulty * 100;
-        this.lastDifficultyAdjustmentTime = block.timestamp;
-        this.currentDifficulty = block.difficulty;
-      }
+        if (['mainnet', 'testnet', 'signet'].includes(config.MEMPOOL.NETWORK) === true) {
+          const miner = await this.$findBlockMiner(blockExtended.coinbaseTx);
+          await blocksRepository.$saveBlockInDatabase(blockExtended, blockHash, coinbase.hex, miner);
+        }
+        this.blocks.push(blockExtended);
+        if (this.blocks.length > config.MEMPOOL.INITIAL_BLOCKS_AMOUNT * 4) {
+          this.blocks = this.blocks.slice(-config.MEMPOOL.INITIAL_BLOCKS_AMOUNT * 4);
+        }
 
-      this.blocks.push(blockExtended);
-      if (this.blocks.length > config.MEMPOOL.INITIAL_BLOCKS_AMOUNT * 4) {
-        this.blocks = this.blocks.slice(-config.MEMPOOL.INITIAL_BLOCKS_AMOUNT * 4);
-      }
-
-      if (this.newBlockCallbacks.length) {
-        this.newBlockCallbacks.forEach((cb) => cb(blockExtended, txIds, transactions));
+        if (this.newBlockCallbacks.length) {
+          this.newBlockCallbacks.forEach((cb) => cb(blockExtended, txIds, transactions));
+        }
       }
       if (memPool.isInSync()) {
         diskCache.$saveCacheToDisk();
@@ -299,6 +365,7 @@ class Blocks {
   public getCurrentBlockHeight(): number {
     return this.currentBlockHeight;
   }
+
 }
 
 export default new Blocks();

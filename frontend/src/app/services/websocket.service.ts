@@ -214,6 +214,15 @@ export class WebsocketService {
         }
       });
     }
+    if( response.lastDifficultyEpochEndBlocks && response.lastDifficultyEpochEndBlocks.length) {
+      const lastDifficultyEpochEndBlocks = response.lastDifficultyEpochEndBlocks;
+      lastDifficultyEpochEndBlocks.forEach((block: Block) => {
+        if( block.height > this.stateService.lastDifficultyEpochEndBlockHeight) {
+          this.stateService.lastDifficultyEpochEndBlockHeight = block.height;
+          this.stateService.lastDifficultyEpochEndBlocks$.next([block, false]);
+        }
+      });
+    }
 
     if (response.tx) {
       this.stateService.mempoolTransactions$.next(response.tx);
@@ -221,8 +230,13 @@ export class WebsocketService {
 
     if (response.block) {
       if (response.block.height > this.stateService.latestBlockHeight) {
-        this.stateService.latestBlockHeight = response.block.height;
-        this.stateService.blocks$.next([response.block, !!response.txConfirmed]);
+        const block = response.block;
+        this.stateService.latestBlockHeight = block.height;
+        this.stateService.blocks$.next([block, !!response.txConfirmed]);
+        if( block.height % 2016 === 0) {
+          this.stateService.lastDifficultyEpochEndBlockHeight = block.height;
+          this.stateService.lastDifficultyEpochEndBlocks$.next([block, !!response.txConfirmed]);
+        }
       }
 
       if (response.txConfirmed) {

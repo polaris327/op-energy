@@ -4,6 +4,7 @@ import { Block, Transaction } from './electrs.interface';
 export interface WebsocketResponse {
   block?: Block;
   blocks?: Block[];
+  lastDifficultyEpochEndBlocks?: Block[];
   conversions?: any;
   txConfirmed?: boolean;
   historicalDate?: string;
