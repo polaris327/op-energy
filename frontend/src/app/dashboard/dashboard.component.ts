@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
-import { combineLatest, merge, Observable, of, timer } from 'rxjs';
+import { ChangeDetectionStrategy, Component, Inject, LOCALE_ID, OnInit, OnDestroy } from '@angular/core';
+import { combineLatest, merge, Observable, of, timer, Subscription } from 'rxjs';
 import { filter, map, scan, share, switchMap, tap } from 'rxjs/operators';
 import { Block } from '../interfaces/electrs.interface';
 import { OptimizedMempoolStats } from '../interfaces/node-api.interface';
@@ -33,12 +33,14 @@ interface MempoolStatsData {
   styleUrls: ['./dashboard.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
   collapseLevel: string;
   network$: Observable<string>;
   mempoolBlocksData$: Observable<MempoolBlocksData>;
   mempoolInfoData$: Observable<MempoolInfoData>;
-  lastDifficultyEpochEndBlocks$: Observable<any>;
+  lastDifficultyEpochEndBlocks: Block[];
+  lastDifficultyEpochEndBlocksSubscription: Subscription;
+  lastDifficultyEpochEndBlocksSeries: any;
   mempoolLoadingStatus$: Observable<number>;
   vBytesPerSecondLimit = 1667;
   blocks$: Observable<Block[]>;
@@ -46,7 +48,6 @@ export class DashboardComponent implements OnInit {
   latestBlockHeight: number;
   mempoolTransactionsWeightPerSecondData: any;
   mempoolStats$: Observable<MempoolStatsData>;
-  difficultyChartOptions: any;
   isLoadingWebSocket$: Observable<boolean>;
   liquidPegsMonth$: Observable<any>;
 
@@ -59,7 +60,30 @@ export class DashboardComponent implements OnInit {
     private storageService: StorageService,
   ) { }
 
+  ngOnDestroy() {
+    this.lastDifficultyEpochEndBlocksSubscription.unsubscribe();
+  }
+
   ngOnInit(): void {
+    this.lastDifficultyEpochEndBlocks = [];
+    this.lastDifficultyEpochEndBlocksSubscription = this.stateService.lastDifficultyEpochEndBlocks$
+      .subscribe(([block, txConfirmed]) => {
+        this.lastDifficultyEpochEndBlocks.push( block);
+        this.lastDifficultyEpochEndBlocks = this.lastDifficultyEpochEndBlocks.slice(0, this.stateService.env.LAST_EPOCH_END_BLOCKS_AMOUNT);
+        let map = new Map<number, string>();
+        this.lastDifficultyEpochEndBlocks.map((block) => {
+          const block_date = new Date( block.timestamp * 1000);
+          const month_real = block_date.getMonth() + 1;
+          const month = (month_real < 10) ? '0' + String(month_real) : month_real;
+          const day = (block_date.getDate() < 10) ? '0' + String(block_date.getDate()) : block_date.getDate();
+          map.set( block.height, String(block.height) + '\n'
+            + block_date.getFullYear() + '/' + month + '/' + day);
+        });
+        this.lastDifficultyEpochEndBlocksSeries = {
+          labels: map,
+          series: [this.lastDifficultyEpochEndBlocks.map((block)=> [ block.height, block.difficulty])]
+        };
+      });
     this.isLoadingWebSocket$ = this.stateService.isLoadingWebSocket$;
     this.seoService.resetTitle();
     this.websocketService.want(['blocks', 'stats', 'mempool-blocks', 'live-2h-chart']);
@@ -136,25 +160,6 @@ export class DashboardComponent implements OnInit {
           acc = acc.slice(0, 6);
           return acc;
         }, []),
-      );
-    this.lastDifficultyEpochEndBlocks$ = this.stateService.lastDifficultyEpochEndBlocks$
-      .pipe(
-        map(([block, txConfirmed]) => block),
-        scan((acc, block) => {
-          acc.push(block);
-          return acc;
-        }, []),
-        map((blocks) => {
-          return {
-            labels: blocks.map((block) => {
-              return String(block.height);
-            }),
-            series: [blocks.map((block) => {
-              return block.difficulty;
-            })]
-          }
-        }),
-        share()
       );
 
     this.transactions$ = this.stateService.transactions$

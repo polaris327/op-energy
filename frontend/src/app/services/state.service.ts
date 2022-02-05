@@ -127,7 +127,7 @@ export class StateService {
     });
 
     this.blocks$ = new ReplaySubject<[Block, boolean]>(this.env.KEEP_BLOCKS_AMOUNT);
-    this.lastDifficultyEpochEndBlocks$ = new ReplaySubject<[Block, boolean]>(this.env.KEEP_BLOCKS_AMOUNT);
+    this.lastDifficultyEpochEndBlocks$ = new ReplaySubject<[Block, boolean]>(this.env.LAST_EPOCH_END_BLOCKS_AMOUNT);
 
     if (this.env.BASE_MODULE === 'bisq') {
       this.network = this.env.BASE_MODULE;
