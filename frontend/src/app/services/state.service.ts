@@ -72,7 +72,7 @@ export class StateService {
   blockVSize: number;
   env: Env;
   latestBlockHeight = 0;
-  lastDifficultyEpochEndBlockHeight = 0;
+  lastDifficultyEpochEndBlockHeight: number | undefined = undefined;
 
   networkChanged$ = new ReplaySubject<string>(1);
   blocks$: ReplaySubject<[Block, boolean]>;
@@ -127,7 +127,7 @@ export class StateService {
     });
 
     this.blocks$ = new ReplaySubject<[Block, boolean]>(this.env.KEEP_BLOCKS_AMOUNT);
-    this.lastDifficultyEpochEndBlocks$ = new ReplaySubject<[Block, boolean]>(this.env.KEEP_BLOCKS_AMOUNT);
+    this.lastDifficultyEpochEndBlocks$ = new ReplaySubject<[Block, boolean]>(this.env.LAST_EPOCH_END_BLOCKS_AMOUNT);
 
     if (this.env.BASE_MODULE === 'bisq') {
       this.network = this.env.BASE_MODULE;

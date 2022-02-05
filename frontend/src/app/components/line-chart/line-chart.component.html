@@ -1,0 +1,4 @@
+<div class="echarts" echarts [initOpts]="lineChartInitOption" [options]="lineChartOption" (chartRendered)="rendered()" (chartInit)="onChartInit($event)" (chartDataZoom)="onChartDataZoom($event)"></div>
+<div class="text-center loadingGraphs" *ngIf="isLoading">
+  <div class="spinner-border text-light"></div>
+</div>
