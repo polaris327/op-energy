@@ -61,13 +61,9 @@ let
       url = "https://github.com/mempool/asset_registry_db/archive/689456ad4d653055eb690dca282b9f8faab1e873.zip";
       sha256 = "0lk377a9kdciwj1w6aik3307zmp64i0sc8g26fmqzm4wfn198n8j";
     };
-    assetsTestnet = fetchurl {
-      url = "https://raw.githubusercontent.com/Blockstream/asset_registry_testnet_db/master/index.json";
-      sha256 = "1wc8vhlmsn0kh814bh2fa1y4z3wwh2xpywqv6kmhlk2h0s6lln8r";
-    };
-    assetsTestnetMinimal = fetchurl {
-      url = "https://raw.githubusercontent.com/Blockstream/asset_registry_testnet_db/master/index.minimal.json";
-      sha256 = "1q3q9rrl3p4pg36vpadqys19547yrddskvp6aj3ia3g9xjx957ix";
+    assetsTestnet = fetchzip {
+      url = "https://github.com/Blockstream/asset_registry_testnet_db/archive/ede5ad5376e178e3da9b21c50fc9babb8fbb6372.zip";
+      sha256 = "0nz7ads18bmjf5s2a12y73h4vhq15xbbcybdyypyrvkvhch7f27x";
     };
 
     nodeDependencies = ( pkgs.callPackage ./frontend/op-energy-frontend.nix {}).shell.nodeDependencies;
@@ -96,6 +92,7 @@ let
       python
       poolsJsonUrl
       assetsJsonUrl
+      assetsTestnet
       rsync
     ];
     preConfigure = ''
@@ -111,8 +108,8 @@ let
       cp ${poolsJsonUrl}/pools.json src/resources
       cp ${assetsJsonUrl}/index.json src/resources/assets.json
       cp ${assetsJsonUrl}/index.minimal.json src/resources/assets.minimal.json
-      cp ${assetsTestnet} src/resources/assets-testnet.json
-      cp ${assetsTestnetMinimal} src/resources/assets-testnet.minimal.json
+      cp ${assetsTestnet}/index.json src/resources/assets-testnet.json
+      cp ${assetsTestnet}/index.minimal.json src/resources/assets-testnet.minimal.json
     '';
     buildPhase = ''
       export PATH="${nodeDependencies}/bin:$PATH"

@@ -272,12 +272,12 @@ class Blocks {
       this.currentBlockHeight = this.blocks[this.blocks.length - 1].height;
     }
     const lastDifficultyEpochEndBlockHeight = blockHeightTip - (blockHeightTip % 2016);
-    let firstDifficultyEpochEndBlockHeight = ((lastDifficultyEpochEndBlockHeight - config.MEMPOOL.LAST_EPOCH_END_BLOCKS_AMOUNT  * 2016) < 0) ? 0 : (lastDifficultyEpochEndBlockHeight - config.MEMPOOL.LAST_EPOCH_END_BLOCKS_AMOUNT  * 2016);
+    let firstDifficultyEpochEndBlockHeight = 0;
     if( this.difficultyEpochEndBlocks.length > 0) {
       firstDifficultyEpochEndBlockHeight = this.difficultyEpochEndBlocks[ this.difficultyEpochEndBlocks.length - 1].height + 2016;
     }
-    if ( lastDifficultyEpochEndBlockHeight >= firstDifficultyEpochEndBlockHeight) {
-      logger.debug('populating difficultyEpochEndBlocks, starting from block ' + lastDifficultyEpochEndBlockHeight);
+    if ( lastDifficultyEpochEndBlockHeight > firstDifficultyEpochEndBlockHeight) {
+      logger.debug('populating difficultyEpochEndBlocks, starting from block ' + firstDifficultyEpochEndBlockHeight);
     }
     for( let i = firstDifficultyEpochEndBlockHeight; i <= lastDifficultyEpochEndBlockHeight; i += 2016) {
       const result = await this.getExtendedBlocktxIdsTransactionsByBlockHeight$(i);
@@ -285,9 +285,6 @@ class Blocks {
         const [ blockExtended, txIds, transactions ] = result
         this.difficultyEpochEndBlocks.push( blockExtended);
       }
-    }
-    if (this.difficultyEpochEndBlocks.length > config.MEMPOOL.LAST_EPOCH_END_BLOCKS_AMOUNT) {
-      this.difficultyEpochEndBlocks.slice( -config.MEMPOOL.LAST_EPOCH_END_BLOCKS_AMOUNT);
     }
 
     if (blockHeightTip - this.currentBlockHeight > config.MEMPOOL.INITIAL_BLOCKS_AMOUNT * 2) {

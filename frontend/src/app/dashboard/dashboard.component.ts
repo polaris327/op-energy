@@ -50,6 +50,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   mempoolStats$: Observable<MempoolStatsData>;
   isLoadingWebSocket$: Observable<boolean>;
   liquidPegsMonth$: Observable<any>;
+  difficultySliderStartValue: number = 0; // those 2 variables contain start / end values for difficulty chart slider
+  difficultySliderEndValue: number = 0;
 
   constructor(
     @Inject(LOCALE_ID) private locale: string,
@@ -69,7 +71,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.lastDifficultyEpochEndBlocksSubscription = this.stateService.lastDifficultyEpochEndBlocks$
       .subscribe(([block, txConfirmed]) => {
         this.lastDifficultyEpochEndBlocks.push( block);
-        this.lastDifficultyEpochEndBlocks = this.lastDifficultyEpochEndBlocks.slice(0, this.stateService.env.LAST_EPOCH_END_BLOCKS_AMOUNT);
+        if( this.lastDifficultyEpochEndBlocks.length > 0){
+          if(this.lastDifficultyEpochEndBlocks.length <= 30) {
+            this.difficultySliderStartValue = this.lastDifficultyEpochEndBlocks[0].height;
+            this.difficultySliderEndValue = this.lastDifficultyEpochEndBlocks[ this.lastDifficultyEpochEndBlocks.length - 1].height;
+          }else{
+            this.difficultySliderStartValue = this.lastDifficultyEpochEndBlocks[ this.lastDifficultyEpochEndBlocks.length - 30].height;
+            this.difficultySliderEndValue = this.lastDifficultyEpochEndBlocks[ this.lastDifficultyEpochEndBlocks.length - 1].height;
+          }
+        }
         let map = new Map<number, string>();
         this.lastDifficultyEpochEndBlocks.map((block) => {
           const block_date = new Date( block.timestamp * 1000);

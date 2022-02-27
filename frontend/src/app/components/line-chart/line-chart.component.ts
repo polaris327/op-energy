@@ -1,6 +1,6 @@
-import { Component, Input, Inject, LOCALE_ID, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, Output, Input, Inject, LOCALE_ID, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { EChartsOption } from 'echarts';
-import { OnChanges } from '@angular/core';
+import { OnChanges, EventEmitter } from '@angular/core';
 import { StorageService } from 'src/app/services/storage.service';
 import { formatterXAxis, formatterXAxisLabel } from 'src/app/shared/graphs.utils';
 
@@ -26,9 +26,14 @@ export class LineChartComponent implements OnInit, OnChanges {
   @Input() left: number | string = '0';
   @Input() template: ('widget' | 'advanced') = 'widget';
   @Input() windowPreferenceOverride: string;
+  @Input() startValue: number;
+  @Input() endValue: number;
+  @Output() onDataZoom: EventEmitter<unknown>; // callback, that can be used on slider change
+  @Output() onInit: EventEmitter<unknown>; // callback, that can be used on chart init
 
   isLoading = true;
   lineChartOption: EChartsOption = {};
+  private echartsInstance: any; // contains pointer to current echarts instance gathered from onChartInit event
   lineChartInitOption = {
     renderer: 'svg'
   };
@@ -37,7 +42,10 @@ export class LineChartComponent implements OnInit, OnChanges {
   constructor(
     @Inject(LOCALE_ID) private locale: string,
     private storageService: StorageService,
-  ) { }
+  ) {
+    this.onInit = new EventEmitter();
+    this.onDataZoom = new EventEmitter();
+  }
 
   ngOnInit() {
     this.isLoading = true;
@@ -57,9 +65,25 @@ export class LineChartComponent implements OnInit, OnChanges {
     }
     this.isLoading = false;
   }
+  onChartInit( ec) {
+    this.echartsInstance = ec;
+    if( this.onInit !== null) {
+      this.onInit.emit( ec);
+    }
+  }
+  onChartDataZoom( event) {
+    if( this.onDataZoom !== null) {
+      this.onDataZoom.emit( event);
+    }
+  }
 
   mountChart(): void {
     this.lineChartOption = {
+      toolbox: {
+        feature: {
+          restore: {},
+        },
+      },
       grid: {
         height: this.height,
         right: this.right,
@@ -68,21 +92,16 @@ export class LineChartComponent implements OnInit, OnChanges {
         containLabel: true,
       },
       animation: false,
-      dataZoom: (this.template === 'widget' && this.isMobile()) ? null : [{
-        type: 'inside',
-        realtime: true,
-        zoomLock: (this.template === 'widget') ? true : false,
-        zoomOnMouseWheel: (this.template === 'advanced') ? true : false,
-        moveOnMouseMove: (this.template === 'widget') ? true : false,
-        maxSpan: 100,
-        minSpan: 10,
-      }, {
+      dataZoom: [{
         showDetail: false,
-        show: (this.template === 'advanced') ? true : false,
+        show: true,
         type: 'slider',
+        xAxisIndex: 0,
         brushSelect: false,
         realtime: true,
         bottom: 0,
+        startValue: this.startValue,
+        endValue: this.endValue,
         selectedDataBackground: {
           lineStyle: {
             color: '#fff',
@@ -92,7 +111,17 @@ export class LineChartComponent implements OnInit, OnChanges {
             opacity: 0,
           }
         },
-      }],
+      },
+      {
+        type: 'inside',
+        realtime: true,
+        zoomLock: false,
+        zoomOnMouseWheel: (this.template === 'advanced') ? true : false,
+        moveOnMouseMove: (this.template === 'widget') ? true : false,
+        maxSpan: 100,
+        minSpan: 10,
+      },
+      ],
       tooltip: {
         show: true,
         trigger: 'axis',

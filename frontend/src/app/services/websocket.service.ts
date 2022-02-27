@@ -217,7 +217,7 @@ export class WebsocketService {
     if( response.lastDifficultyEpochEndBlocks && response.lastDifficultyEpochEndBlocks.length) {
       const lastDifficultyEpochEndBlocks = response.lastDifficultyEpochEndBlocks;
       lastDifficultyEpochEndBlocks.forEach((block: Block) => {
-        if( block.height > this.stateService.lastDifficultyEpochEndBlockHeight) {
+        if( this.stateService.lastDifficultyEpochEndBlockHeight === undefined || block.height > this.stateService.lastDifficultyEpochEndBlockHeight) {
           this.stateService.lastDifficultyEpochEndBlockHeight = block.height;
           this.stateService.lastDifficultyEpochEndBlocks$.next([block, false]);
         }

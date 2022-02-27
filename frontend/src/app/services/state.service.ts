@@ -72,7 +72,7 @@ export class StateService {
   blockVSize: number;
   env: Env;
   latestBlockHeight = 0;
-  lastDifficultyEpochEndBlockHeight = 0;
+  lastDifficultyEpochEndBlockHeight: number | undefined = undefined;
 
   networkChanged$ = new ReplaySubject<string>(1);
   blocks$: ReplaySubject<[Block, boolean]>;

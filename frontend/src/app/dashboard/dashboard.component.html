@@ -52,6 +52,8 @@
                 <app-line-chart
                 [template]="'widget'"
                 [data]="lastDifficultyEpochEndBlocksSeries"
+                [startValue]="this.difficultySliderStartValue"
+                [endValue]="this.difficultySliderEndValue"
                 ></app-line-chart>
               </div>
             </ng-container>
