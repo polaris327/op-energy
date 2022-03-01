@@ -280,11 +280,9 @@ class Blocks {
       logger.debug('populating difficultyEpochEndBlocks, starting from block ' + firstDifficultyEpochEndBlockHeight);
     }
     for( let i = firstDifficultyEpochEndBlockHeight; i <= lastDifficultyEpochEndBlockHeight; i += 2016) {
-      const result = await this.getExtendedBlocktxIdsTransactionsByBlockHeight$(i);
-      if (typeof(result) !== 'undefined' ) {
-        const [ blockExtended, txIds, transactions ] = result
-        this.difficultyEpochEndBlocks.push( blockExtended);
-      }
+      const blockHash = await bitcoinApi.$getBlockHash(i);
+      const block = await bitcoinApi.$getBlock(blockHash);
+      this.difficultyEpochEndBlocks.push( block);
     }
 
     if (blockHeightTip - this.currentBlockHeight > config.MEMPOOL.INITIAL_BLOCKS_AMOUNT * 2) {
