@@ -31,7 +31,7 @@ variable "SSH_KEYS_IDS" {
 resource "digitalocean_volume" "bitcoind_mainnet" {
   region                  = var.DO_REGION
   name                    = "${var.DROPLET_NAME}-bitcoind-mainnet"
-  size                    = 460
+  size                    = 480
   initial_filesystem_type = "xfs"
   description             = "volume for blockchain"
 }
