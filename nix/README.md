@@ -16,6 +16,46 @@ Scripts expect to use DigitalOcean API token to perform a deploy. If you don't h
 3 enter token's name, ensure, that 'write' access is selected and hit 'Generate Token';
 4 copy-patse token into some file so it can be reused later for scripts. In this tutorial, this file will be located at<repo>/nix/DO_TOKEN. This path is excluded from git tracking, so you can keep it there as well.
 
+## Frontend development. The fast flow
+
+General development flow can be considered as slow because it should provide reproducible environment.
+If you want to have fast development flow, you may use the following steps. Notice, that this method can't guarantee packagesto be pinned.
+
+1 fork the repo, checkout branch op-energy-master and create new branch with your new feature:
+
+```
+git clone https://github.com/<your account here>/op-energy
+cd op-energy
+git checkout -b op-energy-new-feature
+```
+
+2 ensure that you have `npm` installed. In case if you are running NixOS or have `nix` package manager installed, you can use:
+
+```
+nix-shell nix/shell.nix
+```
+
+3 build and run development web server:
+
+```
+cd frontend
+npm install
+npm run build
+npm run start
+```
+
+4 start ssh session into some existing instance of op-energy. In this example, I will use development instance running signet backend:
+
+```
+ssh root@<IP> -L8889:127.0.0.1:8995 "while true; do sleep 10s; echo ping; done"
+```
+
+5 open browser and navigate to "http://localhost:4200"
+
+6 now you can edit source code of the frontend and it will be reloaded as soon as you will save any change.
+
+7 push your changes and create pull request by navigating to github -> pull requests -> create pull request. Choose 'base' repo 'op-energy-master' and you current repo as 'compare' one.
+
 ## Development
 
 Development of op-energy toy exchange is supposed to consist of those steps:
