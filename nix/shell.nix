@@ -10,5 +10,5 @@ let
   myTerraform = pkgs.terraform_0_15.withPlugins (tp: [ tp.digitalocean ]);
 in
 pkgs.mkShell {
-  buildInputs = with pkgs; [ curl jq myTerraform python3 ];
+  buildInputs = with pkgs; [ curl jq myTerraform python3 nodejs ];
 }
