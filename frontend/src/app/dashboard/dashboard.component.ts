@@ -44,10 +44,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   mempoolLoadingStatus$: Observable<number>;
   vBytesPerSecondLimit = 1667;
   blocks$: Observable<Block[]>;
-  transactions$: Observable<TransactionStripped[]>;
   latestBlockHeight: number;
   mempoolTransactionsWeightPerSecondData: any;
-  mempoolStats$: Observable<MempoolStatsData>;
   isLoadingWebSocket$: Observable<boolean>;
   liquidPegsMonth$: Observable<any>;
   difficultySliderStartValue: number = 0; // those 2 variables contain start / end values for difficulty chart slider
@@ -170,41 +168,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
           acc = acc.slice(0, 6);
           return acc;
         }, []),
-      );
-
-    this.transactions$ = this.stateService.transactions$
-      .pipe(
-        scan((acc, tx) => {
-          acc.unshift(tx);
-          acc = acc.slice(0, 6);
-          return acc;
-        }, []),
-      );
-
-    this.mempoolStats$ = this.stateService.connectionState$
-      .pipe(
-        filter((state) => state === 2),
-        switchMap(() => this.apiService.list2HStatistics$()),
-        switchMap((mempoolStats) => {
-          return merge(
-            this.stateService.live2Chart$
-              .pipe(
-                scan((acc, stats) => {
-                  acc.unshift(stats);
-                  acc = acc.slice(0, 120);
-                  return acc;
-                }, mempoolStats)
-              ),
-            of(mempoolStats)
-          );
-        }),
-        map((mempoolStats) => {
-          return {
-            mempool: mempoolStats,
-            weightPerSecond: this.handleNewMempoolData(mempoolStats.concat([])),
-          };
-        }),
-        share(),
       );
 
     if (this.stateService.network === 'liquid' || this.stateService.network === 'liquidtestnet') {
