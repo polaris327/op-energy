@@ -100,8 +100,8 @@ export class LineChartComponent implements OnInit, OnChanges {
         brushSelect: false,
         realtime: true,
         bottom: 0,
-        startValue: this.startValue,
-        endValue: this.endValue,
+        start: (this.startValue / this.endValue) * 100,
+        end: 100,
         selectedDataBackground: {
           lineStyle: {
             color: '#fff',
@@ -165,7 +165,7 @@ export class LineChartComponent implements OnInit, OnChanges {
           nameTextStyle: {
             padding: [20, 0, 0, 0],
           },
-          type: 'value',
+          type: 'category',
           min: 'dataMin',
           max: 'dataMax',
           interval: 4032,
