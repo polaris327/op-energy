@@ -23,6 +23,7 @@ import { SponsorComponent } from './components/sponsor/sponsor.component';
 import { LiquidMasterPageComponent } from './components/liquid-master-page/liquid-master-page.component';
 import { PushTransactionComponent } from './components/push-transaction/push-transaction.component';
 import { PoolRankingComponent } from './components/pool-ranking/pool-ranking.component';
+import { AccountComponent } from './components/account/account.component';
 
 let routes: Routes = [
   {
@@ -107,6 +108,10 @@ let routes: Routes = [
       {
         path: 'sponsor',
         component: SponsorComponent,
+      },
+      {
+        path: 'account',
+        component: AccountComponent,
       },
     ],
   },
@@ -387,6 +392,10 @@ if (browserWindowEnv && browserWindowEnv.BASE_MODULE === 'liquid') {
         path: 'sponsor',
         component: SponsorComponent,
       },
+      {
+        path: 'account',
+        component: AccountComponent,
+      },
     ],
   },
   {
@@ -477,6 +486,10 @@ if (browserWindowEnv && browserWindowEnv.BASE_MODULE === 'liquid') {
           {
             path: 'sponsor',
             component: SponsorComponent,
+          },
+          {
+            path: 'account',
+            component: AccountComponent,
           },
         ],
       },

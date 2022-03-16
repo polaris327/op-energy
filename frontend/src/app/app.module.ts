@@ -64,6 +64,7 @@ import { HttpCacheInterceptor } from './services/http-cache.interceptor';
 import { LanguageService } from './services/language.service';
 import { SponsorComponent } from './components/sponsor/sponsor.component';
 import { PushTransactionComponent } from './components/push-transaction/push-transaction.component';
+import { AccountComponent } from './components/account/account.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
@@ -112,6 +113,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     PushTransactionComponent,
     DocsComponent,
     ApiDocsNavComponent,
+    AccountComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
