@@ -226,4 +226,37 @@ ssh root@<dropletIP> -L8889:127.0.0.1:8995 "while true; do sleep 10s; echo ping;
 
 8 as soon as pull request will be merged, production instance will rebuild and deploy new version within 10 minutes.
 
-## Backend development
+## Backend development. The fast flow
+
+Although, the recommended development path is to update from git and use `nixos-rebuild switch` on the development instance, there is an option of the fast development flow is possible for backend as well, although, with fast development flow is will not be possible to deploy DB schema updates (at least for now). You will still need the development instance running to use bincoind, electrs and DB instances.
+
+1 - 3 steps are the same as for `Frontend development. The fast flow`
+
+4 setup SSH session with port forwarding:
+
+```
+ssh root@<dropletIP> -L38332:127.0.0.1:38332 -L60601:127.0.0.1:60601 -L3306:127.0.0.1:3306  "while true; do echo ping; sleep 10s; done"
+```
+
+5 copy backend config from the development instance from the cloud to get proper secrets:
+
+```
+cd backend
+scp root@<dropletIP>:$(ssh root@<dropletIP> "cat \$(cat /etc/systemd/system/op-energy-backend-signet.service | grep ExecStart | awk 'BEGIN{FS=\"=\"}{print \$2}') | grep json | awk '{print \$6}' | awk 'BEGIN{FS=\"\\\"\"}{print \$2}'") ./mempool-backend.json
+```
+
+6 replace listen port with 8999:
+
+```
+sed -i -E 's/(.*"HTTP_PORT": .*)/    "HTTP_PORT": 8999,/' mempool-backend.json
+```
+
+6 build and run development version of the backend:
+
+```
+npm install
+npm run build
+npm run start
+```
+now backend will be running on port 8999
+you can walk `Frontend development. The fast flow` to setup frontend instance which will use such backend instance so you can use fast development flow both for frontend and backend.
