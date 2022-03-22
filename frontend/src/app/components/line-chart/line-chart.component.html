@@ -1,3 +1,6 @@
+<button type="button" class="btn btn-secondary btn-sm d-block mx-auto" (click)="toggleViewMode()">
+  <div>{{ isLogMode ? 'Log' : 'Linear'}}</div>
+</button>
 <div class="echarts" echarts [initOpts]="lineChartInitOption" [options]="lineChartOption" (chartRendered)="rendered()" (chartInit)="onChartInit($event)" (chartDataZoom)="onChartDataZoom($event)"></div>
 <div class="text-center loadingGraphs" *ngIf="isLoading">
   <div class="spinner-border text-light"></div>

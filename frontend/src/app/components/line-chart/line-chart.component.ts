@@ -39,6 +39,8 @@ export class LineChartComponent implements OnInit, OnChanges {
   };
   windowPreference: string;
 
+  isLogMode: boolean;
+
   constructor(
     @Inject(LOCALE_ID) private locale: string,
     private storageService: StorageService,
@@ -217,6 +219,19 @@ export class LineChartComponent implements OnInit, OnChanges {
         },
       ],
     };
+  }
+
+  toggleViewMode() {
+    this.isLogMode = !this.isLogMode;
+    this.lineChartOption = {
+      ...this.lineChartOption,
+      yAxis: {
+        ...this.lineChartOption.yAxis,
+        type: this.isLogMode ? 'log' : 'value',
+        min: this.isLogMode ? null : 'dataMin',
+        max: this.isLogMode ? null : 'dataMax'
+      }
+    }
   }
 
   isMobile() {
