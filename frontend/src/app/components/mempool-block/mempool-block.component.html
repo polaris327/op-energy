@@ -1,7 +1,7 @@
 <div class="container-xl" *ngIf="mempoolBlock$ | async as mempoolBlock">
 
   <div class="title-block">
-    <h1>{{ mempoolBlock.height }}</h1>
+    <h1>{{ mempoolBlock.height }} (Next block)</h1>
     <button [routerLink]="['/' | relativeUrl]" class="btn btn-sm float-right">&#10005;</button>
   </div>
 
@@ -10,38 +10,21 @@
   <div class="box">
     <div class="row">
       <div class="col-md">
-        <table class="table table-borderless table-striped">
-          <tbody>
-            <tr>
-              <td i18n="mempool-block.median-fee">Median fee</td>
-              <td>~{{ mempoolBlock.medianFee | number:'1.0-0' }} <span class="symbol" i18n="shared.sat-vbyte|sat/vB">sat/vB</span> <span class="fiat"><app-fiat [value]="mempoolBlock.medianFee * 140" digitsInfo="1.2-2" i18n-ngbTooltip="Transaction fee tooltip" ngbTooltip="Based on average native segwit transaction of 140 vBytes" placement="bottom"></app-fiat></span></td>
-            </tr>
-            <tr>
-              <td i18n="mempool-block.fee-span">Fee span</td>
-              <td><span class="yellow-color">{{ mempoolBlock.feeRange[0] | number:'1.0-0' }} - {{ mempoolBlock.feeRange[mempoolBlock.feeRange.length - 1] | number:'1.0-0' }} <span class="symbol" i18n="shared.sat-vbyte|sat/vB">sat/vB</span></span></td>
-            </tr>
-            <tr>
-              <td i18n="mempool-block.total-fees">Total fees</td>
-              <td><app-amount [satoshis]="mempoolBlock.totalFees" [digitsInfo]="'1.2-2'" [noFiat]="true"></app-amount> <span class="fiat"><app-fiat [value]="mempoolBlock.totalFees" digitsInfo="1.0-0"></app-fiat></span></td>
-            </tr>
-            <tr>
-              <td i18n="mempool-block.transactions">Transactions</td>
-              <td>{{ mempoolBlock.nTx }}</td>
-            </tr>
-            <tr>
-              <td i18n="mempool-block.size">Size</td>
-              <td>
-                <div class="progress">
-                  <div class="progress-bar progress-mempool {{ (network$ | async) }}" role="progressbar" [ngStyle]="{'width': (mempoolBlock.blockVSize / stateService.blockVSize) * 100 + '%' }"></div>
-                  <div class="progress-text" [innerHTML]="mempoolBlock.blockSize | bytes: 2"></div>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <form [formGroup]="betForm">
+          <div class="row">
+            <h2 class="col-md">Your Bet</h2>
+            <div class="col-md">
+              <input formControlName="betAmount" type="number" class="col-md form-control" placeholder="Enter amount">
+              <div class="d-flex justify-content-between mt-4">
+                <button class="btn btn-secondary mr-4" type="button" (click)="doBet()">Bet slow</button>
+                <button class="btn btn-primary" type="button" (click)="doBet(true)">Bet Fast</button>
+              </div>    
+            </div>
+          </div>
+        </form>
       </div>
       <div class="col-md chart-container">
-        <app-fee-distribution-graph [data]="mempoolBlock.feeRange" ></app-fee-distribution-graph>
+        <remi-bet-pie-chart *ngIf="pieData" [data]="pieData"></remi-bet-pie-chart>
       </div>
     </div>
   </div>

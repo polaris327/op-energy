@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { StateService } from 'src/app/services/state.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { switchMap, map, tap, filter } from 'rxjs/operators';
@@ -19,14 +20,34 @@ export class MempoolBlockComponent implements OnInit, OnDestroy {
   mempoolBlock$: Observable<MempoolBlock>;
   ordinal$: BehaviorSubject<string> = new BehaviorSubject('');
 
+  betForm: FormGroup;
+  totalAmount = 1000000;
+  totalSlowAmount = 100000;
+  pieData: any[] = [];
+
   constructor(
     private route: ActivatedRoute,
+    private formBuilder: FormBuilder,
     public stateService: StateService,
     private seoService: SeoService,
     private websocketService: WebsocketService,
   ) { }
 
   ngOnInit(): void {
+    this.betForm = this.formBuilder.group({
+      betAmount: [this.totalSlowAmount, [Validators.required, Validators.min(0), Validators.max(this.totalAmount)]]
+    });
+    this.pieData = [
+      {
+        name: 'Total Bet Slow',
+        value: this.totalSlowAmount
+      },
+      {
+        name: 'Total Bet Fast',
+        value: this.totalAmount - this.totalSlowAmount
+      }
+    ];
+
     this.websocketService.want(['blocks', 'mempool-blocks']);
 
     this.mempoolBlock$ = this.route.paramMap
@@ -63,6 +84,33 @@ export class MempoolBlockComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.stateService.markBlock$.next({});
+  }
+
+  doBet(isFast = false) {
+    this.totalSlowAmount = this.betForm.get('betAmount').value;
+    if (isFast) {
+      this.pieData = [
+        {
+          name: 'Total Bet Slow',
+          value: this.totalAmount - this.totalSlowAmount
+        },
+        {
+          name: 'Total Bet Fast',
+          value: this.totalSlowAmount
+        }
+      ];
+    } else {
+      this.pieData = [
+        {
+          name: 'Total Bet Slow',
+          value: this.totalSlowAmount
+        },
+        {
+          name: 'Total Bet Fast',
+          value: this.totalAmount - this.totalSlowAmount
+        }
+      ];
+    }
   }
 
   getOrdinal(mempoolBlock: MempoolBlock): string {
