@@ -255,7 +255,6 @@ sed -i -E 's/8995/8999/' mempool-config.json
 
 ```
 npm install
-npm run build
 npm run start
 ```
 now backend will be running on port 8999
