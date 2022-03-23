@@ -248,7 +248,7 @@ scp root@<dropletIP>:$(ssh root@<dropletIP> "cat \$(cat /etc/systemd/system/op-e
 6 replace listen port with 8999:
 
 ```
-sed -i -E 's/(.*"HTTP_PORT": .*)/    "HTTP_PORT": 8999,/' mempool-config.json
+sed -i -E 's/8995/8999/' mempool-config.json
 ```
 
 6 build and run development version of the backend:
