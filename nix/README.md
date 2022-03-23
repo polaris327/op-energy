@@ -242,13 +242,13 @@ ssh root@<dropletIP> -L38332:127.0.0.1:38332 -L60601:127.0.0.1:60601 -L3306:127.
 
 ```
 cd backend
-scp root@<dropletIP>:$(ssh root@<dropletIP> "cat \$(cat /etc/systemd/system/op-energy-backend-signet.service | grep ExecStart | awk 'BEGIN{FS=\"=\"}{print \$2}') | grep json | awk '{print \$6}' | awk 'BEGIN{FS=\"\\\"\"}{print \$2}'") ./mempool-backend.json
+scp root@<dropletIP>:$(ssh root@<dropletIP> "cat \$(cat /etc/systemd/system/op-energy-backend-signet.service | grep ExecStart | awk 'BEGIN{FS=\"=\"}{print \$2}') | grep json | awk '{print \$6}' | awk 'BEGIN{FS=\"\\\"\"}{print \$2}'") ./mempool-config.json
 ```
 
 6 replace listen port with 8999:
 
 ```
-sed -i -E 's/(.*"HTTP_PORT": .*)/    "HTTP_PORT": 8999,/' mempool-backend.json
+sed -i -E 's/(.*"HTTP_PORT": .*)/    "HTTP_PORT": 8999,/' mempool-config.json
 ```
 
 6 build and run development version of the backend:
