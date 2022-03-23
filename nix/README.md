@@ -212,7 +212,7 @@ npm run build
 npm run start
 ```
 
-4 start ssh session into some existing instance of op-energy. In this example, I will use development instance running signet backend:
+4 (NOTE: this option is not needed in case if you are using local backend instance running from the part below) start ssh session into some existing instance of op-energy. In this example, I will use development instance running signet backend:
 
 ```
 ssh root@<dropletIP> -L8889:127.0.0.1:8995 "while true; do sleep 10s; echo ping; done"
@@ -259,4 +259,4 @@ npm run build
 npm run start
 ```
 now backend will be running on port 8999
-you can walk `Frontend development. The fast flow` to setup frontend instance which will use such backend instance so you can use fast development flow both for frontend and backend.
+you can walk `Frontend development. The fast flow` to setup frontend instance which will use such backend instance so you can use fast development flow both for frontend and backend. In this case, step 4 from frontend's development how to should be skipped.
