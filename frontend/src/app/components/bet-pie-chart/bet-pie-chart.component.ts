@@ -35,7 +35,7 @@ export class BetPieChartComponent implements OnInit, OnChanges {
 			},
 			tooltip: {
 				trigger: 'item',
-				formatter: '{b} : {c} sat - {d}%'
+				formatter: '{b} : {c} satoshis - {d}%'
 			},
 			// legend: {
 			// 	orient: 'vertical',
@@ -69,9 +69,10 @@ export class BetPieChartComponent implements OnInit, OnChanges {
 					},
 					label: {
 						normal: {
+							fontSize: 14,
 							color: '#fff',
-							formatter: '{d}%',
-							position: 'inside'
+							formatter: '{c} satoshi',
+							// position: 'inside'
 						}
 					},
 				}
@@ -93,7 +94,7 @@ export class BetPieChartComponent implements OnInit, OnChanges {
 		return this.data.map(item => ({
 			value: Math.round(item.value),
 			name: item.name,
-			itemStyle: {color: item.name === 'Total Bet Slow' ? '#e25454' : '#91cc75'}
+			itemStyle: {color: item.name === 'Total Bet Slow' ? '#dc3545' : '#1a9436'}
 		}));
 	}
 }
