@@ -1,6 +1,11 @@
-<button type="button" class="btn btn-secondary btn-sm d-block mx-auto" (click)="toggleViewMode()">
-  <div>{{ isLogMode ? 'Log' : 'Linear'}}</div>
-</button>
+<div class="d-flex justify-content-end">
+  <button type="button" class="btn btn-sm d-block mr-2" [ngClass]="{'btn-primary': isLogMode, 'btn-secondary': !isLogMode}" style="width: 60px;" (click)="toggleViewMode()">
+    Log
+  </button>
+  <button type="button" class="btn btn-sm d-block" [ngClass]="{'btn-primary': !isLogMode, 'btn-secondary': isLogMode}" style="width: 60px;" (click)="toggleViewMode()">
+    Linear
+  </button>
+</div>
 <div class="echarts" echarts [initOpts]="lineChartInitOption" [options]="lineChartOption" (chartRendered)="rendered()" (chartInit)="onChartInit($event)" (chartDataZoom)="onChartDataZoom($event)"></div>
 <div class="text-center loadingGraphs" *ngIf="isLoading">
   <div class="spinner-border text-light"></div>
