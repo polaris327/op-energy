@@ -1,0 +1,27 @@
+<ng-container *ngIf="(loadingBlocks$ | async) === false; else loadingBlocks">
+  <div class="flashing">
+    <div class="bitcoin-block text-center mempool-block" id="mempool-block" [ngStyle]="mempoolBlockStyle" [class.blink-bg]="false">
+      <div class="block-height">
+        {{ stateService.latestBlockHeight + 1 }}
+      </div>
+      <div class="block-body">
+        <button type="button" class="btn btn-secondary btn-sm d-block mx-auto btn-speedup" (click)="guessSpeedup()">
+          <div>guess speedup (<600)</div>
+        </button>
+        <button type="button" class="btn btn-secondary btn-sm d-block mx-auto btn-speeddown" (click)="guessSpeeddown()">
+          <div>guess speeddown (>=600)</div>
+        </button>
+      </div>
+      <span class="animated-border"></span>
+    </div>
+  </div>
+  <div *ngIf="arrowVisible" id="arrow-up" [ngStyle]="{'right': rightPosition + 75 + 'px', transition: transition }"></div>
+</ng-container>
+
+<ng-template #loadingBlocks>
+  <div class="mempool-blocks-container">
+    <div class="flashing">
+        <div class="bitcoin-block text-center mempool-block" id="mempool-block" [ngStyle]="mempoolEmptyBlockStyle"></div>
+    </div>
+  </div>
+</ng-template>

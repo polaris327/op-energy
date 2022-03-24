@@ -8,6 +8,7 @@ import { NgxEchartsModule } from 'ngx-echarts';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './components/app/app.component';
 
+import { FutureBlockComponent } from './components/future-block/future-block.component';
 import { StartComponent } from './components/start/start.component';
 import { ElectrsApiService } from './services/electrs-api.service';
 import { TransactionComponent } from './components/transaction/transaction.component';
@@ -69,6 +70,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 @NgModule({
   declarations: [
     AppComponent,
+    FutureBlockComponent,
     AboutComponent,
     MasterPageComponent,
     BisqMasterPageComponent,
