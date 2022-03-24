@@ -2,13 +2,13 @@ NOTE: if you need table of contents in github, hit a button "=" in the left uppe
 
 # Brief
 
-This document describes deployment procedure of Op-energy toy exchange.
+This document describes deployment and development procedure of Op-energy toy exchange.
 
 Currently, we only provide support for deployment to DigitalOcean using terraform.
 
 There is a manual installation procedure, described at https://github.com/dambaev/mempool-overlay/blob/services-based-build/README.md, which walks you step-by-step in a procedure of getting NixOS on DigitalOcean and deploying op-energy toy exchange.
 
-## Preparations
+## DO Deployment preparations
 
 Scripts expect to use DigitalOcean API token to perform a deploy. If you don't have any:
 1 navigate to https://cloud.digitalocean.com/account/api/tokens;
@@ -16,49 +16,9 @@ Scripts expect to use DigitalOcean API token to perform a deploy. If you don't h
 3 enter token's name, ensure, that 'write' access is selected and hit 'Generate Token';
 4 copy-patse token into some file so it can be reused later for scripts. In this tutorial, this file will be located at<repo>/nix/DO_TOKEN. This path is excluded from git tracking, so you can keep it there as well.
 
-## Frontend development. The fast flow
+## Development deployment to DigitalOcean
 
-General development flow can be considered as slow because it should provide reproducible environment.
-If you want to have fast development flow, you may use the following steps. Notice, that this method can't guarantee packagesto be pinned.
-
-1 fork the repo, checkout branch op-energy-master and create new branch with your new feature:
-
-```
-git clone https://github.com/<your account here>/op-energy
-cd op-energy
-git checkout -b op-energy-new-feature
-```
-
-2 ensure that you have `npm` installed. In case if you are running NixOS or have `nix` package manager installed, you can use:
-
-```
-nix-shell nix/shell.nix
-```
-
-3 build and run development web server:
-
-```
-cd frontend
-npm install
-npm run build
-npm run start
-```
-
-4 start ssh session into some existing instance of op-energy. In this example, I will use development instance running signet backend:
-
-```
-ssh root@<IP> -L8889:127.0.0.1:8995 "while true; do sleep 10s; echo ping; done"
-```
-
-5 open browser and navigate to "http://localhost:4200"
-
-6 now you can edit source code of the frontend and it will be reloaded as soon as you will save any change.
-
-7 push your changes and create pull request by navigating to github -> pull requests -> create pull request. Choose 'base' repo 'op-energy-master' and you current repo as 'compare' one.
-
-## Development
-
-Development of op-energy toy exchange is supposed to consist of those steps:
+Development deployment of op-energy toy exchange is supposed to consist of those steps:
 
 1 fork the repo, checkout branch op-energy-master and create new branch with your new feature:
 
@@ -151,3 +111,152 @@ You can force update with:
 ssh -A root@dropletIP
 systemctl start nixos-apply & journal -f | grep -E "(nixos-apply|nixos-upgrade|op-energy-backend-build|op-energy-frontend-build)"
 ```
+
+## Deployment to a local NixOS instance
+
+Deployment to a local NixOS instance can be useful because it can be faster than deployment to cloud, but still fully functional.
+For this, you will need to:
+
+1 navigate to /etc/nixos, create `overlays` directory:
+
+```
+cd /etc/nixos
+mkdir overlays
+cd overlays
+```
+
+2 clone repo https://gthub.com/dambaev/op-energy-development
+
+```
+git clone --recursive https://github.com/dambaev/op-energy-development
+cd ..
+```
+
+3 generate secrets for local instances:
+
+```
+nix-shell overlays/op-energy-development/overlays/op-energy/nix/shell.nix
+./overlays/op-energy-development/overlays/op-energy/nix/gen-psk.sh /etc/nixos/private/ signet
+exit
+```
+
+4 edit `/etc/nixos/configuration.nix` to import `./overlays/op-energy-development/local-build-container.nix`. To do that, you need to add this file into `imports` list like that:
+
+```
+  imports =
+    [ # Include the results of the hardware scan.
+      ./hardware-configuration.nix
+      ./overlays/op-energy-development/local-build-container.nix # this line should be added
+    ];
+```
+
+5 rebuild the config:
+
+```
+nixos-rebuild switch
+```
+
+6 start container with op-energy instance:
+
+```
+systemctl start container@build
+```
+
+7 now you can navigate your browser to `http://192.168.100.17/` to get access to the frontend
+
+8 in order to update your instance, you need to run:
+
+```
+cd /etc/nixos/overlays/op-energy-developoment
+git submodule update --remote
+nixos-rebuild switch
+```
+
+or, you can change the branch if you want to test some feature before merging:
+
+```
+cd /etc/nixos/overlays/op-energy-developoment
+git checkout master
+git checkout -b op-energy-some-feature-branch
+git submodule set-branch -b op-energy-some-feature-branch
+git submodule update --remote
+git commit -a -m op-energy-some-feature-branch
+nixos-rebuild switch
+```
+
+## Frontend development. The fast flow
+
+General development flow can be considered as slow because it should provide reproducible environment.
+If you want to have fast development flow, you may use the following steps. Notice, that this method can't guarantee packagesto be pinned.
+
+1 fork the repo, checkout branch op-energy-master and create new branch with your new feature:
+
+```
+git clone https://github.com/<your account here>/op-energy
+cd op-energy
+git checkout -b op-energy-new-feature
+```
+
+2 ensure that you have `npm` installed. In case if you are running NixOS or have `nix` package manager installed, you can use:
+
+```
+nix-shell nix/shell.nix
+```
+
+3 build and run development web server:
+
+```
+cd frontend
+npm install
+npm run build
+npm run start
+```
+
+4 (NOTE: this option is not needed in case if you are using local backend instance running from the part below) start ssh session into some existing instance of op-energy. In this example, I will use development instance running signet backend:
+
+```
+ssh root@<dropletIP> -L8889:127.0.0.1:8995 "while true; do sleep 10s; echo ping; done"
+```
+
+5 open browser and navigate to "http://localhost:4200"
+
+6 now you can edit source code of the frontend and it will be reloaded as soon as you will save any change.
+
+7 push your changes and create pull request by navigating to github -> pull requests -> create pull request. Choose 'base' repo 'op-energy-master' and you current repo as 'compare' one.
+
+8 as soon as pull request will be merged, production instance will rebuild and deploy new version within 10 minutes.
+
+## Backend development. The fast flow
+
+Although, the recommended development path is to update from git and use `nixos-rebuild switch` on the development instance, there is an option of the fast development flow is possible for backend as well, although, with fast development flow is will not be possible to deploy DB schema updates (at least for now). You will still need the development instance running to use bincoind, electrs and DB instances.
+
+1 - 3 steps are the same as for `Frontend development. The fast flow`
+
+4 setup SSH session with port forwarding:
+
+```
+ssh root@<dropletIP> -L38332:127.0.0.1:38332 -L60601:127.0.0.1:60601 -L3306:127.0.0.1:3306  "while true; do echo ping; sleep 10s; done"
+```
+
+5 copy backend config from the development instance from the cloud to get proper secrets:
+
+```
+cd backend
+scp root@<dropletIP>:$(ssh root@<dropletIP> "cat \$(cat /etc/systemd/system/op-energy-backend-signet.service | grep ExecStart | awk 'BEGIN{FS=\"=\"}{print \$2}') | grep json | awk '{print \$6}' | awk 'BEGIN{FS=\"\\\"\"}{print \$2}'") ./mempool-config.json
+```
+
+6 replace listen port with 8999:
+
+```
+sed -i -E 's/8995/8999/' mempool-config.json
+```
+
+6 build and run development version of the backend:
+
+```
+npm install
+npm run build
+npm run start
+```
+now backend will be running on port 8999
+you can walk `Frontend development. The fast flow` to setup frontend instance which will use such backend instance so you can use fast development flow both for frontend and backend. In this case, step 4 from frontend's development how to should be skipped.

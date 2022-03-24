@@ -34,7 +34,6 @@ export class BlockComponent implements OnInit, OnDestroy {
   page = 1;
   itemsPerPage: number;
   txsLoadingStatus$: Observable<number>;
-  showDetails = false;
   showPreviousBlocklink = true;
   showNextBlocklink = true;
 
@@ -42,7 +41,6 @@ export class BlockComponent implements OnInit, OnDestroy {
   keyNavigationSubscription: Subscription;
   blocksSubscription: Subscription;
   networkChangedSubscription: Subscription;
-  queryParamsSubscription: Subscription;
 
   constructor(
     private route: ActivatedRoute,
@@ -180,14 +178,6 @@ export class BlockComponent implements OnInit, OnDestroy {
     this.networkChangedSubscription = this.stateService.networkChanged$
       .subscribe((network) => this.network = network);
 
-    this.queryParamsSubscription = this.route.queryParams.subscribe((params) => {
-      if (params.showDetails === 'true') {
-        this.showDetails = true;
-      } else {
-        this.showDetails = false;
-      }
-    });
-
     this.keyNavigationSubscription = this.stateService.keyNavigation$.subscribe((event) => {
       if (this.showPreviousBlocklink && event.key === 'ArrowRight' && this.nextBlockHeight - 2 >= 0) {
         this.navigateToPreviousBlock();
@@ -208,7 +198,6 @@ export class BlockComponent implements OnInit, OnDestroy {
     this.keyNavigationSubscription.unsubscribe();
     this.blocksSubscription.unsubscribe();
     this.networkChangedSubscription.unsubscribe();
-    this.queryParamsSubscription.unsubscribe();
   }
 
   setBlockSubsidy() {
@@ -222,52 +211,6 @@ export class BlockComponent implements OnInit, OnDestroy {
       this.blockSubsidy = this.blockSubsidy / 2;
       halvenings--;
     }
-  }
-
-  pageChange(page: number, target: HTMLElement) {
-    const start = (page - 1) * this.itemsPerPage;
-    this.isLoadingTransactions = true;
-    this.transactions = null;
-    target.scrollIntoView(); // works for chrome
-
-    this.electrsApiService.getBlockTransactions$(this.block.id, start)
-     .subscribe((transactions) => {
-        this.transactions = transactions;
-        this.isLoadingTransactions = false;
-        target.scrollIntoView(); // works for firefox
-      });
-  }
-
-  toggleShowDetails() {
-    if (this.showDetails) {
-      this.showDetails = false;
-      this.router.navigate([], {
-        relativeTo: this.route,
-        queryParams: { showDetails: false },
-        queryParamsHandling: 'merge',
-        fragment: 'block'
-      });
-    } else {
-      this.showDetails = true;
-      this.router.navigate([], {
-        relativeTo: this.route,
-        queryParams: { showDetails: true },
-        queryParamsHandling: 'merge',
-        fragment: 'details'
-      });
-    }
-  }
-
-  hasTaproot(version: number): boolean {
-    const versionBit = 2; // Taproot
-    return (Number(version) & (1 << versionBit)) === (1 << versionBit);
-  }
-
-  displayTaprootStatus(): boolean {
-    if (this.stateService.network !== '') {
-      return false;
-    }
-    return this.block && this.block.height > 681393 && (new Date().getTime() / 1000) < 1628640000;
   }
 
   onResize(event: any) {
