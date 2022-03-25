@@ -11,7 +11,6 @@ import { LanguageService } from 'src/app/services/language.service';
 export class LiquidMasterPageComponent implements OnInit {
   env: Env;
   connectionState$: Observable<number>;
-  navCollapsed = false;
   isMobile = window.innerWidth <= 767.98;
   officialMempoolSpace = this.stateService.env.OFFICIAL_MEMPOOL_SPACE;
   network$: Observable<string>;
@@ -27,10 +26,6 @@ export class LiquidMasterPageComponent implements OnInit {
     this.connectionState$ = this.stateService.connectionState$;
     this.network$ = merge(of(''), this.stateService.networkChanged$);
     this.urlLanguage = this.languageService.getLanguageForUrl();
-  }
-
-  collapse(): void {
-    this.navCollapsed = !this.navCollapsed;
   }
 
   onResize(event: any) {
