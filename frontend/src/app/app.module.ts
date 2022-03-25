@@ -9,6 +9,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './components/app/app.component';
 
 import { FutureBlockComponent } from './components/future-block/future-block.component';
+import { PastBlocksComponent } from './components/past-blocks/past-blocks.component';
 import { StartComponent } from './components/start/start.component';
 import { ElectrsApiService } from './services/electrs-api.service';
 import { TransactionComponent } from './components/transaction/transaction.component';
@@ -71,6 +72,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
   declarations: [
     AppComponent,
     FutureBlockComponent,
+    PastBlocksComponent,
     AboutComponent,
     MasterPageComponent,
     BisqMasterPageComponent,
