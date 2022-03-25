@@ -10,7 +10,6 @@ import { LanguageService } from 'src/app/services/language.service';
 })
 export class BisqMasterPageComponent implements OnInit {
   connectionState$: Observable<number>;
-  navCollapsed = false;
   env: Env;
   isMobile = window.innerWidth <= 767.98;
   urlLanguage: string;
@@ -24,10 +23,6 @@ export class BisqMasterPageComponent implements OnInit {
     this.env = this.stateService.env;
     this.connectionState$ = this.stateService.connectionState$;
     this.urlLanguage = this.languageService.getLanguageForUrl();
-  }
-
-  collapse(): void {
-    this.navCollapsed = !this.navCollapsed;
   }
 
   onResize(event: any) {
