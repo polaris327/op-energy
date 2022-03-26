@@ -1,5 +1,5 @@
 .bitcoin-block {
-  width: 125px;
+  width: 165px;
   height: 145px;
 }
 
@@ -44,6 +44,17 @@
   font-size: 13px;
 }
 
+.mediantime-utc {
+    font-size: 9px;
+    margin-top: 10px;
+    margin-bottom: 2px;
+}
+.mediantime-posix {
+    font-size: 9px;
+    margin-top: 10px;
+    margin-bottom: 2px;
+    color: #F1B82D;
+}
 .fees {
   font-size: 12px;
   margin-top: 10px;
@@ -73,7 +84,7 @@
 
 .bitcoin-block::after {
   content: '';
-  width: 125px;
+  width: 165px;
   height: 24px;
   position:absolute;
   top: -24px;

@@ -1,14 +1,29 @@
 <div class="blocks-container blockchain-blocks-container" *ngIf="(loadingBlocks$ | async) === false; else loadingBlocksTemplate">
-  <div *ngFor="let block of blocks; let i = index; trackBy: trackByBlocksFn" >
-    <div class="text-center bitcoin-block mined-block blockchain-blocks-{{ i }}" id="bitcoin-block-{{ block.height }}" [ngStyle]="blockStyles[i]" [class.blink-bg]="(specialBlocks[block.height] !== undefined)">
-      <a draggable="false" [routerLink]="['/block/' | relativeUrl, block.id]" [state]="{ data: { block: block } }" 
+  <div *ngFor="let pastBlock of pastBlocks; let i = index; trackBy: trackByPastBlocksFn" >
+    <div class="text-center bitcoin-block mined-block blockchain-blocks-{{ i }}" id="bitcoin-block-{{ pastBlock.height }}" [ngStyle]="blockStyles[i]" [class.blink-bg]="(specialBlocks[pastBlock.height] !== undefined)">
+      <a draggable="false" [routerLink]="['/block/' | relativeUrl, pastBlock.id]" [state]="{ data: { block: pastBlock } }"
         class="blockLink" [ngClass]="{'disabled': (this.stateService.blockScrolling$ | async)}">&nbsp;</a>
       <div class="block-height">
-        <a [routerLink]="['/block/' | relativeUrl, block.id]" [state]="{ data: { block: block } }">{{ block.height }}</a>
+        <a [routerLink]="['/block/' | relativeUrl, pastBlock.id]" [state]="{ data: { block: pastBlock } }">{{ pastBlock.height }}</a>
       </div>
       <div class="block-body">
-        <div class="fees">
-          MTP: {{ block.mediantime }}
+        <div class="mediantime-posix">
+          mediantime (POSIX): {{ pastBlock.mediantime }}
+        </div>
+        <div class="mediantime-utc">
+          <b>mediantime delta: {{ pastBlock.mediantimeDiff }}</b>
+        </div>
+        <div *ngIf="pastBlock.mediantimeDiff < 600; else speeddownTemplate" class="mediantime-utc" >
+          (<600)
+        </div>
+        <div class="mediantime-utc">
+          time (POSIX): {{ pastBlock.timestamp }}
+        </div>
+        <div class="mediantime-utc">
+          time (UTC): {{ pastBlock.timestamp * 1000 | date:'yyyy-MM-dd HH:mm' }}
+        </div>
+        <div class="mediantime-utc">
+          mediantime (UTC): {{ pastBlock.mediantime * 1000 | date:'yyyy-MM-dd HH:mm' }}
         </div>
       </div>
     </div>
@@ -26,3 +41,8 @@
   </div>
 </ng-template>
 
+<ng-template #speeddownTemplate>
+  <div class="mediantime-utc">
+    (>=600)
+  </div>
+</ng-template>

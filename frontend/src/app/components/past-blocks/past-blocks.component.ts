@@ -5,6 +5,10 @@ import { StateService } from 'src/app/services/state.service';
 import { Router } from '@angular/router';
 import { specialBlocks } from 'src/app/app.constants';
 
+interface PastBlock extends Block {
+  mediantimeDiff: number;
+}
+
 @Component({
   selector: 'app-past-blocks',
   templateUrl: './past-blocks.component.html',
@@ -14,7 +18,7 @@ import { specialBlocks } from 'src/app/app.constants';
 export class PastBlocksComponent implements OnInit, OnDestroy {
   specialBlocks = specialBlocks;
   network = '';
-  blocks: Block[] = [];
+  pastBlocks: PastBlock[] = [];
   emptyBlocks: Block[] = this.mountEmptyBlocks();
   markHeight: number;
   blocksSubscription: Subscription;
@@ -52,17 +56,23 @@ export class PastBlocksComponent implements OnInit, OnDestroy {
     this.tabHiddenSubscription = this.stateService.isTabHidden$.subscribe((tabHidden) => this.tabHidden = tabHidden);
     this.blocksSubscription = this.stateService.blocks$
       .subscribe(([block, txConfirmed]) => {
-        if (this.blocks.some((b) => b.height === block.height)) {
+        if (this.pastBlocks.some((b) => b.height === block.height)) {
           return;
         }
 
-        if (this.blocks.length && block.height !== this.blocks[0].height + 1) {
-          this.blocks = [];
+        if (this.pastBlocks.length && block.height !== this.pastBlocks[0].height + 1) {
+          this.pastBlocks = [];
           this.blocksFilled = false;
         }
 
-        this.blocks.unshift(block);
-        this.blocks = this.blocks.slice(0, this.stateService.env.KEEP_BLOCKS_AMOUNT);
+        var pastBlock: PastBlock = <PastBlock> block;
+        pastBlock.mediantimeDiff = 0;
+        if( this.pastBlocks.length > 0) {
+          pastBlock.mediantimeDiff = block.mediantime - this.pastBlocks[0].mediantime;
+        }
+        this.pastBlocks.unshift( pastBlock);
+        // we need this.stateService.env.KEEP_BLOCKS_AMOUNT + 1 in order to keep block information next to the end, because the very first block has mediantimeDiff = 0. This block will be cutted off below, but needs to be used to calculate mediantimeDiff of the blocks, that will actually be displayed
+        this.pastBlocks = this.pastBlocks.slice( 0, this.stateService.env.KEEP_BLOCKS_AMOUNT + 1);
 
         if (this.blocksFilled && !this.tabHidden) {
           block.stage = block.matchRate >= 66 ? 1 : 2;
@@ -76,16 +86,13 @@ export class PastBlocksComponent implements OnInit, OnDestroy {
         }
 
         this.blockStyles = [];
-        for( var i = 0; i < this.blocks.length; i++) {
-          if( i === this.blocks.length - 1){
-            this.blockStyles.push(this.getStyleForBlock(this.blocks[i], i, 0));
-          } else {
-            this.blockStyles.push(this.getStyleForBlock(this.blocks[i], i, this.blocks[i].timestamp - this.blocks[i+1].timestamp));
-          }
-        }
+        this.pastBlocks.forEach( (pastBlock, index) => {
+          this.blockStyles.push(this.getStyleForBlock(pastBlock, index));
+        });
 
-        if (this.blocks.length === this.stateService.env.KEEP_BLOCKS_AMOUNT) {
+        if (this.pastBlocks.length === this.stateService.env.KEEP_BLOCKS_AMOUNT + 1) {
           this.blocksFilled = true;
+          this.pastBlocks = this.pastBlocks.slice( 0, this.stateService.env.KEEP_BLOCKS_AMOUNT); // slice array to the size that actually needed
         }
         this.cd.markForCheck();
       });
@@ -113,21 +120,21 @@ export class PastBlocksComponent implements OnInit, OnDestroy {
       this.arrowVisible = false;
       return;
     }
-    const blockindex = this.blocks.findIndex((b) => b.height === this.markHeight);
+    const blockindex = this.pastBlocks.findIndex((b) => b.height === this.markHeight);
     if (blockindex > -1) {
       if (!animate) {
         this.transition = 'inherit';
       }
       this.arrowVisible = true;
       if (newBlockFromLeft) {
-        this.arrowLeftPx = blockindex * 155 + 30 - 205;
+        this.arrowLeftPx = blockindex * 195 + 30 - 205;
         setTimeout(() => {
           this.transition = '2s';
-          this.arrowLeftPx = blockindex * 155 + 30;
+          this.arrowLeftPx = blockindex * 195 + 30;
           this.cd.markForCheck();
         }, 50);
       } else {
-        this.arrowLeftPx = blockindex * 155 + 30;
+        this.arrowLeftPx = blockindex * 195 + 30;
         if (!animate) {
           setTimeout(() => {
             this.transition = '2s';
@@ -141,16 +148,18 @@ export class PastBlocksComponent implements OnInit, OnDestroy {
   trackByBlocksFn(index: number, item: Block) {
     return item.height;
   }
+  trackByPastBlocksFn(index: number, item: PastBlock) {
+    return item.height;
+  }
 
-  getStyleForBlock(block: Block, index: number, timestampDiff: number) {
-    const greenBackgroundHeight = 100 - (block.weight / this.stateService.env.BLOCK_WEIGHT_UNITS) * 100;
+  getStyleForBlock(block: PastBlock, index: number) {
     var color = '#770000';
-    if( timestampDiff < 600) {
+    if( block.mediantimeDiff < 600) {
       color = '#007700';
     }
 
     return {
-      left: 155 * index + 'px',
+      left: 195 * index + 'px',
       background: color,
     };
   }
@@ -164,7 +173,7 @@ export class PastBlocksComponent implements OnInit, OnDestroy {
     }
 
     return {
-      left: addLeft + 155 * this.emptyBlocks.indexOf(block) + 'px',
+      left: addLeft + 195 * this.emptyBlocks.indexOf(block) + 'px',
       background: "#2d3348",
     };
   }
