@@ -19,6 +19,7 @@ export class PastBlocksComponent implements OnInit, OnDestroy {
   specialBlocks = specialBlocks;
   network = '';
   pastBlocks: PastBlock[] = [];
+  lastPastBlock: PastBlock;
   emptyBlocks: Block[] = this.mountEmptyBlocks();
   markHeight: number;
   blocksSubscription: Subscription;
@@ -70,6 +71,7 @@ export class PastBlocksComponent implements OnInit, OnDestroy {
         if( this.pastBlocks.length > 0) {
           pastBlock.mediantimeDiff = block.mediantime - this.pastBlocks[0].mediantime;
         }
+        this.lastPastBlock = pastBlock;
         this.pastBlocks.unshift( pastBlock);
         // we need this.stateService.env.KEEP_BLOCKS_AMOUNT + 1 in order to keep block information next to the end, because the very first block has mediantimeDiff = 0. This block will be cutted off below, but needs to be used to calculate mediantimeDiff of the blocks, that will actually be displayed
         this.pastBlocks = this.pastBlocks.slice( 0, this.stateService.env.KEEP_BLOCKS_AMOUNT + 1);

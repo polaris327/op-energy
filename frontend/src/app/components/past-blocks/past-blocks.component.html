@@ -16,9 +16,14 @@
         <div *ngIf="pastBlock.mediantimeDiff < 600; else speeddownTemplate" class="mediantime-utc" >
           (<600)
         </div>
-        <div class="mediantime-utc">
+        <div *ngIf="pastBlock.timestamp !== lastPastBlock.mediantime; else goldTimestamp" class="time-utc" >
           time (POSIX): {{ pastBlock.timestamp }}
         </div>
+        <ng-template #goldTimestamp>
+          <div class="time-utc-gold">
+            time (POSIX): {{ pastBlock.timestamp }}
+          </div>
+        </ng-template>
         <div class="mediantime-utc">
           time (UTC): {{ pastBlock.timestamp * 1000 | date:'yyyy-MM-dd HH:mm' }}
         </div>
