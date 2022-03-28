@@ -21,7 +21,7 @@ export class MempoolBlockComponent implements OnInit, OnDestroy {
   ordinal$: BehaviorSubject<string> = new BehaviorSubject('');
 
   betForm: FormGroup;
-  totalAmount = 1000000;
+  totalAmount = 900000;
   totalSlowAmount = 100000;
   pieData: any[] = [];
 

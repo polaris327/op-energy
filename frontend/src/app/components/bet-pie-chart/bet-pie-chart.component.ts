@@ -71,7 +71,7 @@ export class BetPieChartComponent implements OnInit, OnChanges {
 						normal: {
 							fontSize: 14,
 							color: '#fff',
-							formatter: '{c} satoshi',
+							formatter: '{c} satoshi, 17 users, 29 bets',
 							// position: 'inside'
 						}
 					},

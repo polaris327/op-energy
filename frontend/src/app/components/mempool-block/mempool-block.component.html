@@ -8,25 +8,27 @@
   <div class="clearfix"></div>
 
   <div class="box">
-    <div class="row">
-      <div class="col-md">
-        <form [formGroup]="betForm">
-          <div class="row">
-            <h2 class="col-md">Your Bet</h2>
-            <div class="col-md">
-              <input formControlName="betAmount" type="number" class="col-md form-control" placeholder="Enter amount">
-              <div class="d-flex justify-content-between mt-4">
-                <button class="btn btn-danger mr-4" type="button" (click)="doBet()">Bet slow</button>
-                <button class="btn btn-success" type="button" (click)="doBet(true)">Bet Fast</button>
-              </div>    
-            </div>
-          </div>
-        </form>
+    <form [formGroup]="betForm">
+      <h2 class="d-flex justify-content-center">
+        Your Bet
+        <input formControlName="betAmount" type="number" class="form-control betAmount" placeholder="Enter amount">
+      </h2>
+      <div class="bet-btns">
+        <div class="card slow" (click)="doBet()">
+          <h3>Bet Slow</h3>
+          <div>Receive {{ totalAmount - betForm.get('betAmount').value | number }} (5x) if block is slow, and no more bets are received</div>
+        </div>
+        <div class="card" (click)="doBet(true)">
+          <h3>Bet Fast</h3>
+          <div>Receive {{ betForm.get('betAmount').value | number }} (1.1x) if block is fast, and no more bets are received</div>
+        </div>
       </div>
-      <div class="col-md chart-container">
-        <remi-bet-pie-chart *ngIf="pieData" [data]="pieData"></remi-bet-pie-chart>
+      <div class="row">
+        <div class="col-md chart-container">
+          <remi-bet-pie-chart *ngIf="pieData" [data]="pieData"></remi-bet-pie-chart>
+        </div>
       </div>
-    </div>
+    </form>
   </div>
 
   <br>
