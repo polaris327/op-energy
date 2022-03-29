@@ -11,16 +11,16 @@
     <form [formGroup]="betForm">
       <h2 class="d-flex justify-content-center">
         Your Bet
-        <input formControlName="betAmount" type="number" class="form-control betAmount" placeholder="Enter amount">
+        <input formControlName="betAmount" type="number" class="form-control betAmount" placeholder="Enter amount" (keyup)="calcAmountWonEta()">
       </h2>
       <div class="bet-btns">
         <div class="card slow" (click)="doBet()">
           <h3>Bet Slow</h3>
-          <div>Receive {{ totalAmount - betForm.get('betAmount').value | number }} (5x) if block is slow, and no more bets are received</div>
+          <div>Receive {{ slowAmountWonETA | number:'1.0-0' }} ({{ slowAmountWonETA / betAmount | number:'1.0-1' }}x) if block is slow, and no more bets are received</div>
         </div>
         <div class="card" (click)="doBet(true)">
           <h3>Bet Fast</h3>
-          <div>Receive {{ betForm.get('betAmount').value | number }} (1.1x) if block is fast, and no more bets are received</div>
+          <div>Receive {{ fastAmountWonETA | number:'1.0-0' }} ({{ fastAmountWonETA / betAmount | number:'1.0-1' }}x) if block is fast, and no more bets are received</div>
         </div>
       </div>
       <div class="row">

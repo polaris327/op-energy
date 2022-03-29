@@ -21,8 +21,11 @@ export class MempoolBlockComponent implements OnInit, OnDestroy {
   ordinal$: BehaviorSubject<string> = new BehaviorSubject('');
 
   betForm: FormGroup;
-  totalAmount = 900000;
-  totalSlowAmount = 100000;
+  initFastBetAmount = 800000;
+  initSlowBetAmount = 100000;
+  betAmount = 100000;
+  slowAmountWonETA: number;
+  fastAmountWonETA: number;
   pieData: any[] = [];
 
   constructor(
@@ -35,18 +38,19 @@ export class MempoolBlockComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.betForm = this.formBuilder.group({
-      betAmount: [this.totalSlowAmount, [Validators.required, Validators.min(0), Validators.max(this.totalAmount)]]
+      betAmount: [this.initSlowBetAmount, [Validators.required, Validators.min(0)]]
     });
     this.pieData = [
       {
         name: 'Total Bet Slow',
-        value: this.totalSlowAmount
+        value: this.initSlowBetAmount
       },
       {
         name: 'Total Bet Fast',
-        value: this.totalAmount - this.totalSlowAmount
+        value: this.initFastBetAmount
       }
     ];
+    this.calcAmountWonEta();
 
     this.websocketService.want(['blocks', 'mempool-blocks']);
 
@@ -87,30 +91,37 @@ export class MempoolBlockComponent implements OnInit, OnDestroy {
   }
 
   doBet(isFast = false) {
-    this.totalSlowAmount = this.betForm.get('betAmount').value;
+    this.betAmount = this.betForm.get('betAmount').value;
     if (isFast) {
       this.pieData = [
         {
           name: 'Total Bet Slow',
-          value: this.totalAmount - this.totalSlowAmount
+          value: this.initSlowBetAmount
         },
         {
           name: 'Total Bet Fast',
-          value: this.totalSlowAmount
+          value: this.initFastBetAmount + this.betAmount
         }
       ];
     } else {
       this.pieData = [
         {
           name: 'Total Bet Slow',
-          value: this.totalSlowAmount
+          value: this.initSlowBetAmount + this.betAmount
         },
         {
           name: 'Total Bet Fast',
-          value: this.totalAmount - this.totalSlowAmount
+          value: this.initFastBetAmount
         }
       ];
     }
+  }
+
+  calcAmountWonEta() {
+    this.betAmount = this.betForm.get('betAmount').value;
+    const totalBetAmount = this.initSlowBetAmount + this.initFastBetAmount + this.betAmount;
+    this.slowAmountWonETA = (this.betAmount / (this.initSlowBetAmount + this.betAmount)) * totalBetAmount;
+    this.fastAmountWonETA = (this.betAmount / (this.initFastBetAmount + this.betAmount)) * totalBetAmount;
   }
 
   getOrdinal(mempoolBlock: MempoolBlock): string {
