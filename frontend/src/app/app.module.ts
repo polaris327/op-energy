@@ -38,6 +38,7 @@ import { TimeSpanComponent } from './components/time-span/time-span.component';
 import { SeoService } from './services/seo.service';
 import { MempoolGraphComponent } from './components/mempool-graph/mempool-graph.component';
 import { LineChartComponent } from './components/line-chart/line-chart.component';
+import { CandlestickChartComponent } from './components/candlestick-chart/candlestick-chart.component';
 import { PoolRankingComponent } from './components/pool-ranking/pool-ranking.component';
 import { LbtcPegsGraphComponent } from './components/lbtc-pegs-graph/lbtc-pegs-graph.component';
 import { AssetComponent } from './components/asset/asset.component';
@@ -94,6 +95,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     IncomingTransactionsGraphComponent,
     MempoolGraphComponent,
     LineChartComponent,
+    CandlestickChartComponent,
     PoolRankingComponent,
     LbtcPegsGraphComponent,
     AssetComponent,

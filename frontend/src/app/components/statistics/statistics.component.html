@@ -1,7 +1,7 @@
 <div class="container-graph">
   <div>
     <div>
-      <div class="card mb-3">
+      <div class="card mb-5">
         <div class="card-header">
           <i class="fa fa-area-chart"></i> <span i18n="dashboard.difficulty|Difficulty">Difficulty</span>
         </div>
@@ -14,6 +14,20 @@
               [startValue]="this.difficultySliderStartValue"
               [endValue]="this.difficultySliderEndValue"
             ></app-line-chart>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-area-chart"></i> <span i18n="dashboard.candlestick|Candlestick">Candlestick</span>
+        </div>
+        <div class="card-body">
+          <div class="incoming-transactions-graph">
+            <app-candlestick-chart
+              [height]="500"
+              [template]="'widget'"
+              [data]="lastDifficultyEpochEndBlocksSeries"
+            ></app-candlestick-chart>
           </div>
         </div>
       </div>
