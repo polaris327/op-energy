@@ -7,21 +7,23 @@
         <a [routerLink]="['/block/' | relativeUrl, pastBlock.id]" [state]="{ data: { block: pastBlock } }">{{ pastBlock.height }}</a>
       </div>
       <div class="block-body">
-        <div class="mediantime-posix">
-          mediantime (POSIX): {{ pastBlock.mediantime }}
-        </div>
         <div class="mediantime-utc">
-          <b>mediantime delta: {{ pastBlock.mediantimeDiff }}</b>
+          mediantime (POSIX): <a class="mediantime-posix">{{ pastBlock.mediantime }}</a><a ngbTooltip="test tooltip">[?]</a>
         </div>
         <div *ngIf="pastBlock.mediantimeDiff < 600; else speeddownTemplate" class="mediantime-utc" >
-          (<600)
+          <b>{{ pastBlock.mediantimeDiff }} seconds (<600)</b> <a ngbTooltip="test tooltip">[?]</a>
         </div>
+        <ng-template #speeddownTemplate>
+          <div class="mediantime-utc">
+            <b>{{ pastBlock.mediantimeDiff }} seconds (>=600)</b><a ngbTooltip="test tooltip">[?]</a>
+          </div>
+        </ng-template>
         <div *ngIf="pastBlock.timestamp !== lastPastBlock.mediantime; else goldTimestamp" class="time-utc" >
           time (POSIX): {{ pastBlock.timestamp }}
         </div>
         <ng-template #goldTimestamp>
-          <div class="time-utc-gold">
-            time (POSIX): {{ pastBlock.timestamp }}
+          <div class="time-utc">
+            time (POSIX): <a class="time-utc-gold">{{ pastBlock.timestamp }}</a>
           </div>
         </ng-template>
         <div class="mediantime-utc">
@@ -43,11 +45,5 @@
         <div class="text-center bitcoin-block mined-block" id="bitcoin-block-{{ block.height }}" [ngStyle]="emptyBlockStyles[i]"></div>
       </div>
     </div>
-  </div>
-</ng-template>
-
-<ng-template #speeddownTemplate>
-  <div class="mediantime-utc">
-    (>=600)
   </div>
 </ng-template>
