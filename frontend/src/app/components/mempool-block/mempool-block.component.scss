@@ -36,3 +36,33 @@ h1 {
     margin: auto;
   }
 }
+
+input.betAmount {
+  max-width: 300px;
+  margin-left: 30px;
+}
+
+.bet-btns {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 40px;
+
+  .card {
+    cursor: pointer;
+    text-align: center;
+    background: #1a9436;
+    padding: 15px;
+
+    &.slow {
+      background: #dc3545;
+
+      &:hover {
+        background: #dc3545b3;
+      }
+    }
+
+    &:hover {
+      background: #1a9436b3;
+    }
+  }
+}
