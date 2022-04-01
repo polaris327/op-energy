@@ -64,6 +64,7 @@ import { HttpCacheInterceptor } from './services/http-cache.interceptor';
 import { LanguageService } from './services/language.service';
 import { SponsorComponent } from './components/sponsor/sponsor.component';
 import { PushTransactionComponent } from './components/push-transaction/push-transaction.component';
+import { BetPieChartComponent } from './components/bet-pie-chart/bet-pie-chart.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
@@ -112,6 +113,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     PushTransactionComponent,
     DocsComponent,
     ApiDocsNavComponent,
+    BetPieChartComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
