@@ -26,6 +26,8 @@ export class CandlestickChartComponent implements OnInit, OnChanges {
   @Input() left: number | string = '0';
   @Input() template: ('widget' | 'advanced') = 'widget';
   @Input() windowPreferenceOverride: string;
+  @Input() startValue: number;
+  @Input() endValue: number;
   @Output() onDataZoom: EventEmitter<unknown>; // callback, that can be used on slider change
   @Output() onInit: EventEmitter<unknown>; // callback, that can be used on chart init
 
@@ -76,24 +78,123 @@ export class CandlestickChartComponent implements OnInit, OnChanges {
   }
 
   mountChart(): void {
+    let xValues = [];
+    this.data.labels.forEach(v => xValues.push(v));
+    // xValues = xValues.map((v, idx) => `${xValues[idx]} - ${xValues[idx + 3]}`);
+    const sValues = this.data.series[0].map(d => d[1]);
+    const series = sValues.map((d, idx) => {
+      const open = sValues[idx];
+      const close = sValues[idx + 3];
+      const lowest = Math.min(sValues[idx], sValues[idx + 1], sValues[idx + 2], sValues[idx + 3]);
+      const highest = Math.max(sValues[idx], sValues[idx + 1], sValues[idx + 2], sValues[idx + 3]);
+      return [open, close, lowest, highest];
+    });
     this.chartOption = {
-      xAxis: {
-        data: ['2022-03-24', '2022-03-25', '2022-03-26', '2022-03-27', '2022-03-28', '2022-03-29', '2022-03-30', '2022-03-31']
+      toolbox: {
+        feature: {
+          restore: {},
+        },
       },
-      yAxis: {},
+      grid: {
+        height: this.height,
+        right: this.right,
+        top: this.top,
+        left: this.left,
+        containLabel: true,
+      },
+      animation: false,
+      xAxis: [
+        {
+          type: 'category',
+          data: xValues,
+        }
+      ],
+      yAxis: {
+        type: 'value',
+        min: 'dataMin',
+        max: 'dataMax',
+        axisLabel: {
+          fontSize: 11,
+          formatter: (value: string, index: number) => {
+            return String( (Number(value)).toExponential(1));
+          }
+        },
+        splitLine: {
+          lineStyle: {
+            type: 'dotted',
+            color: '#ffffff66',
+            opacity: 0.25,
+          }
+        }
+      },
+      dataZoom: [
+        {
+          showDetail: false,
+          show: true,
+          type: 'slider',
+          xAxisIndex: 0,
+          brushSelect: false,
+          realtime: true,
+          bottom: 0,
+          start: (this.startValue / this.endValue) * 100,
+          end: 100,
+          selectedDataBackground: {
+            lineStyle: {
+              color: '#fff',
+              opacity: 0.45,
+            },
+            areaStyle: {
+              opacity: 0,
+            }
+          },
+        },
+        {
+          type: 'inside',
+          realtime: true,
+          zoomLock: false,
+          zoomOnMouseWheel: (this.template === 'advanced') ? true : false,
+          moveOnMouseMove: (this.template === 'widget') ? true : false,
+          maxSpan: 100,
+          minSpan: 10,
+        }
+      ],
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+          type: 'cross'
+        },
+        borderWidth: 1,
+        borderColor: '#ccc',
+        padding: 10,
+        textStyle: {
+          color: '#000'
+        },
+        position: function (pos, params, el, elRect, size) {
+          const obj: Record<string, number> = {
+            top: 10
+          };
+          obj[['left', 'right'][+(pos[0] < size.viewSize[0] / 2)]] = 30;
+          return obj;
+        }
+        // extraCssText: 'width: 170px'
+      },
       series: [
         {
+          name: 'OHLC',
           type: 'candlestick',
-          data: [
-            [20, 34, 10, 38],
-            [40, 35, 30, 50],
-            [31, 38, 33, 44],
-            [38, 15, 5, 42],
-            [31, 38, 33, 44],
-            [20, 34, 10, 38],
-            [31, 38, 33, 44],
-            [40, 35, 30, 50],
-          ]
+          data: series,
+          tooltip: {
+            formatter: function (param: any) {
+              param = param[0];
+              return [
+                'Date: ' + param.name + '<hr size=1 style="margin: 3px 0">',
+                'Open: ' + param.data[0] + '<br/>',
+                'Close: ' + param.data[1] + '<br/>',
+                'Lowest: ' + param.data[2] + '<br/>',
+                'Highest: ' + param.data[3] + '<br/>'
+              ].join('');
+            }
+          }
         }
       ]
     };
