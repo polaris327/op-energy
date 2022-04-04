@@ -80,7 +80,7 @@ export class CandlestickChartComponent implements OnInit, OnChanges {
   mountChart(): void {
     let xValues = [];
     this.data.labels.forEach(v => xValues.push(v));
-    // xValues = xValues.map((v, idx) => `${xValues[idx]} - ${xValues[idx + 3]}`);
+    xValues = xValues.map((v, idx) => `${xValues[idx]} - ${xValues[idx + 3]}`);
     const sValues = this.data.series[0].map(d => d[1]);
     const series = sValues.map((d, idx) => {
       const open = sValues[idx];
