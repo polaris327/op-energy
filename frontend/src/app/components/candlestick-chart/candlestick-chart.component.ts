@@ -177,10 +177,10 @@ export class CandlestickChartComponent implements OnInit, OnChanges {
           param = param[0];
           return [
             '' + param.name.split('\n').join('<br/>') + '<hr size=1 style="margin: 3px 0">',
-            'O: ' + String( (Number(param.data[1])).toExponential(1)) + '<br/>',
-            'H: ' + String( (Number(param.data[1])).toExponential(4)) + '<br/>',
-            'L: ' + String( (Number(param.data[1])).toExponential(3)) + '<br/>',
-            'C: ' + String( (Number(param.data[1])).toExponential(2)) + '<br/>',
+            'O: ' + String( (Number(param.data[1])).toExponential(3)) + '<br/>',
+            'H: ' + String( (Number(param.data[4])).toExponential(3)) + '<br/>',
+            'L: ' + String( (Number(param.data[3])).toExponential(3)) + '<br/>',
+            'C: ' + String( (Number(param.data[2])).toExponential(3)) + '<br/>',
           ].join('');
         }
         // extraCssText: 'width: 170px'

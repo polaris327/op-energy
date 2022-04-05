@@ -154,7 +154,7 @@ export class LineChartComponent implements OnInit, OnChanges {
               itemFormatted += `<div class="item">
                 <div class="indicator-container">${colorSpan(item.color)}</div>
                 <div class="grow"></div>
-                <div class="value">${String( (Number(item.value[1])).toExponential(7))}</div>
+                <div class="value">${String( (Number(item.value[1])).toExponential(3))}</div>
               </div>`;
             }
           });
