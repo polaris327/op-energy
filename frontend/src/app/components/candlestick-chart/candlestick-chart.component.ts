@@ -80,7 +80,11 @@ export class CandlestickChartComponent implements OnInit, OnChanges {
   mountChart(): void {
     let xValues = [];
     this.data.labels.forEach(v => xValues.push(v));
-    xValues = xValues.map((v, idx) => `${xValues[idx]} - ${xValues[idx + 3]}`);
+    xValues = xValues.map((v, idx) => {
+      const valueRange = xValues[idx + 3] ? `${(+xValues[idx].split('\n')[0]).toLocaleString()} - ${(+xValues[idx + 3].split('\n')[0]).toLocaleString()}` : `${xValues[idx].split('\n')[0]}`;
+      const dateRange = xValues[idx + 3] ? `${xValues[idx].split('\n')[1]} - ${xValues[idx + 3].split('\n')[1]}` : `${xValues[idx].split('\n')[1]}`;
+      return `${valueRange}\n${dateRange}`
+    });
     const sValues = this.data.series[0].map(d => d[1]);
     const series = sValues.map((d, idx) => {
       const open = sValues[idx];
@@ -169,12 +173,15 @@ export class CandlestickChartComponent implements OnInit, OnChanges {
         textStyle: {
           color: '#000'
         },
-        position: function (pos, params, el, elRect, size) {
-          const obj: Record<string, number> = {
-            top: 10
-          };
-          obj[['left', 'right'][+(pos[0] < size.viewSize[0] / 2)]] = 30;
-          return obj;
+        formatter: function (param: any) {
+          param = param[0];
+          return [
+            '' + param.name.split('\n').join('<br/>') + '<hr size=1 style="margin: 3px 0">',
+            'O: ' + String( (Number(param.data[1])).toExponential(1)) + '<br/>',
+            'H: ' + String( (Number(param.data[1])).toExponential(4)) + '<br/>',
+            'L: ' + String( (Number(param.data[1])).toExponential(3)) + '<br/>',
+            'C: ' + String( (Number(param.data[1])).toExponential(2)) + '<br/>',
+          ].join('');
         }
         // extraCssText: 'width: 170px'
       },
@@ -182,19 +189,7 @@ export class CandlestickChartComponent implements OnInit, OnChanges {
         {
           name: 'OHLC',
           type: 'candlestick',
-          data: series,
-          tooltip: {
-            formatter: function (param: any) {
-              param = param[0];
-              return [
-                'Date: ' + param.name + '<hr size=1 style="margin: 3px 0">',
-                'Open: ' + param.data[0] + '<br/>',
-                'Close: ' + param.data[1] + '<br/>',
-                'Lowest: ' + param.data[2] + '<br/>',
-                'Highest: ' + param.data[3] + '<br/>'
-              ].join('');
-            }
-          }
+          data: series
         }
       ]
     };
