@@ -8,30 +8,35 @@
       </div>
       <div class="block-body">
         <div class="mediantime-utc">
-          mediantime (POSIX): <a class="mediantime-posix">{{ pastBlock.mediantime }}</a><a ngbTooltip="test tooltip">[?]</a>
+          Mediantime (POSIX):
+          <div><a class="mediantime-posix" [class.gold]="isTipBlock(pastBlock) || isMedianBlock(pastBlock)">{{ pastBlock.mediantime }}</a><a class="m-tooltip" [ngbTooltip]="getMedianTimePosixTooltip(pastBlock)" placement="top">[?]</a></div>
         </div>
-        <div *ngIf="pastBlock.mediantimeDiff < 600; else speeddownTemplate" class="mediantime-utc" >
+        <div class="mediantime-utc">
+          Mediantime (UTC):
+          <div>{{ pastBlock.mediantime * 1000 | date:'yyyy-MM-dd HH:mm' }}</div>
+        </div>
+        <div *ngIf="!(isTipBlock(pastBlock) || isMedianBlock(pastBlock)); else goldTimestamp" class="time-utc" >
+          Time (POSIX):
+          <div><a class="time-utc-posix">{{ pastBlock.timestamp }}</a><a class="m-tooltip" [ngbTooltip]="timePosixTooltip" placement="top">[?]</a></div>
+        </div>
+        <ng-template #goldTimestamp>
+          <div class="time-utc">
+            Time (POSIX):
+            <div><a class="time-utc-gold">{{ pastBlock.timestamp }}</a><a class="m-tooltip" [ngbTooltip]="timePosixTooltip" placement="top">[?]</a></div>
+          </div>
+        </ng-template>
+        <div class="mediantime-utc">
+          Time (UTC):
+          <div>{{ pastBlock.timestamp * 1000 | date:'yyyy-MM-dd HH:mm' }}</div>
+        </div>
+        <!-- <div *ngIf="pastBlock.mediantimeDiff < 600; else speeddownTemplate" class="mediantime-utc" >
           <b>{{ pastBlock.mediantimeDiff }} seconds (<600)</b> <a ngbTooltip="test tooltip">[?]</a>
         </div>
         <ng-template #speeddownTemplate>
           <div class="mediantime-utc">
             <b>{{ pastBlock.mediantimeDiff }} seconds (>=600)</b><a ngbTooltip="test tooltip">[?]</a>
           </div>
-        </ng-template>
-        <div *ngIf="pastBlock.timestamp !== lastPastBlock.mediantime; else goldTimestamp" class="time-utc" >
-          time (POSIX): {{ pastBlock.timestamp }}
-        </div>
-        <ng-template #goldTimestamp>
-          <div class="time-utc">
-            time (POSIX): <a class="time-utc-gold">{{ pastBlock.timestamp }}</a>
-          </div>
-        </ng-template>
-        <div class="mediantime-utc">
-          time (UTC): {{ pastBlock.timestamp * 1000 | date:'yyyy-MM-dd HH:mm' }}
-        </div>
-        <div class="mediantime-utc">
-          mediantime (UTC): {{ pastBlock.mediantime * 1000 | date:'yyyy-MM-dd HH:mm' }}
-        </div>
+        </ng-template> -->
       </div>
     </div>
   </div>

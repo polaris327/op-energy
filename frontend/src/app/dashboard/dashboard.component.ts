@@ -43,7 +43,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
   lastDifficultyEpochEndBlocksSeries: any;
   mempoolLoadingStatus$: Observable<number>;
   vBytesPerSecondLimit = 1667;
-  blocks$: Observable<Block[]>;
   latestBlockHeight: number;
   mempoolTransactionsWeightPerSecondData: any;
   isLoadingWebSocket$: Observable<boolean>;
@@ -156,18 +155,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
             blocks: Math.ceil(vsize / this.stateService.blockVSize)
           };
         })
-      );
-
-    this.blocks$ = this.stateService.blocks$
-      .pipe(
-        tap(([block]) => {
-          this.latestBlockHeight = block.height;
-        }),
-        scan((acc, [block]) => {
-          acc.unshift(block);
-          acc = acc.slice(0, 6);
-          return acc;
-        }, []),
       );
 
     if (this.stateService.network === 'liquid' || this.stateService.network === 'liquidtestnet') {

@@ -18,6 +18,7 @@ interface PastBlock extends Block {
 export class PastBlocksComponent implements OnInit, OnDestroy {
   specialBlocks = specialBlocks;
   network = '';
+  allBlocks: PastBlock[] = [];
   pastBlocks: PastBlock[] = [];
   lastPastBlock: PastBlock;
   emptyBlocks: Block[] = this.mountEmptyBlocks();
@@ -44,6 +45,16 @@ export class PastBlocksComponent implements OnInit, OnDestroy {
     signet: ['#6f1d5d', '#471850'],
   };
 
+  getMedianTimePosixTooltip(block: PastBlock) {
+    const matchBlock = this.allBlocks.find(b => b.timestamp === block.mediantime);
+    const matchBlockHeight = matchBlock?.height || block.height - 5; // hacky solution. Need to get the exact match block
+    return `Median of posix times from blocks ${block.height - this.stateService.env.KEEP_BLOCKS_AMOUNT + 1} to ${block.height}. matches time (posix) of block ${matchBlockHeight}`;
+  }
+
+  get timePosixTooltip() {
+    return 'Seconds since midnight, January 1 1970, as recorded in block by bitcoin miners';
+  }
+
   constructor(
     public stateService: StateService,
     private router: Router,
@@ -62,6 +73,7 @@ export class PastBlocksComponent implements OnInit, OnDestroy {
         }
 
         if (this.pastBlocks.length && block.height !== this.pastBlocks[0].height + 1) {
+          this.allBlocks = [];
           this.pastBlocks = [];
           this.blocksFilled = false;
         }
@@ -73,6 +85,7 @@ export class PastBlocksComponent implements OnInit, OnDestroy {
         }
         this.lastPastBlock = pastBlock;
         this.pastBlocks.unshift( pastBlock);
+        this.allBlocks = [...this.pastBlocks];
         // we need this.stateService.env.KEEP_BLOCKS_AMOUNT + 1 in order to keep block information next to the end, because the very first block has mediantimeDiff = 0. This block will be cutted off below, but needs to be used to calculate mediantimeDiff of the blocks, that will actually be displayed
         this.pastBlocks = this.pastBlocks.slice( 0, this.stateService.env.KEEP_BLOCKS_AMOUNT + 1);
 
@@ -155,14 +168,22 @@ export class PastBlocksComponent implements OnInit, OnDestroy {
   }
 
   getStyleForBlock(block: PastBlock, index: number) {
-    var color = '#770000';
-    if( block.mediantimeDiff < 600) {
-      color = '#007700';
+    const greenBackgroundHeight = (block.weight / this.stateService.env.BLOCK_WEIGHT_UNITS) * 100;
+    let addLeft = 0;
+
+    if (block.stage === 1) {
+      block.stage = 2;
+      addLeft = -205;
     }
 
     return {
       left: 195 * index + 'px',
-      background: color,
+      background: `repeating-linear-gradient(
+        #2d3348,
+        #2d3348 ${greenBackgroundHeight}%,
+        ${this.gradientColors[this.network][0]} ${Math.max(greenBackgroundHeight, 0)}%,
+        ${this.gradientColors[this.network][1]} 100%
+      )`,
     };
   }
 
@@ -201,5 +222,13 @@ export class PastBlocksComponent implements OnInit, OnDestroy {
       });
     }
     return emptyBlocks;
+  }
+
+  isTipBlock(block: Block) {
+    return block.mediantime === this.lastPastBlock.mediantime;
+  }
+
+  isMedianBlock(block: Block) {
+    return block.timestamp === this.lastPastBlock.mediantime;
   }
 }

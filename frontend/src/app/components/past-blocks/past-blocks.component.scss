@@ -1,6 +1,6 @@
 .bitcoin-block {
-  width: 165px;
-  height: 145px;
+  width: 145px;
+  height: 160px;
 }
 
 .blockLink {
@@ -49,6 +49,10 @@
     margin-top: 10px;
     margin-bottom: 2px;
 }
+.time-utc-posix {
+  font-size: 9px;
+  margin-right: 2px;
+}
 .time-utc-gold {
     font-size: 9px;
     margin-top: 10px;
@@ -56,15 +60,23 @@
     color: #F1B82D;
 }
 .mediantime-utc {
-    font-size: 9px;
-    margin-top: 10px;
-    margin-bottom: 2px;
+  display: flex;
+  flex-direction: column;
+  font-size: 9px;
+  margin-top: 10px;
+  margin-bottom: 2px;
 }
 .mediantime-posix {
-    font-size: 9px;
-    margin-top: 10px;
-    margin-bottom: 2px;
+  font-size: 9px;
+  margin-right: 2px;
+
+  &.gold {
     color: #F1B82D;
+  }
+}
+a.m-tooltip {
+  position: absolute;
+  z-index: 10;
 }
 .fees {
   font-size: 12px;
@@ -95,7 +107,7 @@
 
 .bitcoin-block::after {
   content: '';
-  width: 165px;
+  width: 145px;
   height: 24px;
   position:absolute;
   top: -24px;
@@ -108,7 +120,7 @@
 .bitcoin-block::before {
   content: '';
   width: 20px;
-  height: 145px;
+  height: 160px;
   position: absolute;
   top: -12px;
   left: -20px;

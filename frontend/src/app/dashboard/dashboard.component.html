@@ -1,15 +1,7 @@
 
 <div class="container-xl dashboard-container">
-  <div class="row row-cols-1 row-cols-md-2" *ngIf="{ value: (mempoolInfoData$ | async) } as mempoolInfoData">
+  <div *ngIf="{ value: (mempoolInfoData$ | async) } as mempoolInfoData">
     <ng-template [ngIf]="collapseLevel === 'three'" [ngIfElse]="expanded">
-      <div class="col card-wrapper" *ngIf="(network$ | async) !== 'liquid' && (network$ | async) !== 'liquidtestnet'">
-        <div class="main-title" i18n="fees-box.transaction-fees">Transaction Fees</div>
-        <div class="card">
-          <div class="card-body">
-            <app-fees-box class="d-block"></app-fees-box>
-          </div>
-        </div>
-      </div>
       <div class="col" *ngIf="(network$ | async) !== 'liquid' && (network$ | async) !== 'liquidtestnet'">
         <app-difficulty></app-difficulty>
       </div>
@@ -22,14 +14,6 @@
       </div>
     </ng-template>
     <ng-template #expanded>
-      <div class="col card-wrapper" *ngIf="(network$ | async) !== 'liquid' && (network$ | async) !== 'liquidtestnet'">
-        <div class="main-title" i18n="fees-box.transaction-fees">Transaction Fees</div>
-        <div class="card">
-          <div class="card-body">
-            <app-fees-box class="d-block"></app-fees-box>
-          </div>
-        </div>
-      </div>
       <div class="col" *ngIf="(network$ | async) !== 'liquid' && (network$ | async) !== 'liquidtestnet'">
         <app-difficulty></app-difficulty>
       </div>
@@ -53,37 +37,6 @@
           </div>
         </div>
       </div>
-      <ng-template [ngIf]="collapseLevel === 'one'">
-      <div class="col">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title" i18n="dashboard.latest-blocks">Latest blocks</h5>
-            <table class="table lastest-blocks-table">
-              <thead>
-                <th class="table-cell-height" i18n="dashboard.latest-blocks.height">Height</th>
-                <th class="table-cell-mined" i18n="dashboard.latest-blocks.mined">Mined</th>
-                <th class="table-cell-transaction-count" i18n="dashboard.latest-blocks.transaction-count">TXs</th>
-                <th class="table-cell-size" i18n="dashboard.latest-blocks.size">Size</th>
-              </thead>
-              <tbody>
-                <tr *ngFor="let block of blocks$ | async; let i = index; trackBy: trackByBlock">
-                  <td class="table-cell-height" ><a [routerLink]="['/block' | relativeUrl, block.id]" [state]="{ data: { block: block } }">{{ block.height }}</a></td>
-                  <td class="table-cell-mined" ><app-time-since [time]="block.timestamp" [fastRender]="true"></app-time-since></td>
-                  <td class="table-cell-transaction-count">{{ block.tx_count | number }}</td>
-                  <td class="table-cell-size">
-                    <div class="progress">
-                      <div class="progress-bar progress-mempool {{ network$ | async }}" role="progressbar" [ngStyle]="{'width': (block.weight / stateService.env.BLOCK_WEIGHT_UNITS)*100 + '%' }">&nbsp;</div>
-                      <div class="progress-text" [innerHTML]="block.size | bytes: 2"></div>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            <div class=""><a href="" [routerLink]="['/blocks' | relativeUrl]" i18n="dashboard.view-all">View all &raquo;</a></div>
-          </div>
-        </div>
-      </div>
-    </ng-template>
     </ng-template>
   </div>
 

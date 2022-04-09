@@ -1,5 +1,5 @@
 .bitcoin-block {
-  width: 125px;
+  width: 145px;
   height: 145px;
   transition: 2s;
 }
@@ -79,7 +79,7 @@
 
 .bitcoin-block::after {
   content: '';
-  width: 125px;
+  width: 145px;
   height: 24px;
   position:absolute;
   top: -24px;
