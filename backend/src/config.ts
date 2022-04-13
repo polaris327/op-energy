@@ -45,6 +45,7 @@ interface IConfig {
     HOST: string,
     PORT: number;
     DATABASE: string;
+    ACCOUNT_DATABASE: string;
     USERNAME: string;
     PASSWORD: string;
   };
@@ -111,6 +112,7 @@ const defaults: IConfig = {
     'HOST': '127.0.0.1',
     'PORT': 3306,
     'DATABASE': 'mempool',
+    'ACCOUNT_DATABASE': 'mempoolacc',
     'USERNAME': 'mempool',
     'PASSWORD': 'mempool'
   },

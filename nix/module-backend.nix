@@ -18,6 +18,12 @@ let
         example = "mempool";
         description = "Database name of the instance";
       };
+      account_db_name = lib.mkOption {
+        default = null;
+        type = lib.types.str;
+        example = "mempoolacc";
+        description = "Account database name of the instance";
+      };
       db_user = lib.mkOption {
         default = null;
         type = lib.types.str;
@@ -76,17 +82,30 @@ in
     services.mysql = {
       enable = true;
       package = pkgs.mariadb; # there is no default value for this option, so we define one
-      initialDatabases = lib.mapAttrsToList (name: cfg:
+      initialDatabases = (lib.mapAttrsToList (name: cfg:
         { name = "${cfg.db_name}";
         }
-      ) eachInstance;
-      ensureUsers = lib.mapAttrsToList (name: cfg:
+      ) eachInstance
+      ) ++ (lib.mapAttrsToList (name: cfg:
+        { name = "${cfg.account_db_name}";
+        }
+      ) eachInstance
+      );
+      ensureUsers = ( lib.mapAttrsToList (name: cfg:
         { name = "${cfg.db_user}";
           ensurePermissions = {
             "${cfg.db_name}.*" = "ALL PRIVILEGES";
           };
         }
-      ) eachInstance;
+      ) eachInstance
+      ) ++ ( lib.mapAttrsToList (name: cfg:
+        { name = "${cfg.db_user}";
+          ensurePermissions = {
+            "${cfg.account_db_name}.*" = "ALL PRIVILEGES";
+          };
+        }
+      ) eachInstance
+      );
     };
     systemd.services = {
       mysql-op-energy-users = {
@@ -109,6 +128,11 @@ in
           if [ ! -d "${config.services.mysql.dataDir}/${cfg.db_name}" ]; then
             ( echo 'CREATE DATABASE `${cfg.db_name}`;'
               echo 'use `${cfg.db_name}`;'
+            ) | mysql -uroot
+          fi
+          if [ ! -d "${config.services.mysql.dataDir}/${cfg.account_db_name}" ]; then
+            ( echo 'CREATE DATABASE `${cfg.account_db_name}`;'
+              echo 'use `${cfg.account_db_name}`;'
             ) | mysql -uroot
           fi
           cat "${initial_script cfg}" | mysql -uroot
