@@ -104,6 +104,8 @@ export class LineChartComponent implements OnInit, OnChanges {
         bottom: 0,
         start: (this.startValue / this.endValue) * 100,
         end: 100,
+        top: 520,
+        height: 30,
         selectedDataBackground: {
           lineStyle: {
             color: '#fff',
