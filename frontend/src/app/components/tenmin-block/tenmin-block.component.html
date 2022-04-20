@@ -1,0 +1,25 @@
+<div *ngIf="pastBlock" class="text-center bitcoin-block mined-block" id="bitcoin-block-{{ pastBlock.height }}" [ngStyle]="blockStyle" style="top: {{top}}px">
+  <a draggable="false" [routerLink]="['/block/' | relativeUrl, pastBlock.id]" [state]="{ data: { block: pastBlock } }"
+    class="blockLink" [ngClass]="{'disabled': (this.stateService.blockScrolling$ | async)}">&nbsp;</a>
+  <div class="block-height">
+    <a [routerLink]="['/block/' | relativeUrl, pastBlock.id]" [state]="{ data: { block: pastBlock } }">{{ pastBlock.height }}</a>
+  </div>
+  <div class="block-body">
+    <div class="mediantime-utc">
+      Mediantime (POSIX):
+      <div><a class="mediantime-posix">{{ pastBlock.mediantime }}</a></div>
+    </div>
+    <div class="mediantime-utc">
+      Mediantime (UTC):
+      <div>{{ pastBlock.mediantime * 1000 | date:'yyyy-MM-dd HH:mm' }}</div>
+    </div>
+  </div>
+</div>
+<div *ngIf="!pastBlock" class="text-center bitcoin-block mined-block" [ngStyle]="blockStyle" style="top: {{top}}px">
+  <div class="block-height">
+    <a>{{ stateService.latestBlockHeight + 1 }}</a>
+  </div>
+  <div class="block-body">
+    ???
+  </div>
+</div>

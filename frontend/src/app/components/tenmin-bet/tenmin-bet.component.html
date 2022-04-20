@@ -1,0 +1,8 @@
+<div class="text-center bitcoin-block mined-block" [class.fast]="isFast" [ngStyle]="blockStyle">
+  <a draggable="false" class="blockLink" [ngClass]="{'disabled': (this.stateService.blockScrolling$ | async)}">&nbsp;</a>
+  <div class="block-body">
+    <div>{{ medianTimeDiff }} seconds</div>
+    <div>( {{ isFast ? '<' : '>=' }} 600 )</div>
+    <div>{{ isFast ? 'FAST' : 'SLOW' }}</div>
+  </div>
+</div>
