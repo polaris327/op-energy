@@ -65,6 +65,7 @@ import { LanguageService } from './services/language.service';
 import { SponsorComponent } from './components/sponsor/sponsor.component';
 import { PushTransactionComponent } from './components/push-transaction/push-transaction.component';
 import { BetPieChartComponent } from './components/bet-pie-chart/bet-pie-chart.component';
+import { SetAccountIdComponent } from './components/setaccountid/setaccountid.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
@@ -114,6 +115,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     DocsComponent,
     ApiDocsNavComponent,
     BetPieChartComponent,
+    SetAccountIdComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),

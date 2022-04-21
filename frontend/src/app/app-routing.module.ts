@@ -13,6 +13,7 @@ import { AssetComponent } from './components/asset/asset.component';
 import { AssetsComponent } from './assets/assets.component';
 import { StatusViewComponent } from './components/status-view/status-view.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { SetAccountIdComponent } from './components/setaccountid/setaccountid.component';
 import { LatestBlocksComponent } from './components/latest-blocks/latest-blocks.component';
 import { DocsComponent } from './components/docs/docs.component';
 import { TermsOfServiceComponent } from './components/terms-of-service/terms-of-service.component';
@@ -25,6 +26,10 @@ import { PushTransactionComponent } from './components/push-transaction/push-tra
 import { PoolRankingComponent } from './components/pool-ranking/pool-ranking.component';
 
 let routes: Routes = [
+  {
+    path: 'account/:accountid',
+    component: SetAccountIdComponent,
+  },
   {
     path: '',
     component: MasterPageComponent,
