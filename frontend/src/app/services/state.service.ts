@@ -73,6 +73,9 @@ export class StateService {
   env: Env;
   latestBlockHeight = 0;
   lastDifficultyEpochEndBlockHeight: number | undefined = undefined;
+  accountIdState: 'init' | 'checked' | 'generated' = 'init'; // this flag is being used to check if frontend should ask to generate account id hash
+  $showAccountIdWarning: ReplaySubject<boolean> = new ReplaySubject<boolean>( 1); // this flag is being used to check if frontend should display WARNING message
+  $accountId: ReplaySubject<string> = new ReplaySubject(1);
 
   networkChanged$ = new ReplaySubject<string>(1);
   blocks$: ReplaySubject<[Block, boolean]>;

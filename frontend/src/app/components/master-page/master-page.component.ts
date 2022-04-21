@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { Env, StateService } from '../../services/state.service';
-import { Observable, merge, of } from 'rxjs';
+import { Observable, merge, of, Subscription } from 'rxjs';
 import { LanguageService } from 'src/app/services/language.service';
+import {ActivatedRoute} from '@angular/router';
+import { DOCUMENT } from '@angular/common';
+import { WebsocketService } from 'src/app/services/websocket.service';
 
 @Component({
   selector: 'app-master-page',
@@ -17,8 +20,11 @@ export class MasterPageComponent implements OnInit {
   urlLanguage: string;
 
   constructor(
-    private stateService: StateService,
+    public stateService: StateService,
+    public route: ActivatedRoute,
     private languageService: LanguageService,
+    private websocketService: WebsocketService,
+    @Inject(DOCUMENT) public document: Document,
   ) { }
 
   ngOnInit() {
@@ -27,8 +33,16 @@ export class MasterPageComponent implements OnInit {
     this.network$ = merge(of(''), this.stateService.networkChanged$);
     this.urlLanguage = this.languageService.getLanguageForUrl();
   }
+  ngAfterContentInit() {
+    if( this.stateService.accountIdState == 'init') {
+      this.websocketService.want(['generatedaccountid']);
+    }
+  }
 
   onResize(event: any) {
     this.isMobile = window.innerWidth <= 767.98;
+  }
+  closeAccountIdWarning() {
+    this.stateService.$showAccountIdWarning.next( false);
   }
 }
