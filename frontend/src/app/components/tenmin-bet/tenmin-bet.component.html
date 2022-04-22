@@ -1,5 +1,8 @@
 <div class="text-center bitcoin-block mined-block" [class.fast]="isFast" [ngStyle]="blockStyle">
-  <a draggable="false" class="blockLink" [ngClass]="{'disabled': (this.stateService.blockScrolling$ | async)}">&nbsp;</a>
+  <a draggable="false" [routerLink]="['/bet-parimutuel/' | relativeUrl, blockNumber, nlockTime]" class="blockLink" [ngClass]="{'disabled': (this.stateService.blockScrolling$ | async)}">&nbsp;</a>
+  <div class="block-height">
+    <a [routerLink]="['/bet-parimutuel/' | relativeUrl, blockNumber, nlockTime]">{{ blockNumber }} / {{ nlockTime }}</a>
+  </div>
   <div class="block-body">
     <div>{{ medianTimeDiff }} seconds</div>
     <div>( {{ isFast ? '<' : '>=' }} 600 )</div>

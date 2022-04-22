@@ -10,6 +10,8 @@ import { StateService } from '../../services/state.service';
 export class TenminBetComponent implements OnInit, OnDestroy {
   @Input() blockStyle: any;
   @Input() medianTimeDiff: number;
+  @Input() blockNumber: number;
+  @Input() nlockTime: number;
 
   get isFast() {
     return this.medianTimeDiff < 600;

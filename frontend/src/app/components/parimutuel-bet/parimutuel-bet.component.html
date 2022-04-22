@@ -1,0 +1,145 @@
+<div class="container-xl" (window:resize)="onResize($event)">
+
+  <div class="title-block" id="block">
+    <h1>
+      <ng-template [ngIf]="blockHeight === 0"><ng-container i18n="@@2303359202781425764">Genesis</ng-container>
+        <span class="next-previous-blocks">
+          <a *ngIf="showNextBlocklink" [routerLink]="['/bet-parimutuel/' | relativeUrl, nextBlockHeight, nextNlocktime]" (click)="navigateToNextBlock()" i18n-ngbTooltip="Next Block" ngbTooltip="Next Block" placement="bottom">
+            <fa-icon [icon]="['fas', 'angle-left']" [fixedWidth]="true"></fa-icon>
+          </a>
+          <a>{{ blockHeight }}</a>
+          <span placement="bottom" class="disable">
+            <fa-icon [icon]="['fas', 'angle-right']" [fixedWidth]="true"></fa-icon>
+          </span>
+        </span>
+      </ng-template>
+      <ng-template [ngIf]="blockHeight" i18n="shared.block-title">Parimutuel bet <ng-container *ngTemplateOutlet="blockTemplateContent"></ng-container></ng-template>
+      <ng-template #blockTemplateContent>
+        <span class="next-previous-blocks">
+          <!-- <a *ngIf="showNextBlocklink" [routerLink]="['/bet-parimutuel/' | relativeUrl, nextBlockHeight, nextNlocktime  ]" (click)="navigateToNextBlock()" i18n-ngbTooltip="Next Block" ngbTooltip="Next Block" placement="bottom">
+            <fa-icon [icon]="['fas', 'angle-left']" [fixedWidth]="true"></fa-icon>
+          </a>
+          <span *ngIf="!showNextBlocklink" placement="bottom" class="disable">
+            <fa-icon [icon]="['fas', 'angle-left']" [fixedWidth]="true"></fa-icon>
+          </span> -->
+          <a>{{ blockHeight }} / {{ nlocktime }}</a>
+          <!-- <a *ngIf="showPreviousBlocklink && block" [routerLink]="['/bet-parimutuel/' | relativeUrl, block.previousblockhash]" (click)="navigateToPreviousBlock()" i18n-ngbTooltip="Previous Block" ngbTooltip="Previous Block" placement="bottom">
+            <fa-icon [icon]="['fas', 'angle-right']" [fixedWidth]="true"></fa-icon>
+          </a>
+          <span *ngIf="!showPreviousBlocklink" placement="bottom" class="disable">
+            <fa-icon [icon]="['fas', 'angle-right']" [fixedWidth]="true"></fa-icon>
+          </span> -->
+        </span>
+      </ng-template>
+    </h1>
+
+    <div class="grow"></div>
+
+    <button [routerLink]="['/' | relativeUrl]" class="btn btn-sm">&#10005;</button>
+  </div>
+
+  <div class="clearfix"></div>
+
+  <ng-template [ngIf]="!isLoadingBlock && !error">
+
+    <div class="box">
+      <div class="row">
+        <div class="col-sm">
+          <table class="table table-borderless table-striped">
+            <tbody>
+              <tr>
+                <td i18n="nlocktime">Nlocktime (Posix)</td>
+                <td>
+                  &lrm;{{ nlocktime }}
+                </td>
+              </tr>
+              <tr>
+                <td i18n="betType">Bet Type</td>
+                <td>Parimutuel</td>
+              </tr>
+              <tr>
+                <td i18n="nlocktime">Nlocktime (UTC)</td>
+                <td>{{ nlocktime * 1000 | date:'yyyy-MM-dd HH:mm' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="col-sm">
+          <table class="table table-borderless table-striped">
+            <tbody>
+              <tr>
+                <td i18n="outcome">Outcome</td>
+                <td>{{ isFast ? 'FAST' : 'SLOW' }}</td>
+              </tr>
+              <tr>
+                <td i18n="withdrawableAtBlock">Withdrawable at Block</td>
+                <td>{{ withdrawableAtBlock }}</td>
+              </tr>
+              <tr>
+                <td i18n="withdrawable">Withdrawable</td>
+                <td>{{ withdrawable }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </ng-template>
+
+  <ng-template [ngIf]="isLoadingBlock && !error">
+
+    <div class="box">
+      <div class="row">
+        <div class="col-sm">
+          <table class="table table-borderless table-striped">
+            <tbody>
+              <tr>
+                <td class="td-width" colspan="2"><span class="skeleton-loader"></span></td>
+              </tr>
+              <tr>
+                <td colspan="2"><span class="skeleton-loader"></span></td>
+              </tr>
+              <tr>
+                <td colspan="2"><span class="skeleton-loader"></span></td>
+              </tr>
+              <tr>
+                <td colspan="2"><span class="skeleton-loader"></span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="col-sm">
+          <table class="table table-borderless table-striped">
+            <tbody>
+              <tr>
+                <td class="td-width" colspan="2"><span class="skeleton-loader"></span></td>
+              </tr>
+              <tr>
+                <td colspan="2"><span class="skeleton-loader"></span></td>
+              </tr>
+              <tr>
+                <td colspan="2"><span class="skeleton-loader"></span></td>
+              </tr>
+              <tr>
+                <td colspan="2"><span class="skeleton-loader"></span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template [ngIf]="error">
+    <div class="text-center">
+      <span i18n="block.error.loading-block-data">Error loading block data.</span>
+      <br><br>
+      <i>{{ error.error }}</i>
+    </div>
+  </ng-template>
+
+</div>
+
+<br>
+<br>

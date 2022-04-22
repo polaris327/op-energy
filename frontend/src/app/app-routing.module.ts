@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { StartComponent } from './components/start/start.component';
 import { TransactionComponent } from './components/transaction/transaction.component';
 import { BlockComponent } from './components/block/block.component';
+import { ParimutuelBetComponent } from './components/parimutuel-bet/parimutuel-bet.component';
 import { AddressComponent } from './components/address/address.component';
 import { MasterPageComponent } from './components/master-page/master-page.component';
 import { AboutComponent } from './components/about/about.component';
@@ -48,6 +49,10 @@ let routes: Routes = [
           {
             path: 'block/:id',
             component: BlockComponent
+          },
+          {
+            path: 'bet-parimutuel/:block/:nlocktime',
+            component: ParimutuelBetComponent
           },
           {
             path: 'mempool-block/:id',
@@ -138,6 +143,10 @@ let routes: Routes = [
                 component: BlockComponent
               },
               {
+                path: 'bet-parimutuel/:block/:nlocktime',
+                component: ParimutuelBetComponent
+              },
+              {
                 path: 'mempool-block/:id',
                 component: MempoolBlockComponent
               },
@@ -218,6 +227,10 @@ let routes: Routes = [
               {
                 path: 'block/:id',
                 component: BlockComponent
+              },
+              {
+                path: 'bet-parimutuel/:block/:nlocktime',
+                component: ParimutuelBetComponent
               },
               {
                 path: 'mempool-block/:id',
@@ -326,6 +339,10 @@ if (browserWindowEnv && browserWindowEnv.BASE_MODULE === 'liquid') {
             component: BlockComponent
           },
           {
+            path: 'bet-parimutuel/:block/:nlocktime',
+            component: ParimutuelBetComponent
+          },
+          {
             path: 'mempool-block/:id',
             component: MempoolBlockComponent
           },
@@ -415,6 +432,10 @@ if (browserWindowEnv && browserWindowEnv.BASE_MODULE === 'liquid') {
               {
                 path: 'block/:id',
                 component: BlockComponent
+              },
+              {
+                path: 'bet-parimutuel/:block/:nlocktime',
+                component: ParimutuelBetComponent
               },
               {
                 path: 'mempool-block/:id',
