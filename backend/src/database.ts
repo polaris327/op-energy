@@ -12,6 +12,15 @@ export class DB {
     connectionLimit: 10,
     supportBigNumbers: true,
   });
+  static accountPool = createPool({
+    host: config.DATABASE.HOST,
+    port: config.DATABASE.PORT,
+    database: config.DATABASE.ACCOUNT_DATABASE,
+    user: config.DATABASE.USERNAME,
+    password: config.DATABASE.PASSWORD,
+    connectionLimit: 10,
+    supportBigNumbers: true,
+  });
 }
 
 export async function checkDbConnection() {

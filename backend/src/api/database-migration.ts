@@ -2,6 +2,7 @@ import { PoolConnection } from 'mysql2/promise';
 import config from '../config';
 import { DB } from '../database';
 import logger from '../logger';
+import oe from './oe-database-migration';
 
 const sleep = (ms: number) => new Promise(res => setTimeout(res, ms));
 
@@ -15,6 +16,7 @@ class DatabaseMigration {
    * Entry point
    */
   public async $initializeOrMigrateDatabase(): Promise<void> {
+    await oe.$initializeOrMigrateDatabase();
     logger.info('MIGRATIONS: Running migrations');
 
     await this.$printDatabaseVersion();
@@ -40,6 +42,7 @@ class DatabaseMigration {
       await sleep(10000);
       process.exit(-1);
     }
+
 
     logger.info('MIGRATIONS: Current state.schema_version ' + databaseSchemaVersion);
     logger.info('MIGRATIONS: Latest DatabaseMigration.version is ' + DatabaseMigration.currentVersion);
@@ -372,6 +375,7 @@ class DatabaseMigration {
       FOREIGN KEY (pool_id) REFERENCES pools (id)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;`;
   }
+
 }
 
 export default new DatabaseMigration();

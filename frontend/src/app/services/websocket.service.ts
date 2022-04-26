@@ -179,6 +179,13 @@ export class WebsocketService {
     this.lastWant = JSON.stringify(data);
   }
 
+  checkAccountId( accountId: string) {
+    if (!this.stateService.isBrowser) {
+      return;
+    }
+    this.websocketSubject.next( {action: 'checkAccountId', data: [ accountId] });
+  }
+
   goOffline() {
     this.goneOffline = true;
     this.stateService.connectionState$.next(0);
@@ -213,6 +220,19 @@ export class WebsocketService {
           this.stateService.blocks$.next([block, false]);
         }
       });
+    }
+    if( response.checkedAccountId) {
+      this.stateService.accountIdState = 'checked';
+      this.stateService.$accountId.next( response.checkedAccountId);
+      this.stateService.$showAccountIdWarning.next( false);
+    }
+    if( response.declinedAccountId) {
+      this.want(['generatedaccountid']);
+    }
+    if( response.generatedAccountId ) {
+      this.stateService.accountIdState = 'generated';
+      this.stateService.$accountId.next( response.generatedAccountId);
+      this.stateService.$showAccountIdWarning.next( true);
     }
     if( response.lastDifficultyEpochEndBlocks && response.lastDifficultyEpochEndBlocks.length) {
       const lastDifficultyEpochEndBlocks = response.lastDifficultyEpochEndBlocks;

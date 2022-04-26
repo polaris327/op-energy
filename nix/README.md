@@ -228,7 +228,7 @@ ssh root@<dropletIP> -L8889:127.0.0.1:8995 "while true; do sleep 10s; echo ping;
 
 ## Backend development. The fast flow
 
-Although, the recommended development path is to update from git and use `nixos-rebuild switch` on the development instance, there is an option of the fast development flow is possible for backend as well, although, with fast development flow is will not be possible to deploy DB schema updates (at least for now). You will still need the development instance running to use bincoind, electrs and DB instances.
+Although, the recommended development path is to update from git and use `nixos-rebuild switch` on the development instance, there is an option of the fast development flow is possible for backend as well. You will still need the development instance running to use bincoind, electrs and DB instances.
 
 1 - 3 steps are the same as for `Frontend development. The fast flow`
 

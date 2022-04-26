@@ -18,6 +18,12 @@ let
         example = "mempool";
         description = "Database name of the instance";
       };
+      account_db_name = lib.mkOption {
+        default = null;
+        type = lib.types.str;
+        example = "mempoolacc";
+        description = "Account database name of the instance";
+      };
       db_user = lib.mkOption {
         default = null;
         type = lib.types.str;
@@ -76,56 +82,32 @@ in
     services.mysql = {
       enable = true;
       package = pkgs.mariadb; # there is no default value for this option, so we define one
-      initialDatabases = lib.mapAttrsToList (name: cfg:
+      initialDatabases = (lib.mapAttrsToList (name: cfg:
         { name = "${cfg.db_name}";
         }
-      ) eachInstance;
-      ensureUsers = lib.mapAttrsToList (name: cfg:
+      ) eachInstance
+      ) ++ (lib.mapAttrsToList (name: cfg:
+        { name = "${cfg.account_db_name}";
+        }
+      ) eachInstance
+      );
+      ensureUsers = ( lib.mapAttrsToList (name: cfg:
         { name = "${cfg.db_user}";
           ensurePermissions = {
             "${cfg.db_name}.*" = "ALL PRIVILEGES";
           };
         }
-      ) eachInstance;
+      ) eachInstance
+      ) ++ ( lib.mapAttrsToList (name: cfg:
+        { name = "${cfg.db_user}";
+          ensurePermissions = {
+            "${cfg.account_db_name}.*" = "ALL PRIVILEGES";
+          };
+        }
+      ) eachInstance
+      );
     };
     systemd.services = {
-      mysql-op-energy-db-migrate = {
-        wantedBy = [ "multi-user.target" ];
-        after = [
-          "mysql.service"
-          "mysql-op-energy-users.service"
-        ];
-        requires = [
-          "mysql.service"
-          "mysql-op-energy-users.service"
-        ];
-        serviceConfig = {
-          Type = "simple";
-        };
-        path = with pkgs; [
-          mariadb
-        ];
-        script = lib.foldl' (acc: i: acc + i) '''' ( lib.mapAttrsToList (name: cfg: ''
-          REVISION=$(
-            (( echo 'use `${cfg.db_name}`;';
-              echo 'select revision from version limit 1;';
-            ) | mysql -uroot || (echo 0; echo 0)) | tail -n 1
-          )
-          echo "current DB revision is $REVISION"
-          FOUND=1;
-          while [ "$FOUND" == "1" ]; do
-            REVISION=$(( $REVISION + 1))
-            FOUND=0;
-            for script in $(find ${pkgs.op-energy-backend}/backend/db_migrations/ -name '*.sql' | grep -E "/''${REVISION}_.*.sql$"); do
-              FOUND=1;
-              echo "applying $script";
-              ( echo 'use `${cfg.db_name}`;'
-                cat $script
-              ) | mysql -uroot
-            done;
-          done;
-        '') eachInstance);
-      };
       mysql-op-energy-users = {
         wantedBy = [ "multi-user.target" ];
         after = [
@@ -148,6 +130,11 @@ in
               echo 'use `${cfg.db_name}`;'
             ) | mysql -uroot
           fi
+          if [ ! -d "${config.services.mysql.dataDir}/${cfg.account_db_name}" ]; then
+            ( echo 'CREATE DATABASE `${cfg.account_db_name}`;'
+              echo 'use `${cfg.account_db_name}`;'
+            ) | mysql -uroot
+          fi
           cat "${initial_script cfg}" | mysql -uroot
         '') eachInstance);
       };
@@ -159,12 +146,10 @@ in
         after = [
           "network-setup.service"
           "mysql.service"
-          "mysql-op-energy-db-migrate.service"
         ];
         requires = [
           "network-setup.service"
           "mysql.service"
-          "mysql-op-energy-db-migrate.service"
           ];
         serviceConfig = {
           Type = "simple";

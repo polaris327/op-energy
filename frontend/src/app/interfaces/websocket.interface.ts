@@ -12,6 +12,9 @@ export interface WebsocketResponse {
   vBytesPerSecond?: number;
   lastDifficultyAdjustment?: number;
   previousRetarget?: number;
+  generatedAccountId?: string;
+  checkedAccountId?: string;
+  declinedAccountId?: string;
   action?: string;
   data?: string[];
   tx?: Transaction;

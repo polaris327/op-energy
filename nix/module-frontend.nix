@@ -65,8 +65,8 @@ in
             location /testnet/api/v1 {
               proxy_pass http://127.0.0.1:8997/api/v1;
             }
-            location /testnet/api/ {
-              proxy_pass http://127.0.0.1:60001/;
+            location /testnet/api {
+              proxy_pass http://127.0.0.1:8997/api/v1;
             }
           ''
         else ''
@@ -90,8 +90,8 @@ in
             location /signet/api/v1 {
               proxy_pass http://127.0.0.1:8995/api/v1;
             }
-            location /signet/api/ {
-              proxy_pass http://127.0.0.1:60601/;
+            location /signet/api {
+              proxy_pass http://127.0.0.1:8995/api/v1;
             }
           ''
         else ''

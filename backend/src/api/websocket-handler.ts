@@ -11,6 +11,7 @@ import { Common } from './common';
 import loadingIndicators from './loading-indicators';
 import config from '../config';
 import transactionUtils from './transaction-utils';
+import {exec} from 'child_process';
 
 class WebsocketHandler {
   private wss: WebSocket.Server | undefined;
@@ -105,6 +106,14 @@ class WebsocketHandler {
               return;
             }
             client.send(JSON.stringify(this.getInitData(_blocks)));
+          }
+
+          if( parsedMessage.action === 'checkAccountId' && parsedMessage.data.length > 0) {
+            client.send( JSON.stringify( this.checkAccountId(parsedMessage.data[0])));
+          }
+
+          if( parsedMessage.action === 'want' && parsedMessage.data.indexOf('generatedaccountid') > -1) {
+            this.handleGeneratedAccountId(client);
           }
 
           if (parsedMessage.action === 'ping') {
@@ -474,6 +483,52 @@ class WebsocketHandler {
 
       client.send(JSON.stringify(response));
     });
+  }
+  handleGeneratedAccountId(client) {
+    exec( 'dd if=/dev/urandom bs=10 count=1 | sha256sum'
+        , (error, stdout, stderr) => {
+          if( error) {
+            logger.info( 'handleGeneratedAccountId: exec error: ' + error);
+          } else {
+            let newHash = stdout.slice(0, 64);
+            if( this.isAlphaNum( newHash)) {
+              client.send( JSON.stringify( {
+                'generatedAccountId': newHash,
+              }));
+            }
+          }
+        }
+    );
+  }
+  checkAccountId( accountId: string) {
+    if( accountId.length !== 64) {
+      return {
+        declinedAccountId: 'length',
+      };
+    }
+    if( !this.isAlphaNum(accountId)) {
+      return {
+        declinedAccountId: 'alphanum',
+      };
+    }
+    return {
+      checkedAccountId: accountId,
+    };
+  }
+  isAlphaNum(str: string){
+    var code, i, len;
+
+    for (i = 0, len = str.length; i < len; i++) {
+      code = str.charAt(i);
+      if (!((code >= '0' && code <= '9') || // numeric (0-9)
+            (code >= 'A' && code <= 'Z') || // upper alpha (A-Z)
+            (code >= 'a' && code <= 'z')    // lower alpha (a-z)
+            )
+          ) {
+        return false;
+      }
+    }
+    return true;
   }
 }
 
