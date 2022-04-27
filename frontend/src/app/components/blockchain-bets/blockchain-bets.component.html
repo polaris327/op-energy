@@ -8,9 +8,8 @@
             <app-tenmin-bet
               *ngIf="i > 0"
               [blockStyle]="blockStyles[i]"
-              [medianTimeDiff]="pastBlocks[i - 1]?.mediantime - pastBlock.mediantime"
-              [blockNumber]="pastBlocks[i - 1]?.height"
-              [nlockTime]="pastBlocks[i - 1]?.mediantime + 600">
+              [block]="pastBlocks[i - 1]"
+              [prevBlock]="pastBlock">
             </app-tenmin-bet>
             <div class="divider-hor" [ngStyle]="blockStyles[i]"></div>
             <app-tenmin-block [pastBlock]="pastBlocks[i - 1]" [blockStyle]="blockStyles[i]" [top]="250"></app-tenmin-block>
