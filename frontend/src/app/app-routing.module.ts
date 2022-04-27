@@ -210,6 +210,10 @@ let routes: Routes = [
     path: 'signet',
     children: [
       {
+        path: 'account/:accountid',
+        component: SetAccountIdComponent,
+      },
+      {
         path: '',
         component: MasterPageComponent,
         children: [
@@ -414,6 +418,10 @@ if (browserWindowEnv && browserWindowEnv.BASE_MODULE === 'liquid') {
   {
     path: 'testnet',
     children: [
+      {
+        path: 'account/:accountid',
+        component: SetAccountIdComponent,
+      },
       {
         path: '',
         component: LiquidMasterPageComponent,
