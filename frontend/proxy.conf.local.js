@@ -49,7 +49,7 @@ PROXY_CONFIG.map(conf => conf.target = "http://localhost:8999");
 // Add rules for local backend
 if (backendConfigContent) {
     PROXY_CONFIG.push({
-        context: ['/api/address/**', '/api/tx/**', '/api/block/**', '/api/blocks/**'],
+        context: ['/api/address/**', '/api/tx/**', '/api/block/**', '/api/blocks/**', '/api/block-height/**'],
         target: `http://localhost:8999`,
         secure: false,
         changeOrigin: true,
