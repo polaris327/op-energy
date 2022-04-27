@@ -48,18 +48,10 @@
           <table class="table table-borderless table-striped">
             <tbody>
               <tr>
-                <td class="td-width" i18n="block.hash">Hash</td>
-                <td><a [routerLink]="['/block/' | relativeUrl, block.id]" title="{{ block.id }}">{{ block.id | shortenString : 13 }}</a> <app-clipboard class="d-none d-sm-inline-block" [text]="block.id"></app-clipboard></td>
-              </tr>
-              <tr>
                 <td i18n="block.mediantime">Mediantime (Posix)</td>
                 <td>
                   &lrm;{{ block.mediantime }}
                 </td>
-              </tr>
-              <tr *ngIf="network !== 'liquid' && network !== 'liquidtestnet'">
-                <td i18n="block.bits">Bits</td>
-                <td>{{ block.bits | decimal2hex }}</td>
               </tr>
               <tr>
                 <td i18n="block.mediantime">Mediantime (UTC)</td>
@@ -71,6 +63,26 @@
         <div class="col-sm">
           <table class="table table-borderless table-striped">
             <tbody>
+              <tr>
+                <td class="td-width" i18n="block.hash">Hash</td>
+                <td><a [routerLink]="['/block/' | relativeUrl, block.id]" title="{{ block.id }}">{{ block.id | shortenString : 13 }}</a> <app-clipboard class="d-none d-sm-inline-block" [text]="block.id"></app-clipboard></td>
+              </tr>
+              <tr *ngIf="network !== 'liquid' && network !== 'liquidtestnet'">
+                <td i18n="block.bits">Bits</td>
+                <td>{{ block.bits | decimal2hex }}</td>
+              </tr>
+              <tr>
+                <td class="td-width" i18n="block.difficulty">Difficulty</td>
+                <td>{{ block.difficulty }}</td>
+              </tr>
+              <tr>
+                <td i18n="block.chainwork">Chainwork</td>
+                <td>{{ block.chainwork | shortenString : 13 }} <app-clipboard class="d-none d-sm-inline-block" [text]="block.chainwork"></app-clipboard> </td>
+              </tr>
+              <tr>
+                <td></td>
+                <td></td>
+              </tr>
               <ng-template [ngIf]="fees !== undefined" [ngIfElse]="loadingFees">
                 <tr>
                   <td i18n="block.total-fees|Total fees in a block">Total fees</td>
@@ -96,14 +108,6 @@
                   <td><span class="skeleton-loader"></span></td>
                 </tr>
               </ng-template>
-              <tr>
-                <td class="td-width" i18n="block.difficulty">Difficulty</td>
-                <td>{{ block.difficulty }}</td>
-              </tr>
-              <tr>
-                <td i18n="block.chainwork">Chainwork</td>
-                <td>{{ block.chainwork | shortenString : 13 }} <app-clipboard class="d-none d-sm-inline-block" [text]="block.chainwork"></app-clipboard> </td>
-              </tr>
             </tbody>
           </table>
         </div>
