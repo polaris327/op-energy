@@ -10,9 +10,5 @@
   </div>
 </div>
 <ng-template #tooltipContent>
-  <div>block {{ blockNumber }} is resolved as {{ isFast ? 'FAST' : 'SLOW' }} because {{ nlockTime }} < {{ block.mediantime }}.</div>
-  <div>(the bet nlocktime is < the block median posixtime).</div>
-  <div>This bet was originated as a mediantime difference between blocks {{ prevBlock.height }} and {{ block.height }}.</div>
-  <div>Since this is a 1-block difference, it is fast if this difference is < 600 * 1.</div>
-  <div>The difference is {{ block.mediantime }} - {{ prevBlock.mediantime }}, or {{ medianTimeDiff }} seconds.</div>
+  <div>bet outcome: FAST if medinatime of block {{ blockNumber }} is less than {{ nlockTime }}. SLOW otherwise.</div>
 </ng-template>
