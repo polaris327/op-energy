@@ -48,6 +48,10 @@ let routes: Routes = [
             component: DashboardComponent,
           },
           {
+            path: 'bets/diffview/:ids',
+            component: DashboardComponent,
+          },
+          {
             path: 'tx/:id',
             component: TransactionComponent
           },
@@ -140,6 +144,10 @@ let routes: Routes = [
                 component: DashboardComponent
               },
               {
+                path: 'bets/diffview/:ids',
+                component: DashboardComponent,
+              },
+              {
                 path: 'tx/:id',
                 component: TransactionComponent
               },
@@ -228,6 +236,10 @@ let routes: Routes = [
               {
                 path: '',
                 component: DashboardComponent
+              },
+              {
+                path: 'bets/diffview/:ids',
+                component: DashboardComponent,
               },
               {
                 path: 'tx/:id',
@@ -336,6 +348,10 @@ if (browserWindowEnv && browserWindowEnv.BASE_MODULE === 'liquid') {
             component: DashboardComponent
           },
           {
+            path: 'bets/diffview/:ids',
+            component: DashboardComponent,
+          },
+          {
             path: 'tx/push',
             component: PushTransactionComponent,
           },
@@ -433,6 +449,10 @@ if (browserWindowEnv && browserWindowEnv.BASE_MODULE === 'liquid') {
               {
                 path: '',
                 component: DashboardComponent
+              },
+              {
+                path: 'bets/diffview/:ids',
+                component: DashboardComponent,
               },
               {
                 path: 'tx/push',
