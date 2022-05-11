@@ -175,6 +175,10 @@ let routes: Routes = [
             component: LatestBlocksComponent,
           },
           {
+            path: 'blocks/observed',
+            component: StartV2Component
+          },
+          {
             path: 'mining/pools',
             component: PoolRankingComponent,
           },
@@ -267,6 +271,10 @@ let routes: Routes = [
           {
             path: 'blocks',
             component: LatestBlocksComponent,
+          },
+          {
+            path: 'blocks/observed',
+            component: StartV2Component
           },
           {
             path: 'mining/pools',
