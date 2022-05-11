@@ -1,0 +1,29 @@
+<div *ngIf="pastBlock" class="text-center bitcoin-block mined-block" id="bitcoin-block-{{ pastBlock.height }}" [ngStyle]="blockStyle">
+  <div class="block-body">
+    <a [routerLink]="['/block/' | relativeUrl, pastBlock.id]" [state]="{ data: { block: pastBlock } }">{{ pastBlock.height }}</a>
+  </div>
+  <div style="width: 100%;display:flex;flex-direction:column;align-items:center">
+    <div class="bitcoin-block-bottom-horizen" style="width: 100%;height:40px;text-align: center;padding: 8px;" [ngStyle]="blockStyle">
+      <a>{{ pastBlock.mediantime }}</a><a class="m-tooltip" [ngbTooltip]="tooltipContent" placement="auto" container="body">[?]</a>
+      <ng-template #tooltipContent>
+        <div class="mediantime-utc">
+          Mediantime (POSIX):
+          <div><a class="mediantime-posix">{{ pastBlock.mediantime }}</a></div>
+        </div>
+        <div class="mediantime-utc">
+          Mediantime (UTC):
+          <div>{{ pastBlock.mediantime * 1000 | date:'yyyy-MM-dd HH:mm:ss' }}</div>
+        </div>
+      </ng-template>
+    </div>
+    <div class="bitcoin-block-bottom-vertical" style="width: 40px;height: 40px;" [ngStyle]="blockStyle"></div>
+  </div>
+</div>
+<div *ngIf="!pastBlock" class="text-center bitcoin-block mined-block" [ngStyle]="blockStyle">
+  <div class="block-height">
+    <a>{{ stateService.latestBlockHeight + 1 }}</a>
+  </div>
+  <div class="block-body">
+    ???
+  </div>
+</div>

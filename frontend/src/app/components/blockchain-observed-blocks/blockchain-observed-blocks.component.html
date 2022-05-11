@@ -1,0 +1,25 @@
+<div class="text-center" class="blockchain-wrapper">
+  <div class="position-container {{ network }}">
+    <span>
+      <div>
+        <div class="blocks-container blockchain-blocks-container" *ngIf="(loadingBlocks$ | async) === false; else loadingBlocksTemplate">
+          <div *ngFor="let pastBlock of pastBlocks; let i = index; trackBy: trackByPastBlocksFn" >
+            <app-observed-block [pastBlock]="pastBlock" [blockStyle]="blockStyles[i]"></app-observed-block>
+          </div>
+          <div [hidden]="!arrowVisible" id="arrow-up" [style.transition]="transition" [ngStyle]="{'left': arrowLeftPx + 'px' }"></div>
+        </div>
+        
+        <ng-template #loadingBlocksTemplate>
+          <div class="blocks-container">
+            <div class="flashing">
+              <div *ngFor="let block of emptyBlocks; let i = index; trackBy: trackByBlocksFn" >
+                <div class="text-center bitcoin-block mined-block" id="bitcoin-block-{{ block.height }}" [ngStyle]="emptyBlockStyles[i]"></div>
+              </div>
+            </div>
+          </div>
+        </ng-template>        
+      </div>
+      <div id="divider"></div>
+    </span>
+  </div>
+</div>

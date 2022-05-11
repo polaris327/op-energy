@@ -11,6 +11,7 @@ import { AppComponent } from './components/app/app.component';
 import { FutureBlockComponent } from './components/future-block/future-block.component';
 import { PastBlocksComponent } from './components/past-blocks/past-blocks.component';
 import { StartComponent } from './components/start/start.component';
+import { StartV2Component } from './components/start-v2/start-v2.component';
 import { ElectrsApiService } from './services/electrs-api.service';
 import { TransactionComponent } from './components/transaction/transaction.component';
 import { TransactionsListComponent } from './components/transactions-list/transactions-list.component';
@@ -33,6 +34,7 @@ import { StatisticsComponent } from './components/statistics/statistics.componen
 import { BlockchainBlocksComponent } from './components/blockchain-blocks/blockchain-blocks.component';
 import { BlockchainComponent } from './components/blockchain/blockchain.component';
 import { BlockchainBetsComponent } from './components/blockchain-bets/blockchain-bets.component';
+import { BlockchainObservedBlocksComponent } from './components/blockchain-observed-blocks/blockchain-observed-blocks.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { AudioService } from './services/audio.service';
 import { MempoolBlockComponent } from './components/mempool-block/mempool-block.component';
@@ -73,6 +75,7 @@ import { SetAccountIdComponent } from './components/setaccountid/setaccountid.co
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TenminBetComponent } from './components/tenmin-bet/tenmin-bet.component';
 import { TenminBlockComponent } from './components/tenmin-block/tenmin-block.component';
+import { ObservedBlockComponent } from './components/observed-block/observed-block.component';
 
 @NgModule({
   declarations: [
@@ -86,7 +89,9 @@ import { TenminBlockComponent } from './components/tenmin-block/tenmin-block.com
     TelevisionComponent,
     BlockchainComponent,
     BlockchainBetsComponent,
+    BlockchainObservedBlocksComponent,
     StartComponent,
+    StartV2Component,
     BlockchainBlocksComponent,
     StatisticsComponent,
     TransactionComponent,
@@ -126,6 +131,7 @@ import { TenminBlockComponent } from './components/tenmin-block/tenmin-block.com
     ApiDocsNavComponent,
     TenminBetComponent,
     TenminBlockComponent,
+    ObservedBlockComponent,
     BetPieChartComponent,
     SetAccountIdComponent,
   ],

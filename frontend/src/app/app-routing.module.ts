@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { StartComponent } from './components/start/start.component';
+import { StartV2Component } from './components/start-v2/start-v2.component';
 import { TransactionComponent } from './components/transaction/transaction.component';
 import { BlockComponent } from './components/block/block.component';
 import { ParimutuelBetComponent } from './components/parimutuel-bet/parimutuel-bet.component';
@@ -72,6 +73,10 @@ let routes: Routes = [
       {
         path: 'blocks',
         component: LatestBlocksComponent,
+      },
+      {
+        path: 'blocks/observed',
+        component: StartV2Component
       },
       {
         path: 'mining/pools',
