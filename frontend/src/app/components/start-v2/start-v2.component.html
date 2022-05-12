@@ -8,11 +8,4 @@
 
 <div *ngIf="countdown > 0" class="warning-label">{{ eventName }} in {{ countdown | number }} block{{ countdown === 1 ? '' : 's' }}!</div>
 
-<div id="blockchain-container" dir="ltr" #blockchainContainer
-  (mousedown)="onMouseDown($event)"
-  (dragstart)="onDragStart($event)"
->
-<app-blockchain-observed-blocks></app-blockchain-observed-blocks>
-</div>
-
 <router-outlet></router-outlet>

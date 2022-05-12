@@ -76,6 +76,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TenminBetComponent } from './components/tenmin-bet/tenmin-bet.component';
 import { TenminBlockComponent } from './components/tenmin-block/tenmin-block.component';
 import { ObservedBlockComponent } from './components/observed-block/observed-block.component';
+import { ObservedBlockDetailComponent } from './components/observed-block-detail/observed-block-detail.component';
 
 @NgModule({
   declarations: [
@@ -132,6 +133,7 @@ import { ObservedBlockComponent } from './components/observed-block/observed-blo
     TenminBetComponent,
     TenminBlockComponent,
     ObservedBlockComponent,
+    ObservedBlockDetailComponent,
     BetPieChartComponent,
     SetAccountIdComponent,
   ],

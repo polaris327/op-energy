@@ -1,6 +1,6 @@
 <div *ngIf="pastBlock" class="text-center bitcoin-block mined-block" id="bitcoin-block-{{ pastBlock.height }}" [ngStyle]="blockStyle">
   <div class="block-body">
-    <a [routerLink]="['/block/' | relativeUrl, pastBlock.id]" [state]="{ data: { block: pastBlock } }">{{ pastBlock.height }}</a>
+    <a [routerLink]="['/tetris/blocks/' | relativeUrl, pastBlock.id]" [state]="{ data: { block: pastBlock } }">{{ pastBlock.height }}</a>
   </div>
   <div style="width: 100%;display:flex;flex-direction:column;align-items:center">
     <div class="bitcoin-block-bottom-horizen" style="width: 100%;height:40px;text-align: center;padding: 8px;" [ngStyle]="blockStyle">

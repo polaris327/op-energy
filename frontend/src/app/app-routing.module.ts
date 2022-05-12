@@ -26,6 +26,8 @@ import { SponsorComponent } from './components/sponsor/sponsor.component';
 import { LiquidMasterPageComponent } from './components/liquid-master-page/liquid-master-page.component';
 import { PushTransactionComponent } from './components/push-transaction/push-transaction.component';
 import { PoolRankingComponent } from './components/pool-ranking/pool-ranking.component';
+import { ObservedBlockDetailComponent } from './components/observed-block-detail/observed-block-detail.component';
+import { BlockchainObservedBlocksComponent } from './components/blockchain-observed-blocks/blockchain-observed-blocks.component';
 
 let routes: Routes = [
   {
@@ -75,8 +77,18 @@ let routes: Routes = [
         component: LatestBlocksComponent,
       },
       {
-        path: 'blocks/observed',
-        component: StartV2Component
+        path: 'tetris',
+        component: StartV2Component,
+        children: [
+          {
+            path: 'blocks',
+            component: BlockchainObservedBlocksComponent,
+          },
+          {
+            path: 'blocks/:id',
+            component: ObservedBlockDetailComponent
+          },
+        ]
       },
       {
         path: 'mining/pools',
@@ -175,8 +187,18 @@ let routes: Routes = [
             component: LatestBlocksComponent,
           },
           {
-            path: 'blocks/observed',
-            component: StartV2Component
+            path: 'tetris',
+            component: StartV2Component,
+            children: [
+              {
+                path: 'blocks',
+                component: BlockchainObservedBlocksComponent,
+              },
+              {
+                path: 'blocks/:id',
+                component: ObservedBlockDetailComponent
+              },
+            ]
           },
           {
             path: 'mining/pools',
@@ -273,8 +295,18 @@ let routes: Routes = [
             component: LatestBlocksComponent,
           },
           {
-            path: 'blocks/observed',
-            component: StartV2Component
+            path: 'tetris',
+            component: StartV2Component,
+            children: [
+              {
+                path: 'blocks',
+                component: BlockchainObservedBlocksComponent,
+              },
+              {
+                path: 'blocks/:id',
+                component: ObservedBlockDetailComponent
+              },
+            ]
           },
           {
             path: 'mining/pools',
@@ -391,6 +423,20 @@ if (browserWindowEnv && browserWindowEnv.BASE_MODULE === 'liquid') {
         component: LatestBlocksComponent,
       },
       {
+        path: 'tetris',
+        component: StartV2Component,
+        children: [
+          {
+            path: 'blocks',
+            component: BlockchainObservedBlocksComponent,
+          },
+          {
+            path: 'blocks/:id',
+            component: ObservedBlockDetailComponent
+          },
+        ]
+      },
+      {
         path: 'graphs',
         component: StatisticsComponent,
       },
@@ -492,6 +538,20 @@ if (browserWindowEnv && browserWindowEnv.BASE_MODULE === 'liquid') {
           {
             path: 'blocks',
             component: LatestBlocksComponent,
+          },
+          {
+            path: 'tetris',
+            component: StartV2Component,
+            children: [
+              {
+                path: 'blocks',
+                component: BlockchainObservedBlocksComponent,
+              },
+              {
+                path: 'blocks/:id',
+                component: ObservedBlockDetailComponent
+              },
+            ]
           },
           {
             path: 'graphs',

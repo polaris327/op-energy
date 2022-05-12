@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef, NgModule } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef, NgModule, HostListener, ViewChild, ElementRef } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { Block } from 'src/app/interfaces/electrs.interface';
 import { StateService } from 'src/app/services/state.service';
@@ -44,6 +44,10 @@ export class BlockchainObservedBlocksComponent implements OnInit, OnDestroy {
     testnet: ['#1d486f', '#183550'],
     signet: ['#6f1d5d', '#471850'],
   };
+
+  mouseDragStartX: number;
+  blockchainScrollLeftInit: number;
+  @ViewChild('blockchainContainer') blockchainContainer: ElementRef;
 
   getMedianTimePosixTooltip(block: PastBlock) {
     const matchBlock = this.allBlocks.find(b => b.timestamp === block.mediantime);
@@ -128,6 +132,30 @@ export class BlockchainObservedBlocksComponent implements OnInit, OnDestroy {
     this.networkSubscription.unsubscribe();
     this.tabHiddenSubscription.unsubscribe();
     this.markBlockSubscription.unsubscribe();
+  }
+
+  onMouseDown(event: MouseEvent) {
+    this.mouseDragStartX = event.clientX;
+    this.blockchainScrollLeftInit = this.blockchainContainer.nativeElement.scrollLeft;
+  }
+  onDragStart(event: MouseEvent) { // Ignore Firefox annoying default drag behavior
+    event.preventDefault();
+  }
+
+  // We're catching the whole page event here because we still want to scroll blocks
+  // even if the mouse leave the blockchain blocks container. Same idea for mouseup below.
+  @HostListener('document:mousemove', ['$event'])
+  onMouseMove(event: MouseEvent): void {
+    if (this.mouseDragStartX != null) {
+      this.stateService.setBlockScrollingInProgress(true);
+      this.blockchainContainer.nativeElement.scrollLeft =
+        this.blockchainScrollLeftInit + this.mouseDragStartX - event.clientX
+    }
+  }
+  @HostListener('document:mouseup', [])
+  onMouseUp() {
+    this.mouseDragStartX = null;
+    this.stateService.setBlockScrollingInProgress(false);
   }
 
   moveArrowToPosition(animate: boolean, newBlockFromLeft = false) {
