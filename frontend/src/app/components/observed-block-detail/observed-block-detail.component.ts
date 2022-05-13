@@ -9,6 +9,7 @@ import { StateService } from '../../services/state.service';
 import { SeoService } from 'src/app/services/seo.service';
 import { WebsocketService } from 'src/app/services/websocket.service';
 import { RelativeUrlPipe } from 'src/app/shared/pipes/relative-url/relative-url.pipe';
+import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-observed-block-detail',
@@ -36,6 +37,16 @@ export class ObservedBlockDetailComponent implements OnInit, OnDestroy {
   txsLoadingStatus$: Observable<number>;
   showPreviousBlocklink = true;
   showNextBlocklink = true;
+  blockStyle: any;
+
+  gradientColors = {
+    '': ['#9339f4', '#105fb0'],
+    bisq: ['#9339f4', '#105fb0'],
+    liquid: ['#116761', '#183550'],
+    'liquidtestnet': ['#494a4a', '#272e46'],
+    testnet: ['#1d486f', '#183550'],
+    signet: ['#6f1d5d', '#471850'],
+  };
 
   subscription: Subscription;
   keyNavigationSubscription: Subscription;
@@ -46,8 +57,9 @@ export class ObservedBlockDetailComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private location: Location,
     private router: Router,
+    private modalService: NgbModal,
     private electrsApiService: ElectrsApiService,
-    private stateService: StateService,
+    public stateService: StateService,
     private seoService: SeoService,
     private websocketService: WebsocketService,
     private relativeUrlPipe: RelativeUrlPipe,
@@ -74,6 +86,7 @@ export class ObservedBlockDetailComponent implements OnInit, OnDestroy {
 
         if (block.id === this.blockHash) {
           this.block = block;
+          this.blockStyle = this.getStyleForBlock(this.block);
           this.fees = block.reward / 100000000 - this.blockSubsidy;
         }
       });
@@ -134,6 +147,7 @@ export class ObservedBlockDetailComponent implements OnInit, OnDestroy {
       }),
       tap((block: Block) => {
         this.block = block;
+        this.blockStyle = this.getStyleForBlock(this.block);
         this.blockHeight = block.height;
         this.nextBlockHeight = block.height + 1;
         this.setNextAndPreviousBlockLink();
@@ -222,14 +236,20 @@ export class ObservedBlockDetailComponent implements OnInit, OnDestroy {
       return;
     }
     const block = this.latestBlocks.find((b) => b.height === this.nextBlockHeight - 2);
-    this.router.navigate([this.relativeUrlPipe.transform('/block/'),
+    this.router.navigate([this.relativeUrlPipe.transform('/tetris/blocks/'),
       block ? block.id : this.block.previousblockhash], { state: { data: { block, blockHeight: this.nextBlockHeight - 2 } } });
   }
 
   navigateToNextBlock() {
     const block = this.latestBlocks.find((b) => b.height === this.nextBlockHeight);
-    this.router.navigate([this.relativeUrlPipe.transform('/block/'),
+    this.router.navigate([this.relativeUrlPipe.transform('/tetris/blocks/'),
       block ? block.id : this.nextBlockHeight], { state: { data: { block, blockHeight: this.nextBlockHeight } } });
+  }
+
+  navigateToBlockByNumber() {
+    const block = this.latestBlocks.find((b) => b.height === this.blockHeight);
+    this.router.navigate([this.relativeUrlPipe.transform('/tetris/blocks/'),
+      block ? block.id : this.blockHeight], { state: { data: { block, blockHeight: this.blockHeight } } });
   }
 
   setNextAndPreviousBlockLink(){
@@ -245,5 +265,30 @@ export class ObservedBlockDetailComponent implements OnInit, OnDestroy {
         this.showNextBlocklink = true;
       }
     }
+  }
+
+  getStyleForBlock(block: Block) {
+    const greenBackgroundHeight = (block.weight / this.stateService.env.BLOCK_WEIGHT_UNITS) * 100;
+    let addLeft = 0;
+
+    if (block.stage === 1) {
+      block.stage = 2;
+      addLeft = -205;
+    }
+
+    return {
+      background: `repeating-linear-gradient(
+        #2d3348,
+        #2d3348 ${greenBackgroundHeight}%,
+        ${this.gradientColors[this.network][0]} ${Math.max(greenBackgroundHeight, 0)}%,
+        ${this.gradientColors[this.network][1]} 100%
+      )`,
+    };
+  }
+
+  open(content) {
+    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
+    }, (reason) => {
+    });
   }
 }

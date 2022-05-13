@@ -1,3 +1,53 @@
 <div class="observed-block-detail">
-  <app-observed-block [pastBlock]="block"></app-observed-block>
+  <div *ngIf="block" class="text-center bitcoin-block mined-block" id="bitcoin-block-{{ block.height }}" [ngStyle]="blockStyle">
+    <div class="block-body">
+      <a [routerLink]="['/tetris/blocks/' | relativeUrl, block.id]" [state]="{ data: { block: block } }">{{ block.height }}</a>
+      <div>
+        <fa-icon [icon]="['fas', 'angle-up']" [fixedWidth]="true" (click)="navigateToNextBlock()"></fa-icon>
+        <button class="btn btn-sm btn-primary" (click)="open(content)">Go to</button>
+        <fa-icon [icon]="['fas', 'angle-down']" [fixedWidth]="true" (click)="navigateToPreviousBlock()"></fa-icon>
+      </div>
+    </div>
+    <div class="block-t">
+      <div class="bitcoin-block-bottom-horizen" style="width: 100%;height:60px;text-align: center;padding: 18px;" [ngStyle]="blockStyle">
+        <a>{{ block.mediantime }}</a><a class="m-tooltip" [ngbTooltip]="tooltipContent" placement="auto" container="body">[?]</a>
+        <ng-template #tooltipContent>
+          <div class="mediantime-utc">
+            Mediantime (POSIX):
+            <div><a class="mediantime-posix">{{ block.mediantime }}</a></div>
+          </div>
+          <div class="mediantime-utc">
+            Mediantime (UTC):
+            <div>{{ block.mediantime * 1000 | date:'yyyy-MM-dd HH:mm:ss' }}</div>
+          </div>
+        </ng-template>
+      </div>
+      <div class="bitcoin-block-bottom-vertical" style="width: 60px;height: 60px;" [ngStyle]="blockStyle"></div>
+    </div>
+  </div>
+  <div *ngIf="!block" class="text-center bitcoin-block mined-block" [ngStyle]="blockStyle">
+    <div class="block-height">
+      <a>{{ stateService.latestBlockHeight + 1 }}</a>
+    </div>
+    <div class="block-body">
+      ???
+    </div>
+  </div>
 </div>
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Go to block</h4>
+    <!-- <fa-icon [icon]="['fas', 'times']" [fixedWidth]="true" (click)="modal.dismiss('Cross click')"></fa-icon> -->
+  </div>
+  <div class="modal-body">
+    <div class="mb-3">
+      <label>Block number</label>
+      <div class="input-group">
+        <input type="number" min="0" class="form-control" [(ngModel)]="blockHeight">
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click');navigateToBlockByNumber()">Go</button>
+  </div>
+</ng-template>

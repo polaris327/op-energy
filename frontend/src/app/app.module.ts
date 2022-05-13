@@ -4,6 +4,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { NgxEchartsModule } from 'ngx-echarts';
+import { FormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './components/app/app.component';
@@ -148,6 +149,7 @@ import { ObservedBlockDetailComponent } from './components/observed-block-detail
     NgbModule,
     FontAwesomeModule,
     SharedModule,
+    FormsModule,
     NgxEchartsModule.forRoot({
       echarts: () => import('echarts')
     })
