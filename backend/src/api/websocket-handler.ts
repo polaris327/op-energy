@@ -12,6 +12,7 @@ import loadingIndicators from './loading-indicators';
 import config from '../config';
 import transactionUtils from './transaction-utils';
 import {exec} from 'child_process';
+import * as sha256 from 'crypto-js/sha256';
 
 class WebsocketHandler {
   private wss: WebSocket.Server | undefined;
@@ -108,12 +109,12 @@ class WebsocketHandler {
             client.send(JSON.stringify(this.getInitData(_blocks)));
           }
 
-          if( parsedMessage.action === 'checkAccountId' && parsedMessage.data.length > 0) {
-            client.send( JSON.stringify( this.checkAccountId(parsedMessage.data[0])));
+          if( parsedMessage.action === 'checkAccountSecret' && parsedMessage.data.length > 0) {
+            client.send( JSON.stringify( this.checkAccountSecret(parsedMessage.data[0])));
           }
 
-          if( parsedMessage.action === 'want' && parsedMessage.data.indexOf('generatedaccountid') > -1) {
-            this.handleGeneratedAccountId(client);
+          if( parsedMessage.action === 'want' && parsedMessage.data.indexOf('generatedaccounttoken') > -1) {
+            this.handleGeneratedAccountToken(client);
           }
 
           if (parsedMessage.action === 'ping') {
@@ -484,36 +485,81 @@ class WebsocketHandler {
       client.send(JSON.stringify(response));
     });
   }
-  handleGeneratedAccountId(client) {
+  // this procedure generates:
+  // - a random secret, which is a sha256 hash
+  // - an appropriate API token for generated random secret
+  handleGeneratedAccountToken(client) {
     exec( 'dd if=/dev/urandom bs=10 count=1 | sha256sum'
         , (error, stdout, stderr) => {
           if( error) {
-            logger.info( 'handleGeneratedAccountId: exec error: ' + error);
+            logger.info( 'handleGeneratedAccountToken: exec error: ' + error);
           } else {
-            let newHash = stdout.slice(0, 64);
+            var newHashArr = [...stdout.slice(0, 64)];
+            // set signature bytes in order to be able to perform a simple check of the user's input
+            newHashArr[10] = '0';
+            newHashArr[30] = 'e';
+            newHashArr[60] = 'e';
+            const newHash = newHashArr.join('');
+            const newAccountToken = this.getHashSalt( newHash, config.DATABASE.SECRET_SALT);
             if( this.isAlphaNum( newHash)) {
               client.send( JSON.stringify( {
-                'generatedAccountId': newHash,
+                'generatedAccountSecret': newHash, // this value is being used to access account
+                'generatedAccountToken': newAccountToken, // this value will be used as API token
               }));
             }
           }
         }
     );
   }
-  checkAccountId( accountId: string) {
-    if( accountId.length !== 64) {
+  // returns a set with the only key:
+  // - 'declinedAccountSecret' in case if accountSecret haven't passed any check. The value is a short description of error
+  // - 'checkedAccountToken' in case if accountSecret had passed the checks. The value is an API token which can be used for appropriate API calls
+  checkAccountSecret( accountSecret: string) {
+    if( accountSecret.length !== 64) {
       return {
-        declinedAccountId: 'length',
+        declinedAccountSecret: 'length',
       };
     }
-    if( !this.isAlphaNum(accountId)) {
+    if( accountSecret[10] !== '0'
+      ||accountSecret[30] !== 'e' // secret has e at this position
+      ||accountSecret[60] !== 'e'
+      ) {
       return {
-        declinedAccountId: 'alphanum',
+        declinedAccountSecret: 'header',
       };
     }
+    if( !this.isAlphaNum(accountSecret)) {
+      return {
+        declinedAccountSecret: 'alphanum',
+      };
+    }
+    let accountToken = this.getHashSalt( accountSecret, config.DATABASE.SECRET_SALT);
     return {
-      checkedAccountId: accountId,
+      checkedAccountToken: accountToken,
     };
+  }
+  // returns a string(64) which is a sha256 hash of the src + salt string
+  // result contains at indexes:
+  // - 10: '0'
+  // - 30: '0'
+  // - 60: 'e'
+  // which is done just to be able to perform a quick check of the user's input
+  // Params:
+  // - src - string(64)
+  // - salt - string(64)
+  getHashSalt( src: string, salt: string):string {
+    if( src.length < 64) {
+      throw new Error("getHashSalt: src.length < 64");
+    }
+    if( salt.length < 64) {
+      throw new Error("getHashSalt: salt.length < 64");
+    }
+    var rawHash = sha256( src + salt);
+    // set significant bytes to be able to make a dumb check later
+    rawHash[10] = '0';
+    rawHash[30] = '0'; // token has 0 at this position
+    rawHash[60] = 'e';
+    return rawHash.toString().slice(0,64);
   }
   isAlphaNum(str: string){
     var code, i, len;

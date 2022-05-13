@@ -3,7 +3,7 @@ import { DB } from '../database';
 import logger from '../logger';
 
 class OpEnergyDatabaseMigration {
-  private static currentVersion = 2;
+  private static currentVersion = 3;
 
   public async $initializeOrMigrateDatabase(): Promise<void> {
     logger.info('OE MIGRATION: running migrations');
@@ -29,6 +29,10 @@ class OpEnergyDatabaseMigration {
       }
       case 1: {
         await this.$createTableChainstats();
+        break;
+      }
+      case 2: {
+        await this.$createTableUsers();
         break;
       }
       default: {
@@ -96,6 +100,25 @@ class OpEnergyDatabaseMigration {
       throw new Error( err_msg);
     }
     logger.info( 'OE MOGRATION: OpEneryDatabaseMigration.$createTableChainstats completed');
+  }
+  private async $createTableUsers(){
+    try {
+      const connection = await DB.accountPool.getConnection();
+      const query = `CREATE TABLE IF NOT EXISTS \`users\` (
+        \`user_id\` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+        \`secret_hash\` VARCHAR(65) NOT NULL,
+        \`display_name\` VARCHAR(30) NOT NULL,
+        \`creation_time\` datetime NOT NULL,
+        \`last_log_time\` datetime NOT NULL,
+        PRIMARY KEY(user_id)
+      ) ENGINE=InnoDB CHARSET=utf8`;
+      await connection.query<any>(query, []);
+      connection.release();
+    } catch(e) {
+      let err_msg = `OE MIGRATION: createTableUsers error ${( e instanceof Error ? e.message : e)}`;
+      throw new Error( err_msg);
+    }
+    logger.info( 'OE MOGRATION: OpEneryDatabaseMigration.$createTableUsers completed');
   }
 
 }

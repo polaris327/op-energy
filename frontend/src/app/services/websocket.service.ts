@@ -179,11 +179,11 @@ export class WebsocketService {
     this.lastWant = JSON.stringify(data);
   }
 
-  checkAccountId( accountId: string) {
+  checkAccountSecret( accountSecret: string) {
     if (!this.stateService.isBrowser) {
       return;
     }
-    this.websocketSubject.next( {action: 'checkAccountId', data: [ accountId] });
+    this.websocketSubject.next( {action: 'checkAccountSecret', data: [ accountSecret] });
   }
 
   goOffline() {
@@ -221,18 +221,19 @@ export class WebsocketService {
         }
       });
     }
-    if( response.checkedAccountId) {
-      this.stateService.accountIdState = 'checked';
-      this.stateService.$accountId.next( response.checkedAccountId);
-      this.stateService.$showAccountIdWarning.next( false);
+    if( response.checkedAccountToken) {
+      this.stateService.accountTokenState = 'checked';
+      this.stateService.$accountToken.next( response.checkedAccountToken);
+      this.stateService.$showAccountURLWarning.next( false);
     }
-    if( response.declinedAccountId) {
-      this.want(['generatedaccountid']);
+    if( response.declinedAccountSecret) {
+      this.want(['generatedaccounttoken']);
     }
-    if( response.generatedAccountId ) {
-      this.stateService.accountIdState = 'generated';
-      this.stateService.$accountId.next( response.generatedAccountId);
-      this.stateService.$showAccountIdWarning.next( true);
+    if( response.generatedAccountSecret  && response.generatedAccountToken) {
+      this.stateService.accountTokenState = 'generated';
+      this.stateService.$accountSecret.next( response.generatedAccountSecret);
+      this.stateService.$accountToken.next( response.generatedAccountToken);
+      this.stateService.$showAccountURLWarning.next( true);
     }
     if( response.lastDifficultyEpochEndBlocks && response.lastDifficultyEpochEndBlocks.length) {
       const lastDifficultyEpochEndBlocks = response.lastDifficultyEpochEndBlocks;
