@@ -28,6 +28,7 @@ export interface WebsocketResponse {
   'track-asset'?: string;
   'watch-mempool'?: boolean;
   'track-bisq-market'?: string;
+  'track-single-player-guess-block'?: 'start' | 'stop';
 }
 
 export interface MempoolBlock {

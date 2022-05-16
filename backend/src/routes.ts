@@ -21,6 +21,7 @@ import bitcoinClient from './api/bitcoin/bitcoin-client';
 import elementsParser from './api/liquid/elements-parser';
 import icons from './api/liquid/icons';
 import miningStats from './api/mining';
+import opEnergyApiService from './api/op-energy.service';
 
 class Routes {
   constructor() {}
@@ -855,6 +856,111 @@ class Routes {
       res.status(404).send('Asset icons not found');
     }
   }
+  public async $getTimeStrikes(req: Request, res: Response) {
+    try {
+      const maccount_token = req.query.account_token;
+      if( typeof maccount_token === "string" ) {
+        const result = await opEnergyApiService.$getTimeStrikes( opEnergyApiService.verifyAccountToken( maccount_token));
+        res.json( result.map( (blocksid) => {
+          return blocksid.value;
+        }));
+      } else {
+        throw new Error( 'ERROR: req.query.account_token is not a string');
+      }
+    } catch(e) {
+      logger.err( `ERROR: OpEnergyApiService.$getTimeStrikes: ${e instanceof Error ? e.message: e}`);
+      res.status(404).send('not found');
+    }
+  }
+  public async $postTimeStrike(req: Request, res: Response) {
+    try {
+      const maccount_token = req.body.account_token;
+      const mnlocktime = req.body.nlocktime;
+      const mblock_height = req.body.block_height;
+
+      if( typeof maccount_token !== "string") {
+        throw new Error( 'ERROR: req.body.account_token is not a string');
+      }
+      if( typeof mnlocktime !== "string") {
+        throw new Error( 'ERROR: req.body.nlocktime is not a string');
+      }
+      if( typeof mblock_height !== "string" ) {
+        throw new Error( 'ERROR: req.body.block_height is not a string');
+      }
+      const result = await opEnergyApiService.$addTimeStrike( opEnergyApiService.verifyAccountToken( maccount_token), opEnergyApiService.verifyBlockHeight( mblock_height), opEnergyApiService.verifyNLockTime(mnlocktime));
+      res.json( result.value);
+    } catch(e) {
+      logger.err( `ERROR: OpEnergyApiService.$addTimeStrike: ${e instanceof Error ? e.message: e}`);
+      res.status(404).send('not found');
+    }
+  }
+  public async $getSlowFastGuesses(req: Request, res: Response) {
+    try {
+      const maccount_token = req.query.account_token;
+      const mnlocktime = req.query.nlocktime;
+      const mblock_height = req.query.block_height;
+
+      if( typeof maccount_token !== "string") {
+        throw new Error( 'ERROR: req.query.account_token is not a string');
+      }
+      if( typeof mnlocktime !== "string") {
+        throw new Error( 'ERROR: req.query.nlocktime is not a string');
+      }
+      if( typeof mblock_height !== "string" ) {
+        throw new Error( 'ERROR: req.query.block_height is not a string');
+      }
+      const result = await opEnergyApiService.$getSlowFastGuesses( opEnergyApiService.verifyAccountToken( maccount_token), opEnergyApiService.verifyBlockHeight( mblock_height), opEnergyApiService.verifyNLockTime(mnlocktime));
+      res.json( result);
+    } catch(e) {
+      logger.err( `ERROR: OpEnergyApiService.$getSlowFastGuesses: ${e instanceof Error ? e.message: e}`);
+      res.status(404).send('not found');
+    }
+  }
+  public async $postSlowFastGuess(req: Request, res: Response) {
+    try {
+      const maccount_token = req.body.account_token;
+      const mnlocktime = req.body.nlocktime;
+      const mblock_height = req.body.block_height;
+      const mguess = req.body.guess;
+
+      if( typeof maccount_token !== "string") {
+        throw new Error( 'ERROR: req.body.account_token is not a string');
+      }
+      if( typeof mnlocktime !== "string") {
+        throw new Error( 'ERROR: req.body.nlocktime is not a string');
+      }
+      if( typeof mblock_height !== "string" ) {
+        throw new Error( 'ERROR: req.body.block_height is not a string');
+      }
+      if( typeof mguess !== "string" ) {
+        throw new Error( 'ERROR: req.body.guess is not a string');
+      }
+      const result = await opEnergyApiService.$addSlowFastGuess( opEnergyApiService.verifyAccountToken( maccount_token), opEnergyApiService.verifyBlockHeight( mblock_height), opEnergyApiService.verifyNLockTime(mnlocktime), opEnergyApiService.verifySlowFastGuessValue( mguess));
+      res.json( result);
+    } catch(e) {
+      logger.err( `ERROR: OpEnergyApiService.$postSlowFastGuess: ${e instanceof Error ? e.message: e}`);
+      res.status(404).send('not found');
+    }
+  }
+  public async $postUserDisplayName(req: Request, res: Response) {
+    try {
+      const maccount_token = req.body.account_token;
+      const mdisplay_name = req.body.display_name;
+
+      if( typeof maccount_token !== "string") {
+        throw new Error( 'ERROR: req.body.account_token is not a string');
+      }
+      if( typeof mdisplay_name !== "string") {
+        throw new Error( 'ERROR: req.body.display_name is not a string');
+      }
+      const result = await opEnergyApiService.$updateUserDisplayName( opEnergyApiService.verifyAccountToken( maccount_token), opEnergyApiService.verifyAlphaNum(mdisplay_name.slice(0,30)));
+      res.json( result);
+    } catch(e) {
+      logger.err( `ERROR: OpEnergyApiService.$postUserDisplayName: ${e instanceof Error ? e.message: e}`);
+      res.status(404).send('not found');
+    }
+  }
+
 }
 
 export default new Routes();

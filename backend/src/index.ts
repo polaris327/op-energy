@@ -187,6 +187,11 @@ class Server {
 
   setUpHttpApiRoutes() {
     this.app
+      .get(config.MEMPOOL.API_URL_PREFIX + 'strike/mediantime', routes.$getTimeStrikes)
+      .post(config.MEMPOOL.API_URL_PREFIX + 'strike/mediantime', routes.$postTimeStrike)
+      .get(config.MEMPOOL.API_URL_PREFIX + 'slowfastguess/mediantime', routes.$getSlowFastGuesses)
+      .post(config.MEMPOOL.API_URL_PREFIX + 'slowfastguess/mediantime', routes.$postSlowFastGuess)
+      .post(config.MEMPOOL.API_URL_PREFIX + 'user/displayname', routes.$postUserDisplayName)
       .get(config.MEMPOOL.API_URL_PREFIX + 'transaction-times', routes.getTransactionTimes)
       .get(config.MEMPOOL.API_URL_PREFIX + 'cpfp/:txId', routes.getCpfpInfo)
       .get(config.MEMPOOL.API_URL_PREFIX + 'difficulty-adjustment', routes.getDifficultyChange)

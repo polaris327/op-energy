@@ -9,6 +9,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './components/app/app.component';
 
 import { StartComponent } from './components/start/start.component';
+import { OpEnergyApiService } from './services/op-energy.service';
 import { ElectrsApiService } from './services/electrs-api.service';
 import { TransactionComponent } from './components/transaction/transaction.component';
 import { TransactionsListComponent } from './components/transactions-list/transactions-list.component';
@@ -133,6 +134,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     })
   ],
   providers: [
+    OpEnergyApiService,
     ElectrsApiService,
     StateService,
     WebsocketService,

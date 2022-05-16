@@ -167,6 +167,18 @@ export class WebsocketService {
   fetchStatistics(historicalDate: string) {
     this.websocketSubject.next({ historicalDate });
   }
+  // this procedure should be used to ask server to send messages with the result of single player guess block game
+  startTrackSinglePlayerGuessBlock() {
+    this.websocketSubject.next( {
+      'track-single-player-guess-block': 'start'
+    });
+  }
+  // this procedure asks server to stop sending messages with the result of single player guess block game
+  stopTrackSinglePlayerGuessBlock() {
+    this.websocketSubject.next( {
+      'track-single-player-guess-block': 'start'
+    });
+  }
 
   want(data: string[], force = false) {
     if (!this.stateService.isBrowser) {

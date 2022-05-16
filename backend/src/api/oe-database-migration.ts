@@ -3,7 +3,7 @@ import { DB } from '../database';
 import logger from '../logger';
 
 class OpEnergyDatabaseMigration {
-  private static currentVersion = 3;
+  private static currentVersion = 6;
 
   public async $initializeOrMigrateDatabase(): Promise<void> {
     logger.info('OE MIGRATION: running migrations');
@@ -33,6 +33,18 @@ class OpEnergyDatabaseMigration {
       }
       case 2: {
         await this.$createTableUsers();
+        break;
+      }
+      case 3: {
+        await this.$alterTableUsersCreateIndex();
+        break;
+      }
+      case 4: {
+        await this.$createTableTimeStrikes();
+        break;
+      }
+      case 5: {
+        await this.$createTableSinglePlayerGuesses();
         break;
       }
       default: {
@@ -105,12 +117,12 @@ class OpEnergyDatabaseMigration {
     try {
       const connection = await DB.accountPool.getConnection();
       const query = `CREATE TABLE IF NOT EXISTS \`users\` (
-        \`user_id\` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+        \`id\` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
         \`secret_hash\` VARCHAR(65) NOT NULL,
         \`display_name\` VARCHAR(30) NOT NULL,
         \`creation_time\` datetime NOT NULL,
         \`last_log_time\` datetime NOT NULL,
-        PRIMARY KEY(user_id)
+        PRIMARY KEY(id)
       ) ENGINE=InnoDB CHARSET=utf8`;
       await connection.query<any>(query, []);
       connection.release();
@@ -119,6 +131,64 @@ class OpEnergyDatabaseMigration {
       throw new Error( err_msg);
     }
     logger.info( 'OE MOGRATION: OpEneryDatabaseMigration.$createTableUsers completed');
+  }
+  private async $createTableTimeStrikes(){
+    try {
+      const connection = await DB.accountPool.getConnection();
+      const query = `CREATE TABLE IF NOT EXISTS \`timestrikes\` (
+        \`id\` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+        \`user_id\` int(11) UNSIGNED NOT NULL,
+        \`block_height\` int(11) UNSIGNED NOT NULL,
+        \`nlocktime\` int(11) UNSIGNED NOT NULL,
+        \`creation_time\` datetime NOT NULL,
+        PRIMARY KEY(id),
+        UNIQUE INDEX(block_height,nlocktime),
+        FOREIGN KEY (user_id)
+          REFERENCES users(id)
+      ) ENGINE=InnoDB CHARSET=utf8`;
+      await connection.query<any>(query, []);
+      connection.release();
+    } catch(e) {
+      let err_msg = `OE MIGRATION: createTableTimeStrikes error ${( e instanceof Error ? e.message : e)}`;
+      throw new Error( err_msg);
+    }
+    logger.info( 'OE MOGRATION: OpEneryDatabaseMigration.$createTableTimeStrikes completed');
+  }
+  private async $alterTableUsersCreateIndex(){
+    try {
+      const connection = await DB.accountPool.getConnection();
+      const query = `ALTER TABLE \`users\` ADD UNIQUE INDEX(secret_hash)`;
+      await connection.query<any>(query, []);
+      connection.release();
+    } catch(e) {
+      let err_msg = `OE MIGRATION: ERROR: OpEneryDatabaseMigration.$alterTableUsersCreateIndex ${( e instanceof Error ? e.message : e)}`;
+      throw new Error( err_msg);
+    }
+    logger.info( 'OE MOGRATION: OpEneryDatabaseMigration.$alterTableUsersCreateIndex completed');
+  }
+  private async $createTableSinglePlayerGuesses(){
+    try {
+      const connection = await DB.accountPool.getConnection();
+      const query = `CREATE TABLE IF NOT EXISTS \`slowfastguesses\` (
+        \`id\` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+        \`user_id\` int(11) UNSIGNED NOT NULL,
+        \`timestrike_id\` int(11) UNSIGNED NOT NULL,
+        \`guess\` int(1) UNSIGNED NOT NULL,
+        \`creation_time\` datetime NOT NULL,
+        PRIMARY KEY(id),
+        UNIQUE INDEX(user_id,timestrike_id),
+        FOREIGN KEY (user_id)
+          REFERENCES users(id),
+        FOREIGN KEY (timestrike_id)
+          REFERENCES timestrikes(id)
+      ) ENGINE=InnoDB CHARSET=utf8`;
+      await connection.query<any>(query, []);
+      connection.release();
+    } catch(e) {
+      let err_msg = `OE MIGRATION: createTableSinglePlayerGuesses error ${( e instanceof Error ? e.message : e)}`;
+      throw new Error( err_msg);
+    }
+    logger.info( 'OE MOGRATION: OpEneryDatabaseMigration.$createTableSinglePlayerGuesses completed');
   }
 
 }
