@@ -1,0 +1,23 @@
+.observed-blockspan-detail {
+  margin-top: 100px;
+
+  &--top {
+    display: flex;
+    justify-content: center;
+
+    .blockspan {
+      min-width: 250px;
+      margin-right: 150px;
+    }
+
+    .blockspan-table {
+      .content {
+        word-wrap: break-word;
+        background-color: #24273e;
+        background-clip: border-box;
+        border: 1px solid rgba(0,0,0,.125);
+        box-shadow: 0.125rem 0.125rem 0.25rem #00000013;
+      }
+    }
+  }
+}

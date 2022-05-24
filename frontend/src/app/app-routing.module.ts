@@ -27,6 +27,7 @@ import { LiquidMasterPageComponent } from './components/liquid-master-page/liqui
 import { PushTransactionComponent } from './components/push-transaction/push-transaction.component';
 import { PoolRankingComponent } from './components/pool-ranking/pool-ranking.component';
 import { ObservedBlockDetailComponent } from './components/observed-block-detail/observed-block-detail.component';
+import { ObservedBlockspanDetailComponent } from './components/observed-blockspan-detail/observed-blockspan-detail.component';
 import { BlockchainObservedBlocksComponent } from './components/blockchain-observed-blocks/blockchain-observed-blocks.component';
 
 let routes: Routes = [
@@ -87,6 +88,10 @@ let routes: Routes = [
           {
             path: 'blocks/:id',
             component: ObservedBlockDetailComponent
+          },
+          {
+            path: 'blockspans/:from/:to',
+            component: ObservedBlockspanDetailComponent
           },
         ]
       },
@@ -198,6 +203,10 @@ let routes: Routes = [
                 path: 'blocks/:id',
                 component: ObservedBlockDetailComponent
               },
+              {
+                path: 'blockspans/:from/:to',
+                component: ObservedBlockspanDetailComponent
+              },
             ]
           },
           {
@@ -305,6 +314,10 @@ let routes: Routes = [
               {
                 path: 'blocks/:id',
                 component: ObservedBlockDetailComponent
+              },
+              {
+                path: 'blockspans/:from/:to',
+                component: ObservedBlockspanDetailComponent
               },
             ]
           },
@@ -434,6 +447,10 @@ if (browserWindowEnv && browserWindowEnv.BASE_MODULE === 'liquid') {
             path: 'blocks/:id',
             component: ObservedBlockDetailComponent
           },
+          {
+            path: 'blockspans/:from/:to',
+            component: ObservedBlockspanDetailComponent
+          },
         ]
       },
       {
@@ -550,6 +567,10 @@ if (browserWindowEnv && browserWindowEnv.BASE_MODULE === 'liquid') {
               {
                 path: 'blocks/:id',
                 component: ObservedBlockDetailComponent
+              },
+              {
+                path: 'blockspans/:from/:to',
+                component: ObservedBlockspanDetailComponent
               },
             ]
           },

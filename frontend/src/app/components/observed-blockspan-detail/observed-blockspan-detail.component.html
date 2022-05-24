@@ -1,0 +1,40 @@
+<div class="observed-blockspan-detail">
+  <div class="observed-blockspan-detail--top">
+    <div class="blockspan">
+      <app-tetris-blockspan *ngIf="fromBlock && toBlock" [fromBlock]="fromBlock" [toBlock]="toBlock"></app-tetris-blockspan>
+    </div>
+    <div *ngIf="fromBlock && toBlock" class="blockspan-table">
+      <h3>Blockspan < {{ fromBlock.height }} - {{ toBlock.height }} ></h3>
+      <div class="content">
+        <table class="table table-borderless table-striped">
+          <tbody>
+            <tr>
+              <td></td>
+              <td>Block</td>
+              <td>Mediantime (UTC)</td>
+              <td>Mediantime (Posix Seconds)</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>{{ toBlock.height }}</td>
+              <td>{{ toBlock.mediantime * 1000 | date:'yyyy-MM-dd HH:mm' }}</td>
+              <td>{{ toBlock.mediantime }}</td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>{{ fromBlock.height }}</td>
+              <td>{{ fromBlock.mediantime * 1000 | date:'yyyy-MM-dd HH:mm' }}</td>
+              <td>{{ fromBlock.mediantime }}</td>
+            </tr>
+            <tr>
+              <td>Elapsed</td>
+              <td>{{ toBlock.height - fromBlock.height }}</td>
+              <td>{{ toHHMMSS(toBlock.mediantime - fromBlock.mediantime) }}</td>
+              <td>{{ toBlock.mediantime - fromBlock.mediantime }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

@@ -58,7 +58,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { DifficultyComponent } from './components/difficulty/difficulty.component';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faFilter, faAngleDown, faAngleUp, faAngleRight, faAngleLeft, faBolt, faChartArea, faCogs, faCubes, faHammer, faDatabase, faExchangeAlt, faInfoCircle,
-  faLink, faList, faSearch, faCaretUp, faCaretDown, faTachometerAlt, faThList, faTint, faTv, faAngleDoubleDown, faSortUp, faAngleDoubleUp, faChevronDown, faFileAlt, faRedoAlt, faArrowAltCircleRight, faExternalLinkAlt, faBook, faListUl } from '@fortawesome/free-solid-svg-icons';
+  faLink, faList, faSearch, faCaretUp, faCaretDown, faTachometerAlt, faThList, faTint, faTv, faAngleDoubleDown, faSortUp, faAngleDoubleUp, faChevronDown, faFileAlt, faRedoAlt, faArrowAltCircleRight, faExternalLinkAlt, faBook, faListUl, faFire } from '@fortawesome/free-solid-svg-icons';
 import { ApiDocsComponent } from './components/docs/api-docs.component';
 import { DocsComponent } from './components/docs/docs.component';
 import { ApiDocsNavComponent } from './components/docs/api-docs-nav.component';
@@ -78,6 +78,8 @@ import { TenminBetComponent } from './components/tenmin-bet/tenmin-bet.component
 import { TenminBlockComponent } from './components/tenmin-block/tenmin-block.component';
 import { ObservedBlockComponent } from './components/observed-block/observed-block.component';
 import { ObservedBlockDetailComponent } from './components/observed-block-detail/observed-block-detail.component';
+import { ObservedBlockspanDetailComponent } from './components/observed-blockspan-detail/observed-blockspan-detail.component';
+import { TetrisBlockspanComponent } from './components/tetris-blockspan/tetris-blockspan.component';
 
 @NgModule({
   declarations: [
@@ -135,8 +137,10 @@ import { ObservedBlockDetailComponent } from './components/observed-block-detail
     TenminBlockComponent,
     ObservedBlockComponent,
     ObservedBlockDetailComponent,
+    ObservedBlockspanDetailComponent,
     BetPieChartComponent,
     SetAccountIdComponent,
+    TetrisBlockspanComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
@@ -201,5 +205,6 @@ export class AppModule {
     library.addIcons(faAngleLeft);
     library.addIcons(faBook);
     library.addIcons(faListUl);
+    library.addIcons(faFire);
   }
 }

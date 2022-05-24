@@ -1,0 +1,19 @@
+<div class="tetris-blockspan">
+  <div class="to-block">
+    {{ toBlock.height }}
+    <div class="span-block">{{ span }}</div>
+  </div>
+  <div class="from-block">{{ fromBlock.height }}</div>
+  <div class="t-block" [class.decrease]="energyDiff < 0">
+    <div class="top">
+      <div>
+        <fa-icon *ngFor="let i of iconArray" [icon]="['fas', energyDiff >= 0 ? 'fire' : 'tint']" [fixedWidth]="true"></fa-icon>
+        <span *ngIf="totalIconCount > maxCount" class="ml-1">+{{ totalIconCount - maxCount }}</span>
+      </div>
+    </div>
+    <div class="bottom">
+      <div>{{ energyDiff | number }}%</div>
+      <div>{{ timeDiff }}s</div>
+    </div>
+  </div>
+</div>
