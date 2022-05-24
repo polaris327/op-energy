@@ -32,6 +32,12 @@
               <td>{{ toHHMMSS(toBlock.mediantime - fromBlock.mediantime) }}</td>
               <td>{{ toBlock.mediantime - fromBlock.mediantime }}</td>
             </tr>
+            <tr>
+              <td>Energy:</td>
+              <td>({{ span }} * 600 - {{ timeDiff }}) / ({{ span }} * 600)</td>
+              <td></td>
+              <td>{{ energyDiff | number }}%</td>
+            </tr>
           </tbody>
         </table>
       </div>

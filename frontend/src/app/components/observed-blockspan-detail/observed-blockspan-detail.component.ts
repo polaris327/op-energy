@@ -43,6 +43,18 @@ export class ObservedBlockspanDetailComponent implements OnInit, OnDestroy {
   blocksSubscription: Subscription;
   networkChangedSubscription: Subscription;
 
+  get span(): number {
+    return (this.toBlock.height - this.fromBlock.height);
+  }
+
+  get timeDiff(): number {
+    return this.toBlock.mediantime - this.fromBlock.mediantime;
+  }
+
+  get energyDiff(): number {
+    return ((this.span * 600 - this.timeDiff) / (this.span * 600)) * 100;
+  }
+
   constructor(
     private route: ActivatedRoute,
     private location: Location,
@@ -126,7 +138,7 @@ export class ObservedBlockspanDetailComponent implements OnInit, OnDestroy {
                   this.fromBlockHash = fromHash;
                   this.toBlockHash = toHash;
                   this.location.replaceState(
-                    this.router.createUrlTree([(this.network ? '/' + this.network : '') + `/tetris/blockspans/`, fromHash, toHash]).toString()
+                    this.router.createUrlTree([(this.network ? '/' + this.network : '') + `/tetris/blockspan/`, fromHash, toHash]).toString()
                   );
                   return combineLatest([
                     this.electrsApiService.getBlock$(fromHash),
@@ -204,19 +216,19 @@ export class ObservedBlockspanDetailComponent implements OnInit, OnDestroy {
       return;
     }
     const block = this.latestBlocks.find((b) => b.height === this.nextBlockHeight - 2);
-    this.router.navigate([this.relativeUrlPipe.transform('/tetris/blockspans/'),
+    this.router.navigate([this.relativeUrlPipe.transform('/tetris/blockspan/'),
       block ? block.id : this.fromBlock.previousblockhash], { state: { data: { block, blockHeight: this.nextBlockHeight - 2 } } });
   }
 
   navigateToNextBlock() {
     const block = this.latestBlocks.find((b) => b.height === this.nextBlockHeight);
-    this.router.navigate([this.relativeUrlPipe.transform('/tetris/blockspans/'),
+    this.router.navigate([this.relativeUrlPipe.transform('/tetris/blockspan/'),
       block ? block.id : this.nextBlockHeight], { state: { data: { block, blockHeight: this.nextBlockHeight } } });
   }
 
   navigateToBlockByNumber() {
     const block = this.latestBlocks.find((b) => b.height === this.blockHeight);
-    this.router.navigate([this.relativeUrlPipe.transform('/tetris/blockspans/'),
+    this.router.navigate([this.relativeUrlPipe.transform('/tetris/blockspan/'),
       block ? block.id : this.blockHeight], { state: { data: { block, blockHeight: this.blockHeight } } });
   }
 

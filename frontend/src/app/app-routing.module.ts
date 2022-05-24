@@ -90,7 +90,7 @@ let routes: Routes = [
             component: ObservedBlockDetailComponent
           },
           {
-            path: 'blockspans/:from/:to',
+            path: 'blockspan/:from/:to',
             component: ObservedBlockspanDetailComponent
           },
         ]
@@ -204,7 +204,7 @@ let routes: Routes = [
                 component: ObservedBlockDetailComponent
               },
               {
-                path: 'blockspans/:from/:to',
+                path: 'blockspan/:from/:to',
                 component: ObservedBlockspanDetailComponent
               },
             ]
@@ -316,7 +316,7 @@ let routes: Routes = [
                 component: ObservedBlockDetailComponent
               },
               {
-                path: 'blockspans/:from/:to',
+                path: 'blockspan/:from/:to',
                 component: ObservedBlockspanDetailComponent
               },
             ]
@@ -448,7 +448,7 @@ if (browserWindowEnv && browserWindowEnv.BASE_MODULE === 'liquid') {
             component: ObservedBlockDetailComponent
           },
           {
-            path: 'blockspans/:from/:to',
+            path: 'blockspan/:from/:to',
             component: ObservedBlockspanDetailComponent
           },
         ]
@@ -569,7 +569,7 @@ if (browserWindowEnv && browserWindowEnv.BASE_MODULE === 'liquid') {
                 component: ObservedBlockDetailComponent
               },
               {
-                path: 'blockspans/:from/:to',
+                path: 'blockspan/:from/:to',
                 component: ObservedBlockspanDetailComponent
               },
             ]
