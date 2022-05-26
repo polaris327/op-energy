@@ -29,6 +29,7 @@ import { PoolRankingComponent } from './components/pool-ranking/pool-ranking.com
 import { ObservedBlockDetailComponent } from './components/observed-block-detail/observed-block-detail.component';
 import { ObservedBlockspanDetailComponent } from './components/observed-blockspan-detail/observed-blockspan-detail.component';
 import { BlockchainObservedBlocksComponent } from './components/blockchain-observed-blocks/blockchain-observed-blocks.component';
+import { BlockspansHomeComponent } from './components/blockspans-home/blockspans-home.component';
 
 let routes: Routes = [
   {
@@ -88,6 +89,10 @@ let routes: Routes = [
           {
             path: 'blocks/:id',
             component: ObservedBlockDetailComponent
+          },
+          {
+            path: 'blockspans/:span/:tip',
+            component: BlockspansHomeComponent,
           },
           {
             path: 'blockspan/:from/:to',
@@ -204,6 +209,10 @@ let routes: Routes = [
                 component: ObservedBlockDetailComponent
               },
               {
+                path: 'blockspans/:span/:tip',
+                component: BlockspansHomeComponent,
+              },
+              {
                 path: 'blockspan/:from/:to',
                 component: ObservedBlockspanDetailComponent
               },
@@ -314,6 +323,10 @@ let routes: Routes = [
               {
                 path: 'blocks/:id',
                 component: ObservedBlockDetailComponent
+              },
+              {
+                path: 'blockspans/:span/:tip',
+                component: BlockspansHomeComponent,
               },
               {
                 path: 'blockspan/:from/:to',
@@ -448,6 +461,10 @@ if (browserWindowEnv && browserWindowEnv.BASE_MODULE === 'liquid') {
             component: ObservedBlockDetailComponent
           },
           {
+            path: 'blockspans/:span/:tip',
+            component: BlockspansHomeComponent,
+          },
+          {
             path: 'blockspan/:from/:to',
             component: ObservedBlockspanDetailComponent
           },
@@ -567,6 +584,10 @@ if (browserWindowEnv && browserWindowEnv.BASE_MODULE === 'liquid') {
               {
                 path: 'blocks/:id',
                 component: ObservedBlockDetailComponent
+              },
+              {
+                path: 'blockspans/:span/:tip',
+                component: BlockspansHomeComponent,
               },
               {
                 path: 'blockspan/:from/:to',
