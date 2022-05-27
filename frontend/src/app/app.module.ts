@@ -81,6 +81,7 @@ import { ObservedBlockComponent } from './components/observed-block/observed-blo
 import { ObservedBlockDetailComponent } from './components/observed-block-detail/observed-block-detail.component';
 import { ObservedBlockspanDetailComponent } from './components/observed-blockspan-detail/observed-blockspan-detail.component';
 import { TetrisBlockspanComponent } from './components/tetris-blockspan/tetris-blockspan.component';
+import { TetrisBlockspanNavigatorComponent } from './components/tetris-blockspan-navigator/tetris-blockspan-navigator.component';
 
 @NgModule({
   declarations: [
@@ -143,6 +144,7 @@ import { TetrisBlockspanComponent } from './components/tetris-blockspan/tetris-b
     BetPieChartComponent,
     SetAccountIdComponent,
     TetrisBlockspanComponent,
+    TetrisBlockspanNavigatorComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),

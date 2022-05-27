@@ -31,6 +31,19 @@
   -moz-user-select: none; /* Firefox */
   -ms-user-select: none; /* IE10+/Edge */
   user-select: none; /* Standard */
+
+  app-tetris-blockspan,
+  app-tetris-blockspan-navigator {
+    position: absolute;
+    top: 0px;
+    transition: 2s;
+    width: 250px;
+    height: 300px;
+  }
+
+  app-tetris-blockspan-navigator {
+    left: -150px;
+  }
 }
 
 .position-container {
@@ -107,14 +120,6 @@
   position: absolute;
   top: 0px;
   left: 40px;
-
-  app-tetris-blockspan {
-    position: absolute;
-    top: 0px;
-    transition: 2s;
-    width: 250px;
-    height: 300px;
-  }
 }
 
 .block-body {

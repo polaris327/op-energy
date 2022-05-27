@@ -8,10 +8,15 @@
         <div>
           <div class="blocks-container blockchain-blocks-container" *ngIf="(loadingBlocks$ | async) === false; else loadingBlocksTemplate">
             <div *ngFor="let pastBlock of pastBlocks; let i = index; trackBy: trackByPastBlocksFn" >
-              <!-- <app-observed-block [pastBlock]="pastBlock" [blockStyle]="blockStyles[i]"></app-observed-block> -->
-              <app-tetris-blockspan *ngIf="pastBlocks[i-1] && pastBlocks" [fromBlock]="pastBlocks[i - 1]" [toBlock]="pastBlock" [ngStyle]="blockStyles[i]"></app-tetris-blockspan>
+              <app-tetris-blockspan *ngIf="pastBlocks[i - 1] && pastBlocks" [fromBlock]="pastBlock" [toBlock]="pastBlocks[i - 1]" [ngStyle]="blockStyles[i]"></app-tetris-blockspan>
             </div>
             <div [hidden]="!arrowVisible" id="arrow-up" [style.transition]="transition" [ngStyle]="{'left': arrowLeftPx + 'px' }"></div>
+          </div>
+          <div>
+            <app-tetris-blockspan-navigator
+              *ngIf="pastBlocks[0] && pastBlocks" [fromBlock]="pastBlocks[1].height - 1" [span]="span + 1"
+              (emitGo)="blockspanChange($event)">
+            </app-tetris-blockspan-navigator>
           </div>
           
           <ng-template #loadingBlocksTemplate>

@@ -1,9 +1,12 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef, NgModule, HostListener, ViewChild, ElementRef } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { Location } from '@angular/common';
+import { forkJoin, Observable, Subscription } from 'rxjs';
 import { Block } from 'src/app/interfaces/electrs.interface';
 import { StateService } from 'src/app/services/state.service';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { specialBlocks } from 'src/app/app.constants';
+import { ElectrsApiService } from 'src/app/services/electrs-api.service';
+import { switchMap } from 'rxjs/operators';
 
 interface PastBlock extends Block {
   mediantimeDiff: number;
@@ -37,6 +40,8 @@ export class BlockspansHomeComponent implements OnInit, OnDestroy {
   blocksFilled = false;
   transition = '1s';
 
+  span = 1;  
+
   gradientColors = {
     '': ['#9339f4', '#105fb0'],
     bisq: ['#9339f4', '#105fb0'],
@@ -61,10 +66,12 @@ export class BlockspansHomeComponent implements OnInit, OnDestroy {
   }
 
   constructor(
+    private location: Location,
     public stateService: StateService,
     private route: ActivatedRoute,
     private router: Router,
     private cd: ChangeDetectorRef,
+    private electrsApiService: ElectrsApiService,
   ) { }
 
   ngOnInit() {
@@ -72,51 +79,6 @@ export class BlockspansHomeComponent implements OnInit, OnDestroy {
     this.loadingBlocks$ = this.stateService.isLoadingWebSocket$;
     this.networkSubscription = this.stateService.networkChanged$.subscribe((network) => this.network = network);
     this.tabHiddenSubscription = this.stateService.isTabHidden$.subscribe((tabHidden) => this.tabHidden = tabHidden);
-    this.blocksSubscription = this.stateService.blocks$
-      .subscribe(([block, txConfirmed]) => {
-        if (this.pastBlocks.some((b) => b.height === block.height)) {
-          return;
-        }
-
-        if (this.pastBlocks.length && block.height !== this.pastBlocks[0].height + 1) {
-          this.allBlocks = [];
-          this.pastBlocks = [];
-          this.blocksFilled = false;
-        }
-
-        var pastBlock: PastBlock = <PastBlock> block;
-        pastBlock.mediantimeDiff = 0;
-        if( this.pastBlocks.length > 0) {
-          pastBlock.mediantimeDiff = block.mediantime - this.pastBlocks[0].mediantime;
-        }
-        this.lastPastBlock = pastBlock;
-        this.pastBlocks.unshift( pastBlock);
-        this.allBlocks = [...this.pastBlocks];
-        // we need this.stateService.env.KEEP_BLOCKS_AMOUNT + 1 in order to keep block information next to the end, because the very first block has mediantimeDiff = 0. This block will be cutted off below, but needs to be used to calculate mediantimeDiff of the blocks, that will actually be displayed
-        this.pastBlocks = this.pastBlocks.slice( 0, this.stateService.env.KEEP_BLOCKS_AMOUNT + 1);
-
-        if (this.blocksFilled && !this.tabHidden) {
-          block.stage = block.matchRate >= 66 ? 1 : 2;
-        }
-
-        if (txConfirmed) {
-          this.markHeight = block.height;
-          this.moveArrowToPosition(true, true);
-        } else {
-          this.moveArrowToPosition(true, false);
-        }
-
-        this.blockStyles = [];
-        this.pastBlocks.forEach( (pastBlock, index) => {
-          this.blockStyles.push(this.getStyleForBlock(pastBlock, index));
-        });
-
-        if (this.pastBlocks.length === this.stateService.env.KEEP_BLOCKS_AMOUNT + 1) {
-          this.blocksFilled = true;
-          this.pastBlocks = this.pastBlocks.slice( 0, this.stateService.env.KEEP_BLOCKS_AMOUNT); // slice array to the size that actually needed
-        }
-        this.cd.markForCheck();
-      });
 
     this.markBlockSubscription = this.stateService.markBlock$
       .subscribe((state) => {
@@ -128,9 +90,18 @@ export class BlockspansHomeComponent implements OnInit, OnDestroy {
         this.cd.markForCheck();
       });
 
-      this.subscription = this.route.paramMap.subscribe((params: ParamMap) => {
+
+    for (let i = 0; i < this.stateService.env.KEEP_BLOCKS_AMOUNT+1; i++) {
+      this.blockStyles.push(this.getStyleForBlock(i));
+    }            
+    this.subscription = this.route.paramMap
+      .subscribe((params: ParamMap) => {
         const span: string = params.get('span') || '';
         const tip: string = params.get('tip') || '';
+        this.blockspanChange({
+          tipBlock: +tip,
+          span: +span
+        });
       });
   }
 
@@ -140,6 +111,27 @@ export class BlockspansHomeComponent implements OnInit, OnDestroy {
     this.networkSubscription.unsubscribe();
     this.tabHiddenSubscription.unsubscribe();
     this.markBlockSubscription.unsubscribe();
+  }
+
+  blockspanChange({tipBlock, span}) {
+    this.span = span;
+    let blockNumbers = [];
+    for (let i = 0; i < this.stateService.env.KEEP_BLOCKS_AMOUNT; i++) {
+      blockNumbers.push(tipBlock - i * span);
+    }
+    this.pastBlocks = [];
+    forkJoin(
+      blockNumbers.map(
+        blockNo => this.electrsApiService.getBlockHashFromHeight$(blockNo).pipe(
+          switchMap(hash => this.electrsApiService.getBlock$(hash))
+        )
+      )
+    ).subscribe((blocks: any[]) => {
+      this.pastBlocks = blocks;
+      this.location.replaceState(
+        this.router.createUrlTree([(this.network ? '/' + this.network : '') + `/tetris/blockspan/`, this.span, tipBlock]).toString()
+      );
+    });
   }
 
   onMouseDown(event: MouseEvent) {
@@ -203,23 +195,9 @@ export class BlockspansHomeComponent implements OnInit, OnDestroy {
     return item.height;
   }
 
-  getStyleForBlock(block: PastBlock, index: number) {
-    const greenBackgroundHeight = (block.weight / this.stateService.env.BLOCK_WEIGHT_UNITS) * 100;
-    let addLeft = 0;
-
-    if (block.stage === 1) {
-      block.stage = 2;
-      addLeft = -205;
-    }
-
+  getStyleForBlock(index: number) {
     return {
       left: 295 * index + 'px',
-      // background: `repeating-linear-gradient(
-      //   #2d3348,
-      //   #2d3348 ${greenBackgroundHeight}%,
-      //   ${this.gradientColors[this.network][0]} ${Math.max(greenBackgroundHeight, 0)}%,
-      //   ${this.gradientColors[this.network][1]} 100%
-      // )`,
     };
   }
 
