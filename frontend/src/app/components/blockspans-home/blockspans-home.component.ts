@@ -129,7 +129,7 @@ export class BlockspansHomeComponent implements OnInit, OnDestroy {
     ).subscribe((blocks: any[]) => {
       this.pastBlocks = blocks;
       this.location.replaceState(
-        this.router.createUrlTree([(this.network ? '/' + this.network : '') + `/tetris/blockspan/`, this.span, tipBlock]).toString()
+        this.router.createUrlTree([(this.network ? '/' + this.network : '') + `/tetris/blockspans/`, this.span, tipBlock]).toString()
       );
     });
   }
@@ -197,7 +197,7 @@ export class BlockspansHomeComponent implements OnInit, OnDestroy {
 
   getStyleForBlock(index: number) {
     return {
-      left: 295 * index + 'px',
+      left: 250 + 295 * index + 'px',
     };
   }
 
