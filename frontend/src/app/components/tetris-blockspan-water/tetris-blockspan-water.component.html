@@ -1,0 +1,23 @@
+<div class="tetris-blockspan">
+  <div class="top-block" [class.decrease]="energyDiff < 0">
+    <div class="top-block-1">
+      <fa-icon class="left" [icon]="['fas', 'snowflake']" [fixedWidth]="true"></fa-icon>
+      <fa-icon class="right" [icon]="['fas', 'snowflake']" [fixedWidth]="true"></fa-icon>
+      <label>211</label>
+    </div>
+    <div class="top-block-2">
+      <div></div>
+      <div></div>
+      <fa-icon class="left fire" [icon]="['fas', 'fire']" [fixedWidth]="true"></fa-icon>
+      <fa-icon class="right fire" [icon]="['fas', 'fire']" [fixedWidth]="true"></fa-icon>
+    </div>
+    <div class="top-block-3">
+      <label>{{ hashrate.toString() }} h / sec</label>
+    </div>
+  </div>
+  <div class="to-block">
+    {{ toBlock.height }}
+    <div class="span-block">{{ span }}</div>
+  </div>
+  <div class="from-block">{{ fromBlock.height }}</div>
+</div>

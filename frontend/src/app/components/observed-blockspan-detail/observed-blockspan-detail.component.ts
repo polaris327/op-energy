@@ -55,6 +55,14 @@ export class ObservedBlockspanDetailComponent implements OnInit, OnDestroy {
     return ((this.span * 600 - this.timeDiff) / (this.span * 600)) * 100;
   }
 
+  get chainworkDiff(): bigint {
+    return BigInt(this.getHexValue(this.toBlock.chainwork)) - BigInt(this.getHexValue(this.fromBlock.chainwork));
+  }
+
+  get hashrate(): bigint {
+    return this.chainworkDiff / BigInt(this.timeDiff);
+  }
+
   constructor(
     private route: ActivatedRoute,
     private location: Location,
@@ -265,5 +273,17 @@ export class ObservedBlockspanDetailComponent implements OnInit, OnDestroy {
     if (minutes < 10) {strMinutes = "0"+minutes;}
     if (seconds < 10) {strSeconds = "0"+seconds;}
     return strHours+':'+strMinutes+':'+strSeconds;
+  }
+
+  getHexValue(str) {
+    const arr1 = str.split('');
+    const idx = arr1.findIndex(a => a !== '0');
+    let hexValue = '0x';
+    if (idx > -1) {
+      hexValue += str.slice(idx);
+    } else {
+      hexValue += str;
+    }
+    return hexValue;
   }
 }

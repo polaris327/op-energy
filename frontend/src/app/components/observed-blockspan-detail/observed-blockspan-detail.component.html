@@ -1,7 +1,7 @@
 <div class="observed-blockspan-detail">
   <div class="observed-blockspan-detail--top">
     <div class="blockspan">
-      <app-tetris-blockspan *ngIf="fromBlock && toBlock" [fromBlock]="fromBlock" [toBlock]="toBlock"></app-tetris-blockspan>
+      <app-tetris-blockspan-water *ngIf="fromBlock && toBlock" [fromBlock]="fromBlock" [toBlock]="toBlock"></app-tetris-blockspan-water>
     </div>
     <div *ngIf="fromBlock && toBlock" class="blockspan-table">
       <h3>Blockspan < {{ fromBlock.height }} - {{ toBlock.height }} ></h3>
@@ -13,30 +13,42 @@
               <td>Block</td>
               <td>Mediantime (UTC)</td>
               <td>Mediantime (Posix Seconds)</td>
+              <td>Chainwork</td>
             </tr>
             <tr>
               <td></td>
               <td>{{ toBlock.height }}</td>
               <td>{{ toBlock.mediantime * 1000 | date:'yyyy-MM-dd HH:mm' }}</td>
               <td>{{ toBlock.mediantime }}</td>
+              <td>{{ toBlock.chainwork }}</td>
             </tr>
             <tr>
               <td></td>
               <td>{{ fromBlock.height }}</td>
               <td>{{ fromBlock.mediantime * 1000 | date:'yyyy-MM-dd HH:mm' }}</td>
               <td>{{ fromBlock.mediantime }}</td>
+              <td>{{ fromBlock.chainwork }}</td>
             </tr>
             <tr>
               <td>Elapsed</td>
               <td>{{ toBlock.height - fromBlock.height }}</td>
               <td>{{ toHHMMSS(toBlock.mediantime - fromBlock.mediantime) }}</td>
               <td>{{ toBlock.mediantime - fromBlock.mediantime }}</td>
+              <td>{{ chainworkDiff.toString() }}</td>
             </tr>
             <tr>
               <td>Energy:</td>
               <td>({{ span }} * 600 - {{ timeDiff }}) / ({{ span }} * 600)</td>
               <td></td>
-              <td>{{ energyDiff | number }}%</td>
+              <td>{{ energyDiff | number }} %</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>Hashrate:</td>
+              <td>{{ chainworkDiff }} / {{ toBlock.mediantime - fromBlock.mediantime }}</td>
+              <td></td>
+              <td>{{ hashrate.toString() }} h / sec</td>
+              <td></td>
             </tr>
           </tbody>
         </table>

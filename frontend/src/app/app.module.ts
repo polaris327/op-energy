@@ -59,7 +59,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { DifficultyComponent } from './components/difficulty/difficulty.component';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faFilter, faAngleDown, faAngleUp, faAngleRight, faAngleLeft, faBolt, faChartArea, faCogs, faCubes, faHammer, faDatabase, faExchangeAlt, faInfoCircle,
-  faLink, faList, faSearch, faCaretUp, faCaretDown, faTachometerAlt, faThList, faTint, faTv, faAngleDoubleDown, faSortUp, faAngleDoubleUp, faChevronDown, faFileAlt, faRedoAlt, faArrowAltCircleRight, faExternalLinkAlt, faBook, faListUl, faFire } from '@fortawesome/free-solid-svg-icons';
+  faLink, faList, faSearch, faCaretUp, faCaretDown, faTachometerAlt, faThList, faTint, faTv, faAngleDoubleDown, faSortUp, faAngleDoubleUp, faChevronDown, faFileAlt, faRedoAlt, faArrowAltCircleRight, faExternalLinkAlt, faBook, faListUl, faFire, faSnowflake } from '@fortawesome/free-solid-svg-icons';
 import { ApiDocsComponent } from './components/docs/api-docs.component';
 import { DocsComponent } from './components/docs/docs.component';
 import { ApiDocsNavComponent } from './components/docs/api-docs-nav.component';
@@ -81,6 +81,7 @@ import { ObservedBlockComponent } from './components/observed-block/observed-blo
 import { ObservedBlockDetailComponent } from './components/observed-block-detail/observed-block-detail.component';
 import { ObservedBlockspanDetailComponent } from './components/observed-blockspan-detail/observed-blockspan-detail.component';
 import { TetrisBlockspanComponent } from './components/tetris-blockspan/tetris-blockspan.component';
+import { TetrisBlockspanWaterComponent } from './components/tetris-blockspan-water/tetris-blockspan-water.component';
 import { TetrisBlockspanNavigatorComponent } from './components/tetris-blockspan-navigator/tetris-blockspan-navigator.component';
 
 @NgModule({
@@ -144,6 +145,7 @@ import { TetrisBlockspanNavigatorComponent } from './components/tetris-blockspan
     BetPieChartComponent,
     SetAccountIdComponent,
     TetrisBlockspanComponent,
+    TetrisBlockspanWaterComponent,
     TetrisBlockspanNavigatorComponent,
   ],
   imports: [
@@ -210,5 +212,6 @@ export class AppModule {
     library.addIcons(faBook);
     library.addIcons(faListUl);
     library.addIcons(faFire);
+    library.addIcons(faSnowflake);
   }
 }
