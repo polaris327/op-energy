@@ -4,10 +4,10 @@
   &--top {
     display: flex;
     justify-content: center;
+    gap: 150px;
 
     .blockspan {
       min-width: 250px;
-      margin-right: 150px;
     }
 
     .blockspan-table {
@@ -17,6 +17,41 @@
         background-clip: border-box;
         border: 1px solid rgba(0,0,0,.125);
         box-shadow: 0.125rem 0.125rem 0.25rem #00000013;
+
+        .table {
+          tr {
+            white-space: initial;
+          }
+  
+          td {
+            word-break: break-all;
+            max-width: 300px;
+          }
+        }
+      }
+    }
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      align-items: center;
+      gap: 50px;
+
+      .blockspan {
+        height: 330px;
+      }
+
+      .blockspan-table {
+        width: 100%;
+        padding: 20px;
+
+        .content {
+          width: 100%;
+          overflow: auto;
+
+          .table td {
+            min-width: 150px;
+          }
+        }
       }
     }
   }
