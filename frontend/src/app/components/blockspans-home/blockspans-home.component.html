@@ -8,7 +8,7 @@
         <div>
           <div class="blocks-container blockchain-blocks-container" *ngIf="(loadingBlocks$ | async) === false; else loadingBlocksTemplate">
             <div *ngFor="let pastBlock of pastBlocks; let i = index; trackBy: trackByPastBlocksFn" >
-              <app-tetris-blockspan-water *ngIf="pastBlocks[i - 1] && pastBlocks" [fromBlock]="pastBlock" [toBlock]="pastBlocks[i - 1]" [ngStyle]="blockStyles[i]"></app-tetris-blockspan-water>
+              <app-tetris-blockspan-water *ngIf="pastBlocks[i - 1] && pastBlocks" [fromBlock]="pastBlock" [toBlock]="pastBlocks[i - 1]" [ngStyle]="blockStyles[i]" (click)="goDetail(pastBlock, pastBlocks[i - 1])"></app-tetris-blockspan-water>
             </div>
             <div [hidden]="!arrowVisible" id="arrow-up" [style.transition]="transition" [ngStyle]="{'left': arrowLeftPx + 'px' }"></div>
           </div>

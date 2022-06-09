@@ -7,6 +7,7 @@ import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { specialBlocks } from 'src/app/app.constants';
 import { ElectrsApiService } from 'src/app/services/electrs-api.service';
 import { switchMap } from 'rxjs/operators';
+import { RelativeUrlPipe } from 'src/app/shared/pipes/relative-url/relative-url.pipe';
 
 interface PastBlock extends Block {
   mediantimeDiff: number;
@@ -70,6 +71,7 @@ export class BlockspansHomeComponent implements OnInit, OnDestroy {
     public stateService: StateService,
     private route: ActivatedRoute,
     private router: Router,
+    private relativeUrlPipe: RelativeUrlPipe,
     private cd: ChangeDetectorRef,
     private electrsApiService: ElectrsApiService,
   ) { }
@@ -107,7 +109,6 @@ export class BlockspansHomeComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
-    this.blocksSubscription.unsubscribe();
     this.networkSubscription.unsubscribe();
     this.tabHiddenSubscription.unsubscribe();
     this.markBlockSubscription.unsubscribe();
@@ -244,5 +245,9 @@ export class BlockspansHomeComponent implements OnInit, OnDestroy {
 
   isMedianBlock(block: Block) {
     return block.timestamp === this.lastPastBlock.mediantime;
+  }
+
+  goDetail(fromBlock, toBlock) {
+    this.router.navigate([this.relativeUrlPipe.transform('/tetris/blockspan/'), fromBlock.height, toBlock.height]);
   }
 }
