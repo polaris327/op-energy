@@ -6,10 +6,14 @@
       <label>211</label>
     </div> -->
     <div class="top-block-2">
-      <div></div>
-      <div></div>
-      <fa-icon class="left fire" [icon]="['fas', 'fire']" [fixedWidth]="true"></fa-icon>
-      <fa-icon class="right fire" [icon]="['fas', 'fire']" [fixedWidth]="true"></fa-icon>
+      <div>
+        <fa-icon *ngFor="let i of iconArray" class="left fire" [icon]="['fas', 'fire']" [fixedWidth]="true"></fa-icon>
+        <span *ngIf="totalIconCount > maxCount" class="ml-1">+{{ totalIconCount - maxCount }}</span>
+      </div>
+      <div>
+        <fa-icon *ngFor="let i of iconArray" class="left fire" [icon]="['fas', 'fire']" [fixedWidth]="true"></fa-icon>
+        <span *ngIf="totalIconCount > maxCount" class="ml-1">+{{ totalIconCount - maxCount }}</span>
+      </div>
     </div>
     <div class="top-block-3">
       <!-- <label>{{ hashrate.toString() }} h / sec</label> -->

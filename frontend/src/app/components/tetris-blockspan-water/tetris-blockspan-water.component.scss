@@ -49,12 +49,10 @@
       > div {
         width: 30%;
         background-color: red;
+        padding: 5px;
       }
 
       fa-icon {
-        position: absolute;
-        top: 6px;
-
         &.fire {
           color: yellow;
         }

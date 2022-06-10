@@ -3,7 +3,7 @@ import { StateService } from 'src/app/services/state.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { Block } from '../../interfaces/electrs.interface';
 
-export const MAX_COUNT = 8;
+export const MAX_COUNT = 6;
 @Component({
   selector: 'app-tetris-blockspan-water',
   templateUrl: './tetris-blockspan-water.component.html',
@@ -28,7 +28,7 @@ export class TetrisBlockspanWaterComponent implements OnInit, OnDestroy {
   }
 
   get totalIconCount() {
-    return Math.round(Math.abs(this.energyDiff / 5));
+    return Math.round((6 + Math.round(Math.abs(this.energyDiff / 5))) / 2);
   }
 
   get iconArray() {
