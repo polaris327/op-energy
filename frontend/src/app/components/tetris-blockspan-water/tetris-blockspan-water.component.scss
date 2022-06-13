@@ -1,4 +1,5 @@
 .tetris-blockspan {
+  position: relative;
   width: 100%;
   height: 100%;
 
@@ -6,7 +7,7 @@
   .from-block {
     position: relative;
     width: 30%;
-    height: 33%;
+    height: 20%;
     background-color: yellow;
     border: 1px solid black;
     margin: auto;
@@ -32,51 +33,59 @@
     }
   }
 
-  .top-block {
-    height: 34%;
+  .fire-block,
+  .bottom-block {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    // background-color: #00fff1;
+    margin: auto;
 
-    &-1,
-    &-2,
-    &-3 {
-      position: relative;
-      display: flex;
-      justify-content: space-between;
-      width: 100%;
-      height: 50%;
-      // background-color: #00fff1;
+    > div {
+      width: 30%;
+      background-color: red;
+      padding: 10px;
+    }
+
+    fa-icon {
+      &.fire {
+        color: yellow;
+      }
+
+      &.left {
+        left: 40px;
+      }
+
+      &.right {
+        right: 40px;
+      }
+    }
+
+    label {
+      font-size: 20px;
+      font-weight: 700;
+      color: black;
       margin: auto;
-
-      > div {
-        width: 30%;
-        background-color: red;
-        padding: 5px;
-      }
-
-      fa-icon {
-        &.fire {
-          color: yellow;
-        }
-
-        &.left {
-          left: 40px;
-        }
-
-        &.right {
-          right: 40px;
-        }
-      }
-
-      label {
-        font-size: 20px;
-        font-weight: 700;
-        color: black;
-        margin: auto;
-      }
     }
+  }
 
-    &-3 {
-      width: 70%;
-      background: red;
-    }
+  .fire-block {
+    position: relative;
+  }
+
+  .water-block {
+    position: absolute;
+    left: 30%;
+    bottom: 0;
+    width: 40% !important;
+    background-color: #00ffff !important;
+    padding: 10px !important;
+  }
+
+  .bottom-block {
+    width: 70%;
+    height: 10%;
+    background: red;
   }
 }
