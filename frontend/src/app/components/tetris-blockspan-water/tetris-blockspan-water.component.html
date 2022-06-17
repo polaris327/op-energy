@@ -8,10 +8,10 @@
       <fa-icon *ngFor="let i of iconArray" class="left fire" [icon]="['fas', 'fire']" [fixedWidth]="true"></fa-icon>
       <span *ngIf="totalIconCount > maxCount" class="ml-1">+{{ totalIconCount - maxCount }}</span>
     </div>
-    <div class="water-block">
+    <!-- <div class="water-block">
       <fa-icon *ngFor="let i of iconArray" class="left fire" [icon]="['fas', 'tint']" [fixedWidth]="true"></fa-icon>
       <span *ngIf="totalIconCount > maxCount" class="ml-1">+{{ totalIconCount - maxCount }}</span>
-    </div>
+    </div> -->
   </div>
   <div class="bottom-block">
     <!-- <label>{{ hashrate.toString() }} h / sec</label> -->
