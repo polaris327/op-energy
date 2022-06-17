@@ -30,6 +30,7 @@ import { ObservedBlockDetailComponent } from './components/observed-block-detail
 import { ObservedBlockspanDetailComponent } from './components/observed-blockspan-detail/observed-blockspan-detail.component';
 import { BlockchainObservedBlocksComponent } from './components/blockchain-observed-blocks/blockchain-observed-blocks.component';
 import { BlockspansHomeComponent } from './components/blockspans-home/blockspans-home.component';
+import { PreviewComponent } from './components/preview/preview.component';
 
 let routes: Routes = [
   {
@@ -148,6 +149,10 @@ let routes: Routes = [
       {
         path: 'sponsor',
         component: SponsorComponent,
+      },
+      {
+        path: 'preview',
+        component: PreviewComponent,
       },
     ],
   },
@@ -522,6 +527,10 @@ if (browserWindowEnv && browserWindowEnv.BASE_MODULE === 'liquid') {
         path: 'sponsor',
         component: SponsorComponent,
       },
+      {
+        path: 'preview',
+        component: PreviewComponent,
+      },
     ],
   },
   {
@@ -646,6 +655,10 @@ if (browserWindowEnv && browserWindowEnv.BASE_MODULE === 'liquid') {
           {
             path: 'sponsor',
             component: SponsorComponent,
+          },
+          {
+            path: 'preview',
+            component: PreviewComponent,
           },
         ],
       },
