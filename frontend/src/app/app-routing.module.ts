@@ -150,10 +150,6 @@ let routes: Routes = [
         path: 'sponsor',
         component: SponsorComponent,
       },
-      {
-        path: 'preview',
-        component: PreviewComponent,
-      },
     ],
   },
   {
@@ -261,6 +257,10 @@ let routes: Routes = [
       {
         path: 'status',
         component: StatusViewComponent
+      },
+      {
+        path: 'preview',
+        component: PreviewComponent,
       },
       {
         path: '**',
@@ -379,6 +379,10 @@ let routes: Routes = [
         component: StatusViewComponent
       },
       {
+        path: 'preview',
+        component: PreviewComponent,
+      },
+      {
         path: '**',
         redirectTo: ''
       },
@@ -391,6 +395,10 @@ let routes: Routes = [
   {
     path: 'status',
     component: StatusViewComponent
+  },
+  {
+    path: 'preview',
+    component: PreviewComponent,
   },
   {
     path: '**',
@@ -527,10 +535,6 @@ if (browserWindowEnv && browserWindowEnv.BASE_MODULE === 'liquid') {
         path: 'sponsor',
         component: SponsorComponent,
       },
-      {
-        path: 'preview',
-        component: PreviewComponent,
-      },
     ],
   },
   {
@@ -656,10 +660,6 @@ if (browserWindowEnv && browserWindowEnv.BASE_MODULE === 'liquid') {
             path: 'sponsor',
             component: SponsorComponent,
           },
-          {
-            path: 'preview',
-            component: PreviewComponent,
-          },
         ],
       },
       {
@@ -670,6 +670,10 @@ if (browserWindowEnv && browserWindowEnv.BASE_MODULE === 'liquid') {
         path: 'status',
         component: StatusViewComponent
       },
+      {
+        path: 'preview',
+        component: PreviewComponent,
+      },
     ]
   },
   {
@@ -679,6 +683,10 @@ if (browserWindowEnv && browserWindowEnv.BASE_MODULE === 'liquid') {
   {
     path: 'status',
     component: StatusViewComponent
+  },
+  {
+    path: 'preview',
+    component: PreviewComponent,
   },
   {
     path: '**',
