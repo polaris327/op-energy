@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { RelativeUrlPipe } from 'src/app/shared/pipes/relative-url/relative-url.pipe';
 
 @Component({
   selector: 'app-preview',
@@ -11,9 +12,26 @@ export class PreviewComponent implements OnInit {
 
   constructor(
     private router: Router,
+    private relativeUrlPipe: RelativeUrlPipe,
   ) { }
 
   ngOnInit() {
 
+  }
+
+  goBlocks() {
+    this.router.navigate([this.relativeUrlPipe.transform('/tetris/blocks')]);
+  }
+
+  goBlockDetail() {
+    this.router.navigate([this.relativeUrlPipe.transform('/tetris/blocks'), 95120]);
+  }
+
+  goBlockspans() {
+    this.router.navigate([this.relativeUrlPipe.transform('/tetris/blockspans/1/89789')]);
+  }
+
+  goBlockspanDetail() {
+    this.router.navigate([this.relativeUrlPipe.transform('/tetris/blockspan/89778/89789')]);
   }
 }
