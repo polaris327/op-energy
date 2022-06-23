@@ -33,12 +33,17 @@
   user-select: none; /* Standard */
 
   app-tetris-blockspan-water,
-  app-tetris-blockspan-navigator {
+  app-tetris-blockspan-navigator,
+  app-tetris-add-strike {
     position: absolute;
     top: 0px;
     transition: 2s;
     width: 250px;
     height: 300px;
+  }
+
+  app-tetris-add-strike{
+    left: -100px;
   }
 
   app-tetris-blockspan-navigator {

@@ -1,12 +1,12 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef, NgModule, HostListener, ViewChild, ElementRef } from '@angular/core';
 import { Location } from '@angular/common';
-import { forkJoin, Observable, Subscription } from 'rxjs';
+import { forkJoin, Observable, Subscription, of } from 'rxjs';
 import { Block } from 'src/app/interfaces/electrs.interface';
 import { StateService } from 'src/app/services/state.service';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { specialBlocks } from 'src/app/app.constants';
 import { ElectrsApiService } from 'src/app/services/electrs-api.service';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, skip, map } from 'rxjs/operators';
 import { RelativeUrlPipe } from 'src/app/shared/pipes/relative-url/relative-url.pipe';
 
 interface PastBlock extends Block {
@@ -92,19 +92,29 @@ export class BlockspansHomeComponent implements OnInit, OnDestroy {
         this.cd.markForCheck();
       });
 
-
     for (let i = 0; i < this.stateService.env.KEEP_BLOCKS_AMOUNT+1; i++) {
       this.blockStyles.push(this.getStyleForBlock(i));
     }            
-    this.subscription = this.route.paramMap
-      .subscribe((params: ParamMap) => {
-        const span: string = params.get('span') || '';
-        const tip: string = params.get('tip') || '';
-        this.blockspanChange({
-          tipBlock: +tip,
-          span: +span
-        });
-      });
+
+    this.subscription = this.route.paramMap.pipe(
+      switchMap((params: ParamMap) =>
+        params.get('tip') 
+        ? of({...params})
+        : this.stateService.blocks$.pipe(
+            skip(11),
+            map(block => ({
+              ...params,
+              tip: block[0].height
+            }))
+          ))
+    ).subscribe((params: any) => {
+      const span: string = params.params.span || '';
+      const tip: string = params.params.tip || params.tip || '';
+      this.blockspanChange({
+        tipBlock: +tip,
+        span: +span
+      });  
+    });
   }
 
   ngOnDestroy() {

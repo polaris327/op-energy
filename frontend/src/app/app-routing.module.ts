@@ -92,6 +92,10 @@ let routes: Routes = [
             component: ObservedBlockDetailComponent
           },
           {
+            path: 'blockspans/:span',
+            component: BlockspansHomeComponent,
+          },
+          {
             path: 'blockspans/:span/:tip',
             component: BlockspansHomeComponent,
           },
@@ -208,6 +212,10 @@ let routes: Routes = [
               {
                 path: 'blocks/:id',
                 component: ObservedBlockDetailComponent
+              },
+              {
+                path: 'blockspans/:span',
+                component: BlockspansHomeComponent,
               },
               {
                 path: 'blockspans/:span/:tip',
@@ -328,6 +336,10 @@ let routes: Routes = [
               {
                 path: 'blocks/:id',
                 component: ObservedBlockDetailComponent
+              },
+              {
+                path: 'blockspans/:span',
+                component: BlockspansHomeComponent,
               },
               {
                 path: 'blockspans/:span/:tip',
@@ -474,6 +486,10 @@ if (browserWindowEnv && browserWindowEnv.BASE_MODULE === 'liquid') {
             component: ObservedBlockDetailComponent
           },
           {
+            path: 'blockspans/:span',
+            component: BlockspansHomeComponent,
+          },
+          {
             path: 'blockspans/:span/:tip',
             component: BlockspansHomeComponent,
           },
@@ -597,6 +613,10 @@ if (browserWindowEnv && browserWindowEnv.BASE_MODULE === 'liquid') {
               {
                 path: 'blocks/:id',
                 component: ObservedBlockDetailComponent
+              },
+              {
+                path: 'blockspans/:span',
+                component: BlockspansHomeComponent,
               },
               {
                 path: 'blockspans/:span/:tip',

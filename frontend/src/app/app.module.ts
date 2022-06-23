@@ -83,6 +83,7 @@ import { ObservedBlockspanDetailComponent } from './components/observed-blockspa
 import { TetrisBlockspanComponent } from './components/tetris-blockspan/tetris-blockspan.component';
 import { TetrisBlockspanWaterComponent } from './components/tetris-blockspan-water/tetris-blockspan-water.component';
 import { TetrisBlockspanNavigatorComponent } from './components/tetris-blockspan-navigator/tetris-blockspan-navigator.component';
+import { TetrisAddStrikeComponent } from './components/tetris-add-strike/tetris-add-strike.component';
 import { PreviewComponent } from './components/preview/preview.component';
 
 @NgModule({
@@ -148,6 +149,7 @@ import { PreviewComponent } from './components/preview/preview.component';
     TetrisBlockspanComponent,
     TetrisBlockspanWaterComponent,
     TetrisBlockspanNavigatorComponent,
+    TetrisAddStrikeComponent,
     PreviewComponent,
   ],
   imports: [
