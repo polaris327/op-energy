@@ -28,7 +28,7 @@ export class PreviewComponent implements OnInit {
   }
 
   goBlockspans() {
-    this.router.navigate([this.relativeUrlPipe.transform('/tetris/blockspans/1/89789')]);
+    this.router.navigate([this.relativeUrlPipe.transform('/tetris/blockspans/1')]);
   }
 
   goBlockspanDetail() {
