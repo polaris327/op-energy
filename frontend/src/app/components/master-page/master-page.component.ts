@@ -34,15 +34,16 @@ export class MasterPageComponent implements OnInit {
     this.urlLanguage = this.languageService.getLanguageForUrl();
   }
   ngAfterContentInit() {
-    if( this.stateService.accountIdState == 'init') {
-      this.websocketService.want(['generatedaccountid']);
+    if( this.stateService.accountTokenState == 'init') {
+      this.websocketService.want(['generatedaccounttoken']);
     }
   }
 
   onResize(event: any) {
     this.isMobile = window.innerWidth <= 767.98;
   }
-  closeAccountIdWarning() {
-    this.stateService.$showAccountIdWarning.next( false);
+  closeAccountURLWarning() {
+    this.stateService.$accountSecret.next(''); // clean secret value
+    this.stateService.$showAccountURLWarning.next( false);
   }
 }

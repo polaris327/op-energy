@@ -4093,6 +4093,231 @@ export class ApiDocsComponent implements OnInit {
           response: ''
         },
       },
+      oe_post_user_displayname: {
+        codeTemplate: {
+          commonJS: `
+        const _ = await opEnergyApiService.$updateUserDisplayName( "TestUser");
+          `,
+          esModule: ``,
+          curl: `/api/v1/user/displayname\" -d "display_name=TestUser" -d "account_token=<token>`,
+        },
+        codeSampleMainnet: {
+          esModule: [],
+          commonJS: [],
+          curl: [],
+          response: `TestUser`
+        },
+        codeSampleTestnet: {
+          esModule: [],
+          commonJS: [],
+          curl: [],
+          response: ``
+        },
+        codeSampleSignet: {
+          esModule: [],
+          commonJS: [],
+          curl: [],
+          response: `TestUser`
+        },
+        codeSampleLiquid: {
+          esModule: [],
+          commonJS: [],
+          curl: [],
+          response: ``
+        },
+        codeSampleLiquidTestnet: {
+          esModule: [],
+          commonJS: [],
+          curl: [],
+          response: ``
+        },
+        codeSampleBisq: {
+          esModule: [],
+          commonJS: [],
+          curl: [],
+          response: ``
+        },
+      },
+      oe_post_slowfastguess: {
+        codeTemplate: {
+          commonJS: `
+        const guessList = await opEnergyApiService.$slowFastGuess( "slow", 1000, 1000);
+          `,
+          esModule: ``,
+          curl: `/api/v1/slowfastguess/mediantime\" -d "guess=fast" -d "block_height=1000" -d "nlocktime=1000" -d "account_token=<token>`,
+        },
+        codeSampleMainnet: {
+          esModule: [],
+          commonJS: [],
+          curl: [],
+          response: `{"guess":"fast","blockHeight":1000,"nLockTime":1000,"creationTime":1655536302,"userId":4,"userName":"User"}`
+        },
+        codeSampleTestnet: {
+          esModule: [],
+          commonJS: [],
+          curl: [],
+          response: ``
+        },
+        codeSampleSignet: {
+          esModule: [],
+          commonJS: [],
+          curl: [],
+          response: `{"guess":"fast","blockHeight":1000,"nLockTime":1000,"creationTime":1655536302,"userId":4,"userName":"User"}`
+        },
+        codeSampleLiquid: {
+          esModule: [],
+          commonJS: [],
+          curl: [],
+          response: ``
+        },
+        codeSampleLiquidTestnet: {
+          esModule: [],
+          commonJS: [],
+          curl: [],
+          response: ``
+        },
+        codeSampleBisq: {
+          esModule: [],
+          commonJS: [],
+          curl: [],
+          response: ``
+        },
+      },
+      oe_get_slowfastguesses: {
+        codeTemplate: {
+          commonJS: `
+        const guessList = await opEnergyApiService.$listSlowFastGuesses( 1000, 1000);
+          `,
+          esModule: ``,
+          curl: `/api/v1/slowfastguess/mediantime\" --get -d "block_height=1000" -d "nlocktime=1000" -d "account_token=<token>`,
+        },
+        codeSampleMainnet: {
+          esModule: [],
+          commonJS: [],
+          curl: [],
+          response: `[{"guess":"fast","blockHeight":1,"nLockTime":1,"creationTime":1655450224,"userId":4,"userName":"User"}]`
+        },
+        codeSampleTestnet: {
+          esModule: [],
+          commonJS: [],
+          curl: [],
+          response: ``
+        },
+        codeSampleSignet: {
+          esModule: [],
+          commonJS: [],
+          curl: [],
+          response: `[{"guess":"fast","blockHeight":1,"nLockTime":1,"creationTime":1655450224,"userId":4,"userName":"User"}]`
+        },
+        codeSampleLiquid: {
+          esModule: [],
+          commonJS: [],
+          curl: [],
+          response: ``
+        },
+        codeSampleLiquidTestnet: {
+          esModule: [],
+          commonJS: [],
+          curl: [],
+          response: ``
+        },
+        codeSampleBisq: {
+          esModule: [],
+          commonJS: [],
+          curl: [],
+          response: ``
+        },
+      },
+      oe_post_timestrike: {
+        codeTemplate: {
+          commonJS: `
+        const lockedBlocks = await opEnergyApiService.$addTimeStrike( 1000, 1000);
+          `,
+          esModule: ``,
+          curl: `/api/v1/lockedblock/mediantime\" -d "block_height=1000" -d "nlocktime=1000" -d "account_token=<token>`,
+        },
+        codeSampleMainnet: {
+          esModule: [],
+          commonJS: [],
+          curl: [],
+          response: `{"blockHeight":1000,"nLockTime":1000,"creationTime":1655486516}`
+        },
+        codeSampleTestnet: {
+          esModule: [],
+          commonJS: [],
+          curl: [],
+          response: ``
+        },
+        codeSampleSignet: {
+          esModule: [],
+          commonJS: [],
+          curl: [],
+          response: `{"blockHeight":1000,"nLockTime":1000,"creationTime":1655486516}`
+        },
+        codeSampleLiquid: {
+          esModule: [],
+          commonJS: [],
+          curl: [],
+          response: ``
+        },
+        codeSampleLiquidTestnet: {
+          esModule: [],
+          commonJS: [],
+          curl: [],
+          response: ``
+        },
+        codeSampleBisq: {
+          esModule: [],
+          commonJS: [],
+          curl: [],
+          response: ``
+        },
+      },
+      oe_get_timestrikes: {
+        codeTemplate: {
+          commonJS: `
+        const lockedBlocks = await opEnergyApiService.$listTimeStrikes();
+          `,
+          esModule: ``,
+          curl: `/api/v1/lockedblock/mediantime\" --get -d "account_token=<token>`,
+        },
+        codeSampleMainnet: {
+          esModule: [],
+          commonJS: [],
+          curl: [],
+          response: `[{"blockHeight":1,"nLockTime":1,"creationTime":1655449480},{"blockHeight":1,"nLockTime":2,"creationTime":1655449557},{"blockHeight":1,"nLockTime":3,"creationTime":1655450278}]`
+        },
+        codeSampleTestnet: {
+          esModule: [],
+          commonJS: [],
+          curl: [],
+          response: ``
+        },
+        codeSampleSignet: {
+          esModule: [],
+          commonJS: [],
+          curl: [],
+          response: `[{"blockHeight":1,"nLockTime":1,"creationTime":1655449480},{"blockHeight":1,"nLockTime":2,"creationTime":1655449557},{"blockHeight":1,"nLockTime":3,"creationTime":1655450278}]`
+        },
+        codeSampleLiquid: {
+          esModule: [],
+          commonJS: [],
+          curl: [],
+          response: ``
+        },
+        codeSampleLiquidTestnet: {
+          esModule: [],
+          commonJS: [],
+          curl: [],
+          response: ``
+        },
+        codeSampleBisq: {
+          esModule: [],
+          commonJS: [],
+          curl: [],
+          response: ``
+        },
+      },
       difficulty: {
         codeTemplate: {
           commonJS: `

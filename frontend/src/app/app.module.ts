@@ -13,6 +13,7 @@ import { FutureBlockComponent } from './components/future-block/future-block.com
 import { PastBlocksComponent } from './components/past-blocks/past-blocks.component';
 import { StartComponent } from './components/start/start.component';
 import { StartV2Component } from './components/start-v2/start-v2.component';
+import { OpEnergyApiService } from './services/op-energy.service';
 import { ElectrsApiService } from './services/electrs-api.service';
 import { TransactionComponent } from './components/transaction/transaction.component';
 import { TransactionsListComponent } from './components/transactions-list/transactions-list.component';
@@ -73,7 +74,7 @@ import { LanguageService } from './services/language.service';
 import { SponsorComponent } from './components/sponsor/sponsor.component';
 import { PushTransactionComponent } from './components/push-transaction/push-transaction.component';
 import { BetPieChartComponent } from './components/bet-pie-chart/bet-pie-chart.component';
-import { SetAccountIdComponent } from './components/setaccountid/setaccountid.component';
+import { SetAccountSecretComponent } from './components/setaccountsecret/setaccountsecret.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TenminBetComponent } from './components/tenmin-bet/tenmin-bet.component';
 import { TenminBlockComponent } from './components/tenmin-block/tenmin-block.component';
@@ -145,12 +146,12 @@ import { PreviewComponent } from './components/preview/preview.component';
     ObservedBlockDetailComponent,
     ObservedBlockspanDetailComponent,
     BetPieChartComponent,
-    SetAccountIdComponent,
     TetrisBlockspanComponent,
     TetrisBlockspanWaterComponent,
     TetrisBlockspanNavigatorComponent,
     TetrisAddStrikeComponent,
     PreviewComponent,
+    SetAccountSecretComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
@@ -169,6 +170,7 @@ import { PreviewComponent } from './components/preview/preview.component';
     })
   ],
   providers: [
+    OpEnergyApiService,
     ElectrsApiService,
     StateService,
     WebsocketService,

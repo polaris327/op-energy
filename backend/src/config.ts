@@ -46,6 +46,7 @@ interface IConfig {
     PORT: number;
     DATABASE: string;
     ACCOUNT_DATABASE: string;
+    SECRET_SALT: string;
     USERNAME: string;
     PASSWORD: string;
   };
@@ -113,6 +114,7 @@ const defaults: IConfig = {
     'PORT': 3306,
     'DATABASE': 'mempool',
     'ACCOUNT_DATABASE': 'mempoolacc',
+    'SECRET_SALT': 'changeme',
     'USERNAME': 'mempool',
     'PASSWORD': 'mempool'
   },

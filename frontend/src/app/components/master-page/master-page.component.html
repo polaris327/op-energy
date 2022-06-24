@@ -48,11 +48,11 @@
       </li>
     </ul>
   </div>
-  <div class="navbar-nav" *ngIf="( this.stateService.$showAccountIdWarning | async) === true" >
+  <div class="navbar-nav" *ngIf="( this.stateService.$showAccountURLWarning | async) === true" >
     <div>
-      WARNING: store your secret account URL<app-clipboard [text]="(document.location.href) + '/account/' + (this.stateService.$accountId | async)"></app-clipboard> and use it to access op-energy later
+      WARNING: store your secret account URL<app-clipboard [text]="(document.location.href) + '/account/' + (this.stateService.$accountSecret | async)"></app-clipboard> and use it to access op-energy later
     </div>
-    <button type="button" class="btn close-account-id-warning" style="width: 60px;" (click)="closeAccountIdWarning()">
+    <button type="button" class="btn close-account-id-warning" style="width: 60px;" (click)="closeAccountURLWarning()">
       X
     </button>
   </div>

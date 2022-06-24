@@ -41,4 +41,6 @@ for NETWORK in $NETWORKS; do
     # DB PSK
     PSK=$(dd if=/dev/urandom bs=1 count=10 2>/dev/null | sha256sum | awk '{print $1}')
     printf "%s" "$PSK" > $OUT_DIR/op-energy-db-psk-$NETWORK.txt
+    SALT=$(dd if=/dev/urandom bs=1 count=10 2>/dev/null | sha256sum | awk '{print $1}')
+    printf "%s" "$SALT" > $OUT_DIR/op-energy-db-salt-$NETWORK.txt
 done

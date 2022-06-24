@@ -5,14 +5,14 @@ import { ActivatedRoute, Router, ParamMap } from '@angular/router';
 import { WebsocketService } from 'src/app/services/websocket.service';
 
 @Component({
-  selector: 'app-setaccountid',
-  templateUrl: './setaccountid.component.html',
+  selector: 'app-setaccountsecret',
+  templateUrl: './setaccountsecret.component.html',
   styleUrls: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SetAccountIdComponent implements OnInit {
+export class SetAccountSecretComponent implements OnInit {
 
-  accountIdSubscription: Subscription;
+  accountTokenSubscription: Subscription;
 
   constructor(
     public stateService: StateService,
@@ -25,15 +25,15 @@ export class SetAccountIdComponent implements OnInit {
   ngOnInit() {
     this.route.paramMap
       .subscribe( (params: ParamMap) => {
-        const maybeAccountId = params.get('accountid');
-        if( maybeAccountId !== null) {
-          const accountId = maybeAccountId.slice(0, 64); // limit user's input to 64 bytes
-          this.accountIdSubscription = this.stateService.$accountId.subscribe( newAccountId => {
+        const maybeAccountSecret = params.get('accountsecret');
+        if( maybeAccountSecret !== null) {
+          const accountSecret = maybeAccountSecret.slice(0, 64); // limit user's input to 64 bytes
+          this.accountTokenSubscription = this.stateService.$accountToken.subscribe( newAccountToken => {
             this.cd.detectChanges();
             this.router.navigate( [ '/' ], {});
-            this.accountIdSubscription.unsubscribe();
+            this.accountTokenSubscription.unsubscribe();
           });
-          this.websocketService.checkAccountId( accountId);
+          this.websocketService.checkAccountSecret( accountSecret);
         }
       });
   }
