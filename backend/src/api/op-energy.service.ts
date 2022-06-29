@@ -46,11 +46,7 @@ export class OpEnergyApiService {
     }
     return true;
   }
-  public verifyNLockTime( rawString: string): NLockTime {
-    if( rawString.length < 1) {
-      throw new Error('verifyNLockTime: length');
-    }
-    const num = Number( rawString);
+  public verifyNLockTime( num: number): NLockTime {
     if( num < 0) {
       throw new Error('verifyNLockTime: negative');
     }
@@ -58,11 +54,7 @@ export class OpEnergyApiService {
       'value': num,
     };
   }
-  public verifyBlockHeight( rawString: string): BlockHeight {
-    if( rawString.length < 1) {
-      throw new Error('verifyBlockHeight: length');
-    }
-    const num = Number( rawString);
+  public verifyBlockHeight( num: number): BlockHeight {
     if( num < 0) {
       throw new Error('verifyBlockHeight: negative');
     }
@@ -143,9 +135,9 @@ export class OpEnergyApiService {
     try {
       const userId = await this.$getUserIdByAccountTokenCreateIfMissing( accountToken);
       const connection = await DB.accountPool.getConnection();
-      const query = 'SELECT id,block_height,nlocktime,UNIX_TIMESTAMP(creation_time) as creation_time FROM timestrikes WHERE user_id = ?';
+      const query = 'SELECT id,block_height,nlocktime,UNIX_TIMESTAMP(creation_time) as creation_time FROM timestrikes';
 
-      const [result] = await connection.query<any>( query, [ userId.userId]);
+      const [result] = await connection.query<any>( query, [ ]);
       connection.release();
       return result.map( (record) => {
         return ({

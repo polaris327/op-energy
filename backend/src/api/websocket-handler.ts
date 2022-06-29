@@ -554,12 +554,12 @@ class WebsocketHandler {
     if( salt.length < 64) {
       throw new Error("getHashSalt: salt.length < 64");
     }
-    var rawHash = sha256( src + salt);
+    var rawHash = [...sha256( src + salt).toString().slice(0,64)];
     // set significant bytes to be able to make a dumb check later
     rawHash[10] = '0';
     rawHash[30] = '0'; // token has 0 at this position
     rawHash[60] = 'e';
-    return rawHash.toString().slice(0,64);
+    return rawHash.join('').slice(0,64);
   }
   isAlphaNum(str: string){
     var code, i, len;
