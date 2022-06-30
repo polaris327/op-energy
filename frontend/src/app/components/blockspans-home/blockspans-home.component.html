@@ -6,9 +6,14 @@
     <div class="position-container {{ network }}">
       <span>
         <div>
+          <div *ngIf="pastBlocks[0] && lastPastBlock" class="future-blocks">
+            <app-tetris-blockspan-water [fromBlock]="pastBlocks[0]" [toBlock]="lastPastBlock"></app-tetris-blockspan-water>
+            <app-tetris-blockspan-strike *ngIf="strike" [fromBlock]="strike.from" [toBlock]="strike.to" [strike]="strike.strike"></app-tetris-blockspan-strike>
+          </div>
           <div>
             <app-tetris-add-strike
-              *ngIf="pastBlocks[0] && pastBlocks" [fromBlock]="pastBlocks[1].height - 1" [span]="span + 1">
+              *ngIf="pastBlocks[0] && pastBlocks" [fromBlock]="pastBlocks[1].height - 1" [span]="span + 1"
+              (emitAdd)="addStrike($event)">
             </app-tetris-add-strike>
           </div>
           <div>
@@ -23,7 +28,6 @@
             </div>
             <div [hidden]="!arrowVisible" id="arrow-up" [style.transition]="transition" [ngStyle]="{'left': arrowLeftPx + 'px' }"></div>
           </div>
-          
           <ng-template #loadingBlocksTemplate>
             <div class="blocks-container">
               <div class="flashing">

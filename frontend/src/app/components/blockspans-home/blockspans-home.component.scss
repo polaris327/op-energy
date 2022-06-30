@@ -25,7 +25,7 @@
 
 .blockchain-wrapper {
   overflow: hidden;
-  height: 450px;
+  height: 100vh;
 
   -webkit-user-select: none; /* Safari */        
   -moz-user-select: none; /* Firefox */
@@ -48,6 +48,19 @@
 
   app-tetris-blockspan-navigator {
     left: 250px;
+  }
+
+  .future-blocks {
+    position: absolute;
+    top: 0px;
+    left: -400px;
+    transition: 2s;
+    width: 250px;
+    height: 300px;
+
+    app-tetris-blockspan-water {
+      position: unset;
+    } 
   }
 }
 

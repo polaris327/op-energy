@@ -83,6 +83,7 @@ import { ObservedBlockDetailComponent } from './components/observed-block-detail
 import { ObservedBlockspanDetailComponent } from './components/observed-blockspan-detail/observed-blockspan-detail.component';
 import { TetrisBlockspanComponent } from './components/tetris-blockspan/tetris-blockspan.component';
 import { TetrisBlockspanWaterComponent } from './components/tetris-blockspan-water/tetris-blockspan-water.component';
+import { TetrisBlockspanStrikeComponent } from './components/tetris-blockspan-strike/tetris-blockspan-strike.component';
 import { TetrisBlockspanNavigatorComponent } from './components/tetris-blockspan-navigator/tetris-blockspan-navigator.component';
 import { TetrisAddStrikeComponent } from './components/tetris-add-strike/tetris-add-strike.component';
 import { PreviewComponent } from './components/preview/preview.component';
@@ -148,6 +149,7 @@ import { PreviewComponent } from './components/preview/preview.component';
     BetPieChartComponent,
     TetrisBlockspanComponent,
     TetrisBlockspanWaterComponent,
+    TetrisBlockspanStrikeComponent,
     TetrisBlockspanNavigatorComponent,
     TetrisAddStrikeComponent,
     PreviewComponent,

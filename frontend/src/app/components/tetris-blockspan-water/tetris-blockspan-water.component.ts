@@ -37,7 +37,7 @@ export class TetrisBlockspanWaterComponent implements OnInit, OnDestroy {
 
   get iconArray() {
     const count = this.totalIconCount > this.maxCount ? this.maxCount : this.totalIconCount;
-    return new Array(count).fill(1);
+    return count ? new Array(count).fill(1) : [];
   }
 
   get chainworkDiff(): bigint {

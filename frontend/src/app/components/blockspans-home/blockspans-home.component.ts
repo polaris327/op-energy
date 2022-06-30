@@ -66,6 +66,8 @@ export class BlockspansHomeComponent implements OnInit, OnDestroy {
     return 'Seconds since midnight, January 1 1970, as recorded in block by bitcoin miners';
   }
 
+  strike: any;
+
   constructor(
     private location: Location,
     public stateService: StateService,
@@ -139,6 +141,11 @@ export class BlockspansHomeComponent implements OnInit, OnDestroy {
       )
     ).subscribe((blocks: any[]) => {
       this.pastBlocks = blocks;
+      this.lastPastBlock = this.pastBlocks[0];
+      this.lastPastBlock = {
+        ...this.lastPastBlock,
+        height: this.lastPastBlock.height + 1
+      };
       this.location.replaceState(
         this.router.createUrlTree([(this.network ? '/' + this.network : '') + `/tetris/blockspans/`, this.span, tipBlock]).toString()
       );
@@ -259,5 +266,9 @@ export class BlockspansHomeComponent implements OnInit, OnDestroy {
 
   goDetail(fromBlock, toBlock) {
     this.router.navigate([this.relativeUrlPipe.transform('/tetris/blockspan/'), fromBlock.height, toBlock.height]);
+  }
+
+  addStrike(strike) {
+    this.strike = strike;
   }
 }

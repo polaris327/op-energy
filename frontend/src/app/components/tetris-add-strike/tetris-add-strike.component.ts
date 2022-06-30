@@ -13,7 +13,7 @@ export class TetrisAddStrikeComponent implements OnInit, OnDestroy {
   @Input() fromBlock: number;
   @Input() span: number = 1;
   @Input() strike: number = 600;
-  @Output() emitGo = new EventEmitter();
+  @Output() emitAdd = new EventEmitter();
 
   get toBlock() {
     return +this.fromBlock + +this.span;
@@ -36,10 +36,12 @@ export class TetrisAddStrikeComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
   }
 
-  onGo() {
-    this.emitGo.emit({
-      tipBlock: this.toBlock,
-      span: +this.span
-    });
+  addStrike() {
+    const strike = {
+      from: this.fromBlock,
+      to: this.toBlock,
+      strike: this.strike
+    }
+    this.emitAdd.emit(strike);
   }
 }
