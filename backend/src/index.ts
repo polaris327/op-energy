@@ -77,6 +77,7 @@ class Server {
       })
       .use(express.urlencoded({ extended: true }))
       .use(express.text())
+      .use(express.json())
     ;
 
     this.server = http.createServer(this.app);

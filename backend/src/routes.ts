@@ -881,11 +881,11 @@ class Routes {
       if( typeof maccount_token !== "string") {
         throw new Error( 'ERROR: req.body.account_token is not a string');
       }
-      if( typeof mnlocktime !== "string") {
-        throw new Error( 'ERROR: req.body.nlocktime is not a string');
+      if( typeof mnlocktime !== "number") {
+        throw new Error( 'ERROR: req.body.nlocktime is not a number');
       }
-      if( typeof mblock_height !== "string" ) {
-        throw new Error( 'ERROR: req.body.block_height is not a string');
+      if( typeof mblock_height !== "number" ) {
+        throw new Error( 'ERROR: req.body.block_height is not a number');
       }
       const result = await opEnergyApiService.$addTimeStrike( opEnergyApiService.verifyAccountToken( maccount_token), opEnergyApiService.verifyBlockHeight( mblock_height), opEnergyApiService.verifyNLockTime(mnlocktime));
       res.json( result.value);
@@ -897,16 +897,16 @@ class Routes {
   public async $getSlowFastGuesses(req: Request, res: Response) {
     try {
       const maccount_token = req.query.account_token;
-      const mnlocktime = req.query.nlocktime;
-      const mblock_height = req.query.block_height;
+      const mnlocktime = Number(req.query.nlocktime);
+      const mblock_height = Number(req.query.block_height);
 
       if( typeof maccount_token !== "string") {
         throw new Error( 'ERROR: req.query.account_token is not a string');
       }
-      if( typeof mnlocktime !== "string") {
-        throw new Error( 'ERROR: req.query.nlocktime is not a string');
+      if( typeof mnlocktime !== "number") {
+        throw new Error( 'ERROR: req.query.nlocktime is not a number');
       }
-      if( typeof mblock_height !== "string" ) {
+      if( typeof mblock_height !== "number" ) {
         throw new Error( 'ERROR: req.query.block_height is not a string');
       }
       const result = await opEnergyApiService.$getSlowFastGuesses( opEnergyApiService.verifyAccountToken( maccount_token), opEnergyApiService.verifyBlockHeight( mblock_height), opEnergyApiService.verifyNLockTime(mnlocktime));
@@ -926,10 +926,10 @@ class Routes {
       if( typeof maccount_token !== "string") {
         throw new Error( 'ERROR: req.body.account_token is not a string');
       }
-      if( typeof mnlocktime !== "string") {
+      if( typeof mnlocktime !== "number") {
         throw new Error( 'ERROR: req.body.nlocktime is not a string');
       }
-      if( typeof mblock_height !== "string" ) {
+      if( typeof mblock_height !== "number" ) {
         throw new Error( 'ERROR: req.body.block_height is not a string');
       }
       if( typeof mguess !== "string" ) {

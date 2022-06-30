@@ -31,7 +31,7 @@ export class OpEnergyApiService {
   // - blockHeight - height of the block
   // - nlocktime - time, by which lock is being blocked
   // returns TimeStrike value in case of success or throws error otherwise
-  $addTimeStrikes( blockHeight: number, nlocktime: number): Observable<TimeStrike> {
+  $addTimeStrike( blockHeight: number, nlocktime: number): Observable<TimeStrike> {
     var accountToken;
     // get account token from the state service
     let subscription = this.stateService.$accountToken.subscribe( newAccountToken => {
@@ -39,19 +39,19 @@ export class OpEnergyApiService {
     });
     subscription.unsubscribe();
 
-    let httpParams: HttpParams = new HttpParams();
-    httpParams.set('block_height', blockHeight);
-    httpParams.set('nlocktime', nlocktime);
-    httpParams.set('account_token', accountToken);
+    let params = {
+      block_height: blockHeight,
+      nlocktime: nlocktime,
+      account_token: accountToken,
+    };
 
-    return this.httpClient.post<TimeStrike>(this.apiBaseUrl + this.apiBasePath + '/api/timestrike/mediantime', '', {
+    return this.httpClient.post<TimeStrike>(this.apiBaseUrl + this.apiBasePath + '/api/v1/strike/mediantime', params, {
       observe: 'body',
       responseType: 'json',
-      params : httpParams,
     });
   }
   // returns list of available locked blocks or throws error in case of failure
-  $listTimeStrike( ): Observable<TimeStrike[]> {
+  $listTimeStrikes( ): Observable<TimeStrike[]> {
     var accountToken;
     // get account token from the state service
     let subscription = this.stateService.$accountToken.subscribe( newAccountToken => {
@@ -59,14 +59,11 @@ export class OpEnergyApiService {
     });
     subscription.unsubscribe();
 
-    let httpParams: HttpParams = new HttpParams();
-    httpParams.set('account_token', accountToken);
+    let params = {
+      account_token: accountToken,
+    };
 
-    return this.httpClient.get<TimeStrike[]>(this.apiBaseUrl + this.apiBasePath + '/api/timestrike/mediantime', {
-      observe: 'body',
-      responseType: 'json',
-      params : httpParams,
-    });
+    return this.httpClient.get<TimeStrike[]>(this.apiBaseUrl + this.apiBasePath + '/api/v1/strike/mediantime', {params});
   }
   // this function returns an observable with value of type SlowFastGuess, meaning, that the guess had been persisted in the DB
   // params:
@@ -81,16 +78,16 @@ export class OpEnergyApiService {
     });
     subscription.unsubscribe();
 
-    let httpParams: HttpParams = new HttpParams();
-    httpParams.set('account_token', accountToken);
-    httpParams.set('block_height', timeStrike.blockHeight);
-    httpParams.set('nlocktime', timeStrike.nLockTime);
-    httpParams.set('guess', guess);
+    let params = {
+      account_token: accountToken,
+      block_height: timeStrike.blockHeight,
+      nlocktime: timeStrike.nLockTime,
+      guess: guess,
+    };
 
-    return this.httpClient.post<SlowFastGuess>(this.apiBaseUrl + this.apiBasePath + '/api/slowfastguess/mediantime', '', {
+    return this.httpClient.post<SlowFastGuess>(this.apiBaseUrl + this.apiBasePath + '/api/v1/slowfastguess/mediantime', params, {
       observe: 'body',
       responseType: 'json',
-      params : httpParams,
     });
   }
   // returns list of the guesses for a given timelocked block
@@ -102,16 +99,13 @@ export class OpEnergyApiService {
     });
     subscription.unsubscribe();
 
-    let httpParams: HttpParams = new HttpParams();
-    httpParams.set('account_token', accountToken);
-    httpParams.set('block_height', timeStrike.blockHeight);
-    httpParams.set('nlocktime', timeStrike.nLockTime);
+    let params = {
+      account_token: accountToken,
+      block_height: timeStrike.blockHeight,
+      nlocktime: timeStrike.nLockTime,
+    };
 
-    return this.httpClient.get<SlowFastGuess[]>(this.apiBaseUrl + this.apiBasePath + '/api/slowfastguess/mediantime', {
-      observe: 'body',
-      responseType: 'json',
-      params : httpParams,
-    });
+    return this.httpClient.get<SlowFastGuess[]>(this.apiBaseUrl + this.apiBasePath + '/api/v1/slowfastguess/mediantime', {params});
   }
 
   // updates displayable user name for a current user
@@ -127,14 +121,14 @@ export class OpEnergyApiService {
     });
     subscription.unsubscribe();
 
-    let httpParams: HttpParams = new HttpParams();
-    httpParams.set('account_token', accountToken);
-    httpParams.set('display_name', displayName);
+    let params = {
+      account_token: accountToken,
+      display_name: displayName,
+    };
 
-    return this.httpClient.post<string>(this.apiBaseUrl + this.apiBasePath + '/api/user/displayname', '', {
+    return this.httpClient.post<string>(this.apiBaseUrl + this.apiBasePath + '/api/v1/user/displayname', params, {
       observe: 'body',
       responseType: 'json',
-      params : httpParams,
     });
   }
 
