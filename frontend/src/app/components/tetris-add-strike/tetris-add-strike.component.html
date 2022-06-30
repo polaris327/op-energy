@@ -11,11 +11,11 @@
   <div class="to-block">
     {{ toBlock }}
     <div class="span-block">
-      <input type="text" class="form-control text-center" [(ngModel)]="span">
+      <input type="text" class="form-control text-center" [(ngModel)]="span" (ngModelChange)="spanChange()">
     </div>
   </div>
   <div class="from-block">
-    <input type="text" class="form-control text-center" [(ngModel)]="fromBlock">
+    {{ fromBlock }}
   </div>
 
   <div class="mt-5">

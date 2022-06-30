@@ -38,10 +38,13 @@ export class TetrisAddStrikeComponent implements OnInit, OnDestroy {
 
   addStrike() {
     const strike = {
-      from: this.fromBlock,
-      to: this.toBlock,
-      strike: this.strike
+      blockHeight: this.toBlock,
+      elapsedTime: this.strike
     }
     this.emitAdd.emit(strike);
+  }
+
+  spanChange() {
+    this.strike = 600 * this.span;
   }
 }

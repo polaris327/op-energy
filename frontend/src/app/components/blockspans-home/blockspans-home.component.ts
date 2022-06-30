@@ -8,6 +8,7 @@ import { specialBlocks } from 'src/app/app.constants';
 import { ElectrsApiService } from 'src/app/services/electrs-api.service';
 import { switchMap, skip, map } from 'rxjs/operators';
 import { RelativeUrlPipe } from 'src/app/shared/pipes/relative-url/relative-url.pipe';
+import { OpEnergyApiService } from 'src/app/services/op-energy.service';
 
 interface PastBlock extends Block {
   mediantimeDiff: number;
@@ -76,6 +77,7 @@ export class BlockspansHomeComponent implements OnInit, OnDestroy {
     private relativeUrlPipe: RelativeUrlPipe,
     private cd: ChangeDetectorRef,
     private electrsApiService: ElectrsApiService,
+    private opEnergyApiService: OpEnergyApiService
   ) { }
 
   ngOnInit() {
@@ -270,5 +272,10 @@ export class BlockspansHomeComponent implements OnInit, OnDestroy {
 
   addStrike(strike) {
     this.strike = strike;
+    const nLockTime = this.pastBlocks[0].mediantime + strike.elapsedTime;
+    this.opEnergyApiService.$addTimeStrikes(strike.blockHeight, nLockTime)
+      .subscribe(timeStrike => {
+        console.log(11445555, timeStrike);
+      })
   }
 }

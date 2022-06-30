@@ -12,7 +12,7 @@ export const MAX_COUNT = 12;
 export class TetrisBlockspanStrikeComponent implements OnInit, OnDestroy {
   @Input() fromBlock: number;
   @Input() toBlock: number;
-  @Input() strike: number;
+  @Input() elapsedTime: number;
   maxCount = MAX_COUNT;
   flameIconArray = new Array(MAX_COUNT).fill(1);
 
@@ -21,7 +21,7 @@ export class TetrisBlockspanStrikeComponent implements OnInit, OnDestroy {
   }
 
   get energyDiff(): number {
-    return ((this.span * 600 - this.strike) / (this.span * 600)) * 100;
+    return ((this.span * 600 - this.elapsedTime) / (this.span * 600)) * 100;
   }
 
   get totalIconCount() {

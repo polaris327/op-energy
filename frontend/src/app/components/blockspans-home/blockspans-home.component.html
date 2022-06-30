@@ -8,11 +8,11 @@
         <div>
           <div *ngIf="pastBlocks[0] && lastPastBlock" class="future-blocks">
             <app-tetris-blockspan-water [fromBlock]="pastBlocks[0]" [toBlock]="lastPastBlock"></app-tetris-blockspan-water>
-            <app-tetris-blockspan-strike *ngIf="strike" [fromBlock]="strike.from" [toBlock]="strike.to" [strike]="strike.strike"></app-tetris-blockspan-strike>
+            <app-tetris-blockspan-strike *ngIf="strike" [fromBlock]="pastBlocks[0].height" [toBlock]="strike.blockHeight" [elapsedTime]="strike.elapsedTime"></app-tetris-blockspan-strike>
           </div>
           <div>
             <app-tetris-add-strike
-              *ngIf="pastBlocks[0] && pastBlocks" [fromBlock]="pastBlocks[1].height - 1" [span]="span + 1"
+              *ngIf="pastBlocks[0] && pastBlocks" [fromBlock]="pastBlocks[0].height" [span]="span + 1"
               (emitAdd)="addStrike($event)">
             </app-tetris-add-strike>
           </div>
