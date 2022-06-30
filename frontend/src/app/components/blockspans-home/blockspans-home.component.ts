@@ -273,7 +273,7 @@ export class BlockspansHomeComponent implements OnInit, OnDestroy {
   addStrike(strike) {
     this.strike = strike;
     const nLockTime = this.pastBlocks[0].mediantime + strike.elapsedTime;
-    this.opEnergyApiService.$addTimeStrikes(strike.blockHeight, nLockTime)
+    this.opEnergyApiService.$addTimeStrike(strike.blockHeight, nLockTime)
       .subscribe(timeStrike => {
         console.log(11445555, timeStrike);
       })
