@@ -26,6 +26,7 @@ export class BlockspansHomeComponent implements OnInit, OnDestroy {
   network = '';
   allBlocks: PastBlock[] = [];
   pastBlocks: PastBlock[] = [];
+  indexArray = [1, 3, 5, 7, 9, 11];
   lastPastBlock: PastBlock;
   emptyBlocks: Block[] = this.mountEmptyBlocks();
   markHeight: number;
@@ -97,7 +98,7 @@ export class BlockspansHomeComponent implements OnInit, OnDestroy {
         this.cd.markForCheck();
       });
 
-    for (let i = 0; i < this.stateService.env.KEEP_BLOCKS_AMOUNT+1; i++) {
+    for (let i = 0; i < this.indexArray.length; i++) {
       this.blockStyles.push(this.getStyleForBlock(i));
     }            
 
@@ -132,8 +133,10 @@ export class BlockspansHomeComponent implements OnInit, OnDestroy {
   blockspanChange({tipBlock, span}) {
     this.span = span;
     let blockNumbers = [];
-    for (let i = 0; i < this.stateService.env.KEEP_BLOCKS_AMOUNT; i++) {
-      blockNumbers.push(tipBlock - i * span);
+    let lastblock = tipBlock;
+    for (let i = 0; i < this.stateService.env.KEEP_BLOCKS_AMOUNT; i += 2) {
+      blockNumbers.push(lastblock, lastblock - span);
+      lastblock = lastblock - (span + 1);
     }
     this.pastBlocks = [];
     forkJoin(
@@ -230,7 +233,7 @@ export class BlockspansHomeComponent implements OnInit, OnDestroy {
 
   getStyleForBlock(index: number) {
     return {
-      left: 250 + 295 * index + 'px',
+      left: 250 + 295 * (index + 1) + 'px',
     };
   }
 

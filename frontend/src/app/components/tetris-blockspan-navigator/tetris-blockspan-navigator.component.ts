@@ -11,11 +11,11 @@ export const MAX_COUNT = 8;
 })
 export class TetrisBlockspanNavigatorComponent implements OnInit, OnDestroy {
   @Input() fromBlock: number;
-  @Input() span: number = 1;
+  @Input() span: number = 2;
   @Output() emitGo = new EventEmitter();
 
   get toBlock() {
-    return +this.fromBlock + +this.span;
+    return +this.fromBlock + +this.span - 1;
   }
 
   constructor(
@@ -32,7 +32,7 @@ export class TetrisBlockspanNavigatorComponent implements OnInit, OnDestroy {
   onGo() {
     this.emitGo.emit({
       tipBlock: this.toBlock,
-      span: +this.span
+      span: +this.span - 1
     });
   }
 }
