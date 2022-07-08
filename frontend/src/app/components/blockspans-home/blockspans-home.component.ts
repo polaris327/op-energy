@@ -9,6 +9,7 @@ import { ElectrsApiService } from 'src/app/services/electrs-api.service';
 import { switchMap, skip, map } from 'rxjs/operators';
 import { RelativeUrlPipe } from 'src/app/shared/pipes/relative-url/relative-url.pipe';
 import { OpEnergyApiService } from 'src/app/services/op-energy.service';
+import { TimeStrike } from 'src/app/interfaces/op-energy.interface';
 
 interface PastBlock extends Block {
   mediantimeDiff: number;
@@ -67,7 +68,7 @@ export class BlockspansHomeComponent implements OnInit, OnDestroy {
     return 'Seconds since midnight, January 1 1970, as recorded in block by bitcoin miners';
   }
 
-  strike: any;
+  timeStrikes: TimeStrike[] = [];
 
   constructor(
     private location: Location,
@@ -151,7 +152,19 @@ export class BlockspansHomeComponent implements OnInit, OnDestroy {
       this.location.replaceState(
         this.router.createUrlTree([(this.network ? '/' + this.network : '') + `/tetris/blockspans/`, this.span, tipBlock]).toString()
       );
+
+      this.getTimeStrikes();
     });
+  }
+
+  getTimeStrikes() {
+    this.opEnergyApiService.$listTimeStrikes()
+      .subscribe((timeStrikes: TimeStrike[]) => {
+        this.timeStrikes = timeStrikes.map(strike => ({
+          ...strike,
+          elapsedTime: strike.nLockTime - this.pastBlocks[0].mediantime
+        }));
+      });
   }
 
   onMouseDown(event: MouseEvent) {
@@ -271,11 +284,10 @@ export class BlockspansHomeComponent implements OnInit, OnDestroy {
   }
 
   addStrike(strike) {
-    this.strike = strike;
     const nLockTime = this.pastBlocks[0].mediantime + Number(strike.elapsedTime);
     this.opEnergyApiService.$addTimeStrike(strike.blockHeight, nLockTime)
       .subscribe(timeStrike => {
-        console.log(11445555, timeStrike);
-      })
+        this.getTimeStrikes();
+      });
   }
 }

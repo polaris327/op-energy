@@ -2,13 +2,13 @@
   (mousedown)="onMouseDown($event)"
   (dragstart)="onDragStart($event)"
   >
-  <div class="text-center" class="blockchain-wrapper">
+  <div class="text-center" class="blockchain-wrapper" [ngStyle]="{'height': 400 * timeStrikes.length + 'px' }">
     <div class="position-container {{ network }}">
       <span>
         <div>
           <div *ngIf="pastBlocks[0] && lastPastBlock" class="future-blocks">
             <app-tetris-blockspan-water [fromBlock]="pastBlocks[0]" [toBlock]="lastPastBlock"></app-tetris-blockspan-water>
-            <app-tetris-blockspan-strike *ngIf="strike" [fromBlock]="pastBlocks[0].height" [toBlock]="strike.blockHeight" [elapsedTime]="strike.elapsedTime"></app-tetris-blockspan-strike>
+            <app-tetris-blockspan-strike *ngFor="let strike of timeStrikes" [fromBlock]="pastBlocks[0].height" [toBlock]="strike.blockHeight" [elapsedTime]="strike.elapsedTime"></app-tetris-blockspan-strike>
           </div>
           <div>
             <app-tetris-add-strike
