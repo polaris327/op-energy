@@ -12,7 +12,7 @@
           </div>
           <div>
             <app-tetris-add-strike
-              *ngIf="pastBlocks[0] && pastBlocks" [fromBlock]="pastBlocks[0].height" [span]="span + 1"
+              *ngIf="pastBlocks[0] && pastBlocks" [fromBlock]="pastBlocks[0].height" [span]="span + 1" [strike]="initStrike"
               (emitAdd)="addStrike($event)">
             </app-tetris-add-strike>
           </div>

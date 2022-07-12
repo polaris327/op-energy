@@ -27,12 +27,6 @@ export class TetrisAddStrikeComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
   }
 
-  ngOnChanges() {
-    if (this.span) {
-      this.strike = 600 * this.span;
-    }
-  }
-
   ngOnDestroy(): void {
   }
 

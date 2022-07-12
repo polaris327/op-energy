@@ -70,6 +70,7 @@ export class BlockspansHomeComponent implements OnInit, OnDestroy {
   }
 
   timeStrikes: TimeStrike[] = [];
+  initStrike = 1200;
 
   constructor(
     private location: Location,
@@ -167,6 +168,10 @@ export class BlockspansHomeComponent implements OnInit, OnDestroy {
           ...strike,
           elapsedTime: strike.nLockTime - this.pastBlocks[0].mediantime
         }));
+        const existingElapsedTimes = this.timeStrikes.map(s => s.elapsedTime);
+        while (existingElapsedTimes.includes(this.initStrike)) {
+          this.initStrike += 1;
+        }
       });
   }
 
