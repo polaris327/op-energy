@@ -156,7 +156,8 @@
             ],
             "styles": [
               "src/styles.scss",
-              "node_modules/@fortawesome/fontawesome-svg-core/styles.css"
+              "node_modules/@fortawesome/fontawesome-svg-core/styles.css",
+              "node_modules/ngx-toastr/toastr.css"
             ],
             "scripts": [
               "generated-config.js"

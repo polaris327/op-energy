@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef, NgModule, HostListener, ViewChild, ElementRef } from '@angular/core';
 import { Location } from '@angular/common';
 import { forkJoin, Observable, Subscription, of } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 import { Block } from 'src/app/interfaces/electrs.interface';
 import { StateService } from 'src/app/services/state.service';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
@@ -74,6 +75,7 @@ export class BlockspansHomeComponent implements OnInit, OnDestroy {
 
   constructor(
     private location: Location,
+    private toastr: ToastrService,
     public stateService: StateService,
     private route: ActivatedRoute,
     private router: Router,
@@ -296,6 +298,9 @@ export class BlockspansHomeComponent implements OnInit, OnDestroy {
     this.opEnergyApiService.$addTimeStrike(strike.blockHeight, nLockTime)
       .subscribe(timeStrike => {
         this.getTimeStrikes();
+        this.toastr.success('A strike has been added successfully!', 'Success!');
+      }, err => {
+        this.toastr.error('Error occurred!', 'Failed!');
       });
   }
 }
