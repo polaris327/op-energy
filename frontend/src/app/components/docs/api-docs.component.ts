@@ -4318,6 +4318,51 @@ export class ApiDocsComponent implements OnInit {
           response: ``
         },
       },
+      oe_get_timestrikesbyblock: {
+        codeTemplate: {
+          commonJS: `
+        const lockedBlocks = await opEnergyApiService.$listTimeStrikesbyBlockHeight(<blockHeightNumber>);
+          `,
+          esModule: ``,
+          curl: `/api/v1/strike/block/mediantime?account_token=<token>&block_height=<block_height_number>`,
+        },
+        codeSampleMainnet: {
+          esModule: [],
+          commonJS: [],
+          curl: [],
+          response: `[{"blockHeight":1,"nLockTime":1,"creationTime":1655449480},{"blockHeight":1,"nLockTime":2,"creationTime":1655449557},{"blockHeight":1,"nLockTime":3,"creationTime":1655450278}]`
+        },
+        codeSampleTestnet: {
+          esModule: [],
+          commonJS: [],
+          curl: [],
+          response: ``
+        },
+        codeSampleSignet: {
+          esModule: [],
+          commonJS: [],
+          curl: [],
+          response: `[{"blockHeight":1,"nLockTime":1,"creationTime":1655449480},{"blockHeight":1,"nLockTime":2,"creationTime":1655449557},{"blockHeight":1,"nLockTime":3,"creationTime":1655450278}]`
+        },
+        codeSampleLiquid: {
+          esModule: [],
+          commonJS: [],
+          curl: [],
+          response: ``
+        },
+        codeSampleLiquidTestnet: {
+          esModule: [],
+          commonJS: [],
+          curl: [],
+          response: ``
+        },
+        codeSampleBisq: {
+          esModule: [],
+          commonJS: [],
+          curl: [],
+          response: ``
+        },
+      },
       difficulty: {
         codeTemplate: {
           commonJS: `

@@ -1,5 +1,6 @@
 <ng-template [ngIf]="network.val !== 'bisq' && network.val !== 'liquid' && network.val !== 'liquidtestnet'">
   <p>Op-Energy</p>
+  <a [routerLink]="['./']" fragment="oe_get_timestrikesbyblock" (click)="collapseItem.toggle()">GET time strikes list by block</a>
   <a [routerLink]="['./']" fragment="oe_get_timestrikes" (click)="collapseItem.toggle()">GET time strikes list</a>
   <a [routerLink]="['./']" fragment="oe_post_timestrike" (click)="collapseItem.toggle()">POST time strike</a>
   <a [routerLink]="['./']" fragment="oe_get_slowfastguesses" (click)="collapseItem.toggle()">GET slow/fast guesses list</a>

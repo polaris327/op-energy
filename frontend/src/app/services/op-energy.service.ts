@@ -65,6 +65,22 @@ export class OpEnergyApiService {
 
     return this.httpClient.get<TimeStrike[]>(this.apiBaseUrl + this.apiBasePath + '/api/v1/strike/mediantime', {params});
   }
+  // returns list of available locked blocks for a given block height or throws error in case of failure
+  $listTimeStrikesByBlockHeight( blockHeight: number): Observable<TimeStrike[]> {
+    var accountToken;
+    // get account token from the state service
+    let subscription = this.stateService.$accountToken.subscribe( newAccountToken => {
+      accountToken = newAccountToken;
+    });
+    subscription.unsubscribe();
+
+    let params = {
+      account_token: accountToken,
+      block_height: blockHeight,
+    };
+
+    return this.httpClient.get<TimeStrike[]>(this.apiBaseUrl + this.apiBasePath + '/api/v1/strike/block/mediantime', {params});
+  }
   // this function returns an observable with value of type SlowFastGuess, meaning, that the guess had been persisted in the DB
   // params:
   // - guess: "slow" or "fast"

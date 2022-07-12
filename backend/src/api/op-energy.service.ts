@@ -256,6 +256,29 @@ export class OpEnergyApiService {
       throw new Error(`OpEnergyApiService.$updateUserDisplayName: failed to query DB: ${e instanceof Error? e.message : e}`);
     }
   }
+  public async $getTimeStrikesByBlock( accountToken: AccountToken, blockHeight: BlockHeight): Promise<TimeStrikeDB[]> {
+    try {
+      const userId = await this.$getUserIdByAccountTokenCreateIfMissing( accountToken);
+      const connection = await DB.accountPool.getConnection();
+      const query = 'SELECT id,block_height,nlocktime,UNIX_TIMESTAMP(creation_time) as creation_time FROM timestrikes WHERE block_height=?';
+
+      const [result] = await connection.query<any>( query, [ blockHeight.value ]);
+      connection.release();
+      return result.map( (record) => {
+        return ({
+          'id': { 'value': record.id},
+          'value': {
+            'blockHeight': record.block_height,
+            'nLockTime': record.nlocktime,
+            'creationTime': record.creation_time,
+          },
+        } as TimeStrikeDB)
+      });
+    } catch(e) {
+      throw new Error(`OpEnergyApiService.$getTimeStrikesByBlock: failed to query DB: ${e instanceof Error? e.message : e}`);
+    }
+    return [];
+  }
 
 }
 
