@@ -87,6 +87,7 @@
     "ngx-bootrap-multiselect": "^2.0.0",
     "ngx-echarts": "^7.0.1",
     "ngx-infinite-scroll": "^10.0.1",
+    "ngx-toastr": "^14.3.0",
     "qrcode": "1.5.0",
     "rxjs": "^6.6.7",
     "tinyify": "^3.0.0",
