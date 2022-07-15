@@ -7105,6 +7105,15 @@ let
         sha512 = "px/KnJAJZf5RuBGcfD+Sp2pAKq0ytz8j+1NehvgIGFkvtvFrDM3T8E4x/JJODXK9WZow8RRGrbA9QQ3hs+pDhA==";
       };
     };
+    "ngx-toastr-14.3.0" = {
+      name = "ngx-toastr";
+      packageName = "ngx-toastr";
+      version = "14.3.0";
+      src = fetchurl {
+        url = "https://registry.npmjs.org/ngx-toastr/-/ngx-toastr-14.3.0.tgz";
+        sha512 = "d8j/sOr60w5U7rGlcKQ0Ff4u+m2NzhqU5ZdJXn7QW3aR3Zf/rY7/Fd14BmUindTOWVr2NeTYcQXCjLpir0ldpA==";
+      };
+    };
     "nise-5.1.0" = {
       name = "nise";
       packageName = "nise";
@@ -11796,6 +11805,11 @@ let
       (sources."nice-napi-1.0.2" // {
         dependencies = [
           sources."node-gyp-build-4.3.0"
+        ];
+      })
+      (sources."ngx-toastr-14.3.0" // {
+        dependencies = [
+          sources."tslib-2.3.0"
         ];
       })
       (sources."nise-5.1.0" // {
