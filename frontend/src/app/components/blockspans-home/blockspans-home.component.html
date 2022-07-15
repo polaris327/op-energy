@@ -8,7 +8,7 @@
         <div>
           <div *ngIf="pastBlocks[0] && lastPastBlock" class="future-blocks">
             <app-tetris-blockspan-water [fromBlock]="pastBlocks[0]" [toBlock]="lastPastBlock"></app-tetris-blockspan-water>
-            <app-tetris-blockspan-strike *ngFor="let strike of timeStrikes" [fromBlock]="pastBlocks[0].height" [toBlock]="strike.blockHeight" [elapsedTime]="strike.elapsedTime"></app-tetris-blockspan-strike>
+            <!-- <app-tetris-blockspan-strike *ngFor="let strike of timeStrikes" [fromBlock]="pastBlocks[0].height" [toBlock]="strike.blockHeight" [elapsedTime]="strike.elapsedTime"></app-tetris-blockspan-strike> -->
           </div>
           <div>
             <app-tetris-add-strike

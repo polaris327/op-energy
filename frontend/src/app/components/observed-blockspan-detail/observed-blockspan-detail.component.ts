@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/co
 import { Location } from '@angular/common';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { ElectrsApiService } from '../../services/electrs-api.service';
-import { switchMap, tap, debounceTime, catchError, map } from 'rxjs/operators';
+import { switchMap, tap, debounceTime, catchError, map, take } from 'rxjs/operators';
 import { Block, Transaction, Vout } from '../../interfaces/electrs.interface';
 import { combineLatest, Observable, of, Subscription } from 'rxjs';
 import { StateService } from '../../services/state.service';
@@ -10,6 +10,8 @@ import { SeoService } from 'src/app/services/seo.service';
 import { WebsocketService } from 'src/app/services/websocket.service';
 import { RelativeUrlPipe } from 'src/app/shared/pipes/relative-url/relative-url.pipe';
 import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
+import { TimeStrike } from 'src/app/interfaces/op-energy.interface';
+import { OpEnergyApiService } from 'src/app/services/op-energy.service';
 
 @Component({
   selector: 'app-observed-blockspan-detail',
@@ -43,6 +45,8 @@ export class ObservedBlockspanDetailComponent implements OnInit, OnDestroy {
   blocksSubscription: Subscription;
   networkChangedSubscription: Subscription;
 
+  timeStrikes: TimeStrike[] = [];
+
   get span(): number {
     return (this.toBlock.height - this.fromBlock.height);
   }
@@ -68,6 +72,7 @@ export class ObservedBlockspanDetailComponent implements OnInit, OnDestroy {
     private location: Location,
     private router: Router,
     private modalService: NgbModal,
+    private opEnergyApiService: OpEnergyApiService,
     private electrsApiService: ElectrsApiService,
     public stateService: StateService,
     private seoService: SeoService,
@@ -184,6 +189,10 @@ export class ObservedBlockspanDetailComponent implements OnInit, OnDestroy {
       this.stateService.markBlock$.next({ blockHeight: this.blockHeight });
       this.isLoadingTransactions = true;
       this.transactions = null;
+
+      this.stateService.$accountToken.pipe(take(1)).subscribe(res => {
+        this.getTimeStrikes();
+      })
     }),
     (error) => {
       this.error = error;
@@ -213,6 +222,16 @@ export class ObservedBlockspanDetailComponent implements OnInit, OnDestroy {
     this.keyNavigationSubscription.unsubscribe();
     this.blocksSubscription.unsubscribe();
     this.networkChangedSubscription.unsubscribe();
+  }
+
+  getTimeStrikes() {
+    this.opEnergyApiService.$listTimeStrikesByBlockHeight(this.toBlock.height)
+      .subscribe((timeStrikes: TimeStrike[]) => {
+        this.timeStrikes = timeStrikes.map(strike => ({
+          ...strike,
+          elapsedTime: strike.nLockTime - this.fromBlock.mediantime
+        }));
+      });
   }
 
   onResize(event: any) {
