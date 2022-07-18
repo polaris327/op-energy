@@ -19,19 +19,11 @@ export class PreviewComponent implements OnInit {
 
   }
 
-  goBlocks() {
-    this.router.navigate([this.relativeUrlPipe.transform('/tetris/blocks')]);
+  blockspansLink() {
+    return this.relativeUrlPipe.transform('/tetris/blockspans/1');
   }
 
-  goBlockDetail() {
-    this.router.navigate([this.relativeUrlPipe.transform('/tetris/blocks'), 95120]);
-  }
-
-  goBlockspans() {
-    this.router.navigate([this.relativeUrlPipe.transform('/tetris/blockspans/1')]);
-  }
-
-  goBlockspanDetail() {
-    this.router.navigate([this.relativeUrlPipe.transform('/tetris/blockspan/89778/89789')]);
+  blockspanDetailLink() {
+    return this.relativeUrlPipe.transform('/tetris/blockspan/89778/89789');
   }
 }
