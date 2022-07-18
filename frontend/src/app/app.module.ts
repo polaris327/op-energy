@@ -39,6 +39,7 @@ import { BlockchainComponent } from './components/blockchain/blockchain.componen
 import { BlockchainBetsComponent } from './components/blockchain-bets/blockchain-bets.component';
 import { BlockchainObservedBlocksComponent } from './components/blockchain-observed-blocks/blockchain-observed-blocks.component';
 import { BlockspansHomeComponent } from './components/blockspans-home/blockspans-home.component';
+import { BlockspansHomeAddstrikeComponent } from './components/blockspans-home-addstrike/blockspans-home-addstrike.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { AudioService } from './services/audio.service';
 import { MempoolBlockComponent } from './components/mempool-block/mempool-block.component';
@@ -103,6 +104,7 @@ import { PreviewComponent } from './components/preview/preview.component';
     BlockchainBetsComponent,
     BlockchainObservedBlocksComponent,
     BlockspansHomeComponent,
+    BlockspansHomeAddstrikeComponent,
     StartComponent,
     StartV2Component,
     BlockchainBlocksComponent,

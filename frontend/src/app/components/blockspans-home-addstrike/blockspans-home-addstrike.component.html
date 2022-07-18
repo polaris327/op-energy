@@ -11,10 +11,10 @@
             <!-- <app-tetris-blockspan-strike *ngFor="let strike of timeStrikes" [fromBlock]="pastBlocks[0].height" [toBlock]="strike.blockHeight" [elapsedTime]="strike.elapsedTime"></app-tetris-blockspan-strike> -->
           </div>
           <div>
-            <!-- <app-tetris-add-strike
+            <app-tetris-add-strike
               *ngIf="pastBlocks[0] && pastBlocks" [fromBlock]="pastBlocks[0].height" [span]="span + 1" [strike]="initStrike"
               (emitAdd)="addStrike($event)">
-            </app-tetris-add-strike> -->
+            </app-tetris-add-strike>
           </div>
           <div>
             <app-tetris-blockspan-navigator

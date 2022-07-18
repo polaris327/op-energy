@@ -30,6 +30,7 @@ import { ObservedBlockDetailComponent } from './components/observed-block-detail
 import { ObservedBlockspanDetailComponent } from './components/observed-blockspan-detail/observed-blockspan-detail.component';
 import { BlockchainObservedBlocksComponent } from './components/blockchain-observed-blocks/blockchain-observed-blocks.component';
 import { BlockspansHomeComponent } from './components/blockspans-home/blockspans-home.component';
+import { BlockspansHomeAddstrikeComponent } from './components/blockspans-home-addstrike/blockspans-home-addstrike.component';
 import { PreviewComponent } from './components/preview/preview.component';
 
 let routes: Routes = [
@@ -98,6 +99,10 @@ let routes: Routes = [
           {
             path: 'blockspans/:span/:tip',
             component: BlockspansHomeComponent,
+          },
+          {
+            path: 'add_strike/:span/:tip',
+            component: BlockspansHomeAddstrikeComponent,
           },
           {
             path: 'blockspan/:from/:to',
@@ -222,6 +227,10 @@ let routes: Routes = [
                 component: BlockspansHomeComponent,
               },
               {
+                path: 'add_strike/:span/:tip',
+                component: BlockspansHomeAddstrikeComponent,
+              },
+              {
                 path: 'blockspan/:from/:to',
                 component: ObservedBlockspanDetailComponent
               },
@@ -344,6 +353,10 @@ let routes: Routes = [
               {
                 path: 'blockspans/:span/:tip',
                 component: BlockspansHomeComponent,
+              },
+              {
+                path: 'add_strike/:span/:tip',
+                component: BlockspansHomeAddstrikeComponent,
               },
               {
                 path: 'blockspan/:from/:to',
@@ -494,6 +507,10 @@ if (browserWindowEnv && browserWindowEnv.BASE_MODULE === 'liquid') {
             component: BlockspansHomeComponent,
           },
           {
+            path: 'add_strike/:span/:tip',
+            component: BlockspansHomeAddstrikeComponent,
+          },
+          {
             path: 'blockspan/:from/:to',
             component: ObservedBlockspanDetailComponent
           },
@@ -621,6 +638,10 @@ if (browserWindowEnv && browserWindowEnv.BASE_MODULE === 'liquid') {
               {
                 path: 'blockspans/:span/:tip',
                 component: BlockspansHomeComponent,
+              },
+              {
+                path: 'add_strike/:span/:tip',
+                component: BlockspansHomeAddstrikeComponent,
               },
               {
                 path: 'blockspan/:from/:to',
