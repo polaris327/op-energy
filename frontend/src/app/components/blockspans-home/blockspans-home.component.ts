@@ -160,6 +160,8 @@ export class BlockspansHomeComponent implements OnInit, OnDestroy {
       );
 
       this.getTimeStrikes();
+    }, error => {
+      this.toastr.error('Blockspans are not found!', 'Failed!');
     });
   }
 
