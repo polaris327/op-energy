@@ -83,6 +83,7 @@ import { TenminBlockComponent } from './components/tenmin-block/tenmin-block.com
 import { ObservedBlockComponent } from './components/observed-block/observed-block.component';
 import { ObservedBlockDetailComponent } from './components/observed-block-detail/observed-block-detail.component';
 import { ObservedBlockspanDetailComponent } from './components/observed-blockspan-detail/observed-blockspan-detail.component';
+import { StrikeDetailComponent } from './components/strike-detail/strike-detail.component';
 import { TetrisBlockspanComponent } from './components/tetris-blockspan/tetris-blockspan.component';
 import { TetrisBlockspanWaterComponent } from './components/tetris-blockspan-water/tetris-blockspan-water.component';
 import { TetrisBlockspanStrikeComponent } from './components/tetris-blockspan-strike/tetris-blockspan-strike.component';
@@ -149,6 +150,7 @@ import { PreviewComponent } from './components/preview/preview.component';
     ObservedBlockComponent,
     ObservedBlockDetailComponent,
     ObservedBlockspanDetailComponent,
+    StrikeDetailComponent,
     BetPieChartComponent,
     TetrisBlockspanComponent,
     TetrisBlockspanWaterComponent,

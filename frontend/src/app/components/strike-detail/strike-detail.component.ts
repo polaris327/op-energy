@@ -10,15 +10,15 @@ import { SeoService } from 'src/app/services/seo.service';
 import { WebsocketService } from 'src/app/services/websocket.service';
 import { RelativeUrlPipe } from 'src/app/shared/pipes/relative-url/relative-url.pipe';
 import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
-import { TimeStrike } from 'src/app/interfaces/op-energy.interface';
+import { SlowFastGuess, TimeStrike } from 'src/app/interfaces/op-energy.interface';
 import { OpEnergyApiService } from 'src/app/services/op-energy.service';
 
 @Component({
-  selector: 'app-observed-blockspan-detail',
-  templateUrl: './observed-blockspan-detail.component.html',
-  styleUrls: ['./observed-blockspan-detail.component.scss']
+  selector: 'app-strike-detail',
+  templateUrl: './strike-detail.component.html',
+  styleUrls: ['./strike-detail.component.scss']
 })
-export class ObservedBlockspanDetailComponent implements OnInit, OnDestroy {
+export class StrikeDetailComponent implements OnInit, OnDestroy {
   network = '';
   fromBlock: Block;
   toBlock: Block;
@@ -26,6 +26,7 @@ export class ObservedBlockspanDetailComponent implements OnInit, OnDestroy {
   nextBlockHeight: number;
   fromBlockHash: string;
   toBlockHash: string;
+  strike: TimeStrike;
   isLoadingBlock = true;
   latestBlock: Block;
   latestBlocks: Block[] = [];
@@ -45,7 +46,11 @@ export class ObservedBlockspanDetailComponent implements OnInit, OnDestroy {
   blocksSubscription: Subscription;
   networkChangedSubscription: Subscription;
 
-  timeStrikes: TimeStrike[] = [];
+  slowFastGuess: SlowFastGuess[] = [];
+
+  get strikeElapsedTime(): number {
+    return (this.strike.nLockTime - this.fromBlock.mediantime);
+  }
 
   get span(): number {
     return (this.toBlock.height - this.fromBlock.height);
@@ -56,7 +61,7 @@ export class ObservedBlockspanDetailComponent implements OnInit, OnDestroy {
   }
 
   get energyDiff(): number {
-    return ((this.span * 600 - this.timeDiff) / (this.span * 600)) * 100;
+    return ((this.span * this.strikeElapsedTime - this.timeDiff) / (this.span * this.strikeElapsedTime)) * 100;
   }
 
   get chainworkDiff(): bigint {
@@ -108,6 +113,12 @@ export class ObservedBlockspanDetailComponent implements OnInit, OnDestroy {
       switchMap((params: ParamMap) => {
         const fromBlockHash: string = params.get('from') || '';
         const toBlockHash: string = params.get('to') || '';
+        this.strike = {
+          blockHeight: +params.get('strikeBlockHeight'),
+          nLockTime: +params.get('strikeMedianTime'),
+          creationTime: +params.get('strikeCreationTime'),
+        };
+        console.log(115577, this.strike);
         this.fromBlock = undefined;
         this.toBlock = undefined;
         this.page = 1;
@@ -151,7 +162,7 @@ export class ObservedBlockspanDetailComponent implements OnInit, OnDestroy {
                   this.fromBlockHash = fromHash;
                   this.toBlockHash = toHash;
                   this.location.replaceState(
-                    this.router.createUrlTree([(this.network ? '/' + this.network : '') + `/tetris/blockspan/`, fromHash, toHash]).toString()
+                    this.router.createUrlTree([(this.network ? '/' + this.network : '') + `/tetris/strike/`, fromHash, toHash, this.strike.blockHeight, this.strike.nLockTime, this.strike.creationTime]).toString()
                   );
                   return combineLatest([
                     this.electrsApiService.getBlock$(fromHash),
@@ -191,7 +202,7 @@ export class ObservedBlockspanDetailComponent implements OnInit, OnDestroy {
       this.transactions = null;
 
       this.stateService.$accountToken.pipe(take(1)).subscribe(res => {
-        this.getTimeStrikes();
+        this.getGuesses();
       })
     }),
     (error) => {
@@ -224,13 +235,11 @@ export class ObservedBlockspanDetailComponent implements OnInit, OnDestroy {
     this.networkChangedSubscription.unsubscribe();
   }
 
-  getTimeStrikes() {
-    this.opEnergyApiService.$listTimeStrikesByBlockHeight(this.toBlock.height)
-      .subscribe((timeStrikes: TimeStrike[]) => {
-        this.timeStrikes = timeStrikes.map(strike => ({
-          ...strike,
-          elapsedTime: strike.nLockTime - this.fromBlock.mediantime
-        }));
+  getGuesses() {
+    this.opEnergyApiService.$listSlowFastGuesses(this.strike)
+      .subscribe((slowFastGuess: SlowFastGuess[]) => {
+        this.slowFastGuess = slowFastGuess;
+        console.log(3335555, this.slowFastGuess)
       });
   }
 
@@ -243,19 +252,19 @@ export class ObservedBlockspanDetailComponent implements OnInit, OnDestroy {
       return;
     }
     const block = this.latestBlocks.find((b) => b.height === this.nextBlockHeight - 2);
-    this.router.navigate([this.relativeUrlPipe.transform('/tetris/blockspan/'),
+    this.router.navigate([this.relativeUrlPipe.transform('/tetris/strike/'),
       block ? block.id : this.fromBlock.previousblockhash], { state: { data: { block, blockHeight: this.nextBlockHeight - 2 } } });
   }
 
   navigateToNextBlock() {
     const block = this.latestBlocks.find((b) => b.height === this.nextBlockHeight);
-    this.router.navigate([this.relativeUrlPipe.transform('/tetris/blockspan/'),
+    this.router.navigate([this.relativeUrlPipe.transform('/tetris/strike/'),
       block ? block.id : this.nextBlockHeight], { state: { data: { block, blockHeight: this.nextBlockHeight } } });
   }
 
   navigateToBlockByNumber() {
     const block = this.latestBlocks.find((b) => b.height === this.blockHeight);
-    this.router.navigate([this.relativeUrlPipe.transform('/tetris/blockspan/'),
+    this.router.navigate([this.relativeUrlPipe.transform('/tetris/strike/'),
       block ? block.id : this.blockHeight], { state: { data: { block, blockHeight: this.blockHeight } } });
   }
 
@@ -304,9 +313,5 @@ export class ObservedBlockspanDetailComponent implements OnInit, OnDestroy {
       hexValue += str;
     }
     return hexValue;
-  }
-
-  goDetail(fromBlock, strike) {
-    this.router.navigate([this.relativeUrlPipe.transform('/tetris/strike/'), fromBlock.height, strike.blockHeight, strike.blockHeight, strike.nLockTime, strike.creationTime]);
   }
 }

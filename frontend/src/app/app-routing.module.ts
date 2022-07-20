@@ -28,6 +28,7 @@ import { PushTransactionComponent } from './components/push-transaction/push-tra
 import { PoolRankingComponent } from './components/pool-ranking/pool-ranking.component';
 import { ObservedBlockDetailComponent } from './components/observed-block-detail/observed-block-detail.component';
 import { ObservedBlockspanDetailComponent } from './components/observed-blockspan-detail/observed-blockspan-detail.component';
+import { StrikeDetailComponent } from './components/strike-detail/strike-detail.component';
 import { BlockchainObservedBlocksComponent } from './components/blockchain-observed-blocks/blockchain-observed-blocks.component';
 import { BlockspansHomeComponent } from './components/blockspans-home/blockspans-home.component';
 import { BlockspansHomeAddstrikeComponent } from './components/blockspans-home-addstrike/blockspans-home-addstrike.component';
@@ -107,6 +108,10 @@ let routes: Routes = [
           {
             path: 'blockspan/:from/:to',
             component: ObservedBlockspanDetailComponent
+          },
+          {
+            path: 'strike/:from/:to/:strikeBlockHeight/:strikeMedianTime/:strikeCreationTime',
+            component: StrikeDetailComponent
           },
         ]
       },
@@ -233,6 +238,10 @@ let routes: Routes = [
               {
                 path: 'blockspan/:from/:to',
                 component: ObservedBlockspanDetailComponent
+              },
+              {
+                path: 'strike/:from/:to/:strikeBlockHeight/:strikeMedianTime/:strikeCreationTime',
+                component: StrikeDetailComponent
               },
             ]
           },
@@ -361,6 +370,10 @@ let routes: Routes = [
               {
                 path: 'blockspan/:from/:to',
                 component: ObservedBlockspanDetailComponent
+              },
+              {
+                path: 'strike/:from/:to/:strikeBlockHeight/:strikeMedianTime/:strikeCreationTime',
+                component: StrikeDetailComponent
               },
             ]
           },
@@ -514,6 +527,10 @@ if (browserWindowEnv && browserWindowEnv.BASE_MODULE === 'liquid') {
             path: 'blockspan/:from/:to',
             component: ObservedBlockspanDetailComponent
           },
+          {
+            path: 'strike/:from/:to/:strikeBlockHeight/:strikeMedianTime/:strikeCreationTime',
+            component: StrikeDetailComponent
+          },
         ]
       },
       {
@@ -646,6 +663,10 @@ if (browserWindowEnv && browserWindowEnv.BASE_MODULE === 'liquid') {
               {
                 path: 'blockspan/:from/:to',
                 component: ObservedBlockspanDetailComponent
+              },
+              {
+                path: 'strike/:from/:to/:strikeBlockHeight/:strikeMedianTime/:strikeCreationTime',
+                component: StrikeDetailComponent
               },
             ]
           },

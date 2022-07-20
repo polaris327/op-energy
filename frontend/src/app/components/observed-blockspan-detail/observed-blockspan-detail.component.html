@@ -2,7 +2,7 @@
   <div class="observed-blockspan-detail--top">
     <div class="blockspan">
       <app-tetris-blockspan-water *ngIf="fromBlock && toBlock" [fromBlock]="fromBlock" [toBlock]="toBlock"></app-tetris-blockspan-water>
-      <app-tetris-blockspan-strike *ngFor="let strike of timeStrikes" [fromBlock]="fromBlock.height" [toBlock]="strike.blockHeight" [elapsedTime]="strike.elapsedTime"></app-tetris-blockspan-strike>
+      <app-tetris-blockspan-strike *ngFor="let strike of timeStrikes" [fromBlock]="fromBlock.height" [toBlock]="strike.blockHeight" [elapsedTime]="strike.elapsedTime" (click)="goDetail(fromBlock, strike)"></app-tetris-blockspan-strike>
     </div>
     <div *ngIf="fromBlock && toBlock" class="blockspan-table">
       <h3>Blockspan < {{ fromBlock.height }} - {{ toBlock.height }} ></h3>
