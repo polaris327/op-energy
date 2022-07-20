@@ -10,6 +10,15 @@
       min-width: 250px;
       max-width: 400px;
       max-height: 400px;
+
+      .guess-btns {
+        display: flex;
+        gap: 30px;
+
+        button {
+          flex: 1;
+        }
+      }
     }
 
     .blockspan-table {

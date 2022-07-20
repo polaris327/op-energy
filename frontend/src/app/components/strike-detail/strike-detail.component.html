@@ -1,10 +1,15 @@
-<div class="observed-blockspan-detail">
+<div *ngIf="fromBlock && toBlock" class="observed-blockspan-detail">
   <div class="observed-blockspan-detail--top">
     <div class="blockspan">
-      <app-tetris-blockspan-water *ngIf="fromBlock && toBlock" [fromBlock]="fromBlock" [toBlock]="toBlock"></app-tetris-blockspan-water>
+      <app-tetris-blockspan-water [fromBlock]="fromBlock" [toBlock]="toBlock"></app-tetris-blockspan-water>
+      <h3>Guess</h3>
+      <div class="guess-btns">
+        <button type="button" class="btn btn-primary" (click)="guess('fast')">Fast</button>
+        <button type="button" class="btn btn-secondary" (click)="guess('slow')">Slow</button>
+      </div>
     </div>
-    <div *ngIf="fromBlock && toBlock" class="blockspan-table">
-      <h3>Strike < {{ fromBlock.height }} - {{ toBlock.height }} ></h3>
+    <div class="blockspan-table">
+      <h3>Strike < {{ fromBlock.height }} - {{ toBlock.height }} / {{ strikeElapsedTime }} ></h3>
       <div class="content">
         <table class="table table-borderless table-striped">
           <tbody>
@@ -74,15 +79,10 @@
               <td>Guess</td>
               <td>Guess Time</td>
             </tr>
-            <tr>
-              <td>Alice</td>
-              <td>SLOW</td>
-              <td>2022-05-10 20:31</td>
-            </tr>
-            <tr>
-              <td>Bob(you)</td>
-              <td>FAST</td>
-              <td>2022-05-10 20:32</td>
+            <tr *ngFor="let guess of slowFastGuesses">
+              <td>{{ guess.userName }}</td>
+              <td>{{ guess.guess }}</td>
+              <td>{{ guess.creationTime * 1000 | date:'yyyy-MM-dd HH:mm' }}</td>
             </tr>
           </tbody>
         </table>

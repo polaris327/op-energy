@@ -46,7 +46,7 @@ export class StrikeDetailComponent implements OnInit, OnDestroy {
   blocksSubscription: Subscription;
   networkChangedSubscription: Subscription;
 
-  slowFastGuess: SlowFastGuess[] = [];
+  slowFastGuesses: SlowFastGuess[] = [];
 
   get strikeElapsedTime(): number {
     return (this.strike.nLockTime - this.fromBlock.mediantime);
@@ -118,7 +118,6 @@ export class StrikeDetailComponent implements OnInit, OnDestroy {
           nLockTime: +params.get('strikeMedianTime'),
           creationTime: +params.get('strikeCreationTime'),
         };
-        console.log(115577, this.strike);
         this.fromBlock = undefined;
         this.toBlock = undefined;
         this.page = 1;
@@ -238,8 +237,7 @@ export class StrikeDetailComponent implements OnInit, OnDestroy {
   getGuesses() {
     this.opEnergyApiService.$listSlowFastGuesses(this.strike)
       .subscribe((slowFastGuess: SlowFastGuess[]) => {
-        this.slowFastGuess = slowFastGuess;
-        console.log(3335555, this.slowFastGuess)
+        this.slowFastGuesses = slowFastGuess;
       });
   }
 
@@ -313,5 +311,12 @@ export class StrikeDetailComponent implements OnInit, OnDestroy {
       hexValue += str;
     }
     return hexValue;
+  }
+
+  guess(guess: 'slow' | 'fast') {
+    this.opEnergyApiService.$slowFastGuess(guess, this.strike)
+      .subscribe((slowFastGuess: SlowFastGuess) => {
+        this.slowFastGuesses = [...this.slowFastGuesses, slowFastGuess];
+      });
   }
 }
