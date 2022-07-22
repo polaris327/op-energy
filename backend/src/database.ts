@@ -9,8 +9,9 @@ export class DB {
     database: config.DATABASE.DATABASE,
     user: config.DATABASE.USERNAME,
     password: config.DATABASE.PASSWORD,
-    connectionLimit: 10,
+    connectionLimit: 1000,
     supportBigNumbers: true,
+    waitForConnections: false,
   });
   static accountPool = createPool({
     host: config.DATABASE.HOST,
@@ -18,8 +19,9 @@ export class DB {
     database: config.DATABASE.ACCOUNT_DATABASE,
     user: config.DATABASE.USERNAME,
     password: config.DATABASE.PASSWORD,
-    connectionLimit: 10,
+    connectionLimit: 1000,
     supportBigNumbers: true,
+    waitForConnections: false,
   });
 }
 
