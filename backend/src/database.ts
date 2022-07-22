@@ -9,7 +9,7 @@ export class DB {
     database: config.DATABASE.DATABASE,
     user: config.DATABASE.USERNAME,
     password: config.DATABASE.PASSWORD,
-    connectionLimit: 1000,
+    connectionLimit: 10,
     supportBigNumbers: true,
     waitForConnections: false,
   });
@@ -19,7 +19,7 @@ export class DB {
     database: config.DATABASE.ACCOUNT_DATABASE,
     user: config.DATABASE.USERNAME,
     password: config.DATABASE.PASSWORD,
-    connectionLimit: 1000,
+    connectionLimit: 10,
     supportBigNumbers: true,
     waitForConnections: false,
   });
