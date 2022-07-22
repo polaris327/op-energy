@@ -11,6 +11,7 @@ export class DB {
     password: config.DATABASE.PASSWORD,
     connectionLimit: 10,
     supportBigNumbers: true,
+    waitForConnections: false,
   });
   static accountPool = createPool({
     host: config.DATABASE.HOST,
@@ -20,6 +21,7 @@ export class DB {
     password: config.DATABASE.PASSWORD,
     connectionLimit: 10,
     supportBigNumbers: true,
+    waitForConnections: false,
   });
 }
 

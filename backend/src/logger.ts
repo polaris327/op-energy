@@ -127,18 +127,19 @@ class Logger {
   }
 
   private ts() {
-    let day, dt, hours, minutes, month, months, seconds;
+    let day, dt, hours, minutes, month, months, seconds, ms;
     dt = new Date();
     hours = this.leadZero(dt.getHours());
     minutes = this.leadZero(dt.getMinutes());
     seconds = this.leadZero(dt.getSeconds());
     month = dt.getMonth();
     day = dt.getDate();
+    ms = dt.getMilliseconds();
     if (day < 10) {
       day = ' ' + day;
     }
     months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    return months[month] + ' ' + day + ' ' + hours + ':' + minutes + ':' + seconds;
+    return months[month] + ' ' + day + ' ' + hours + ':' + minutes + ':' + seconds + ':' + ms;
   }
 }
 

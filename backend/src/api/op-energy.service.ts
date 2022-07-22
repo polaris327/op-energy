@@ -1,5 +1,6 @@
 import logger from '../logger';
 import { DB } from '../database';
+import {exec} from 'child_process';
 import * as sha256 from 'crypto-js/sha256';
 
 import { SlowFastGuessValue, BlockHeight, NLockTime, UserId, TimeStrikeDB, AlphaNumString, TimeStrikeId, AccountToken, TimeStrike, SlowFastGuess } from './interfaces/op-energy.interface';
@@ -278,6 +279,22 @@ export class OpEnergyApiService {
       throw new Error(`OpEnergyApiService.$getTimeStrikesByBlock: failed to query DB: ${e instanceof Error? e.message : e}`);
     }
     return [];
+  }
+  // this procedure returns a random hash, which is a sha256 hash
+  async $generateRandomHash(): Promise<string> {
+    const util = require('node:util');
+    const exec = util.promisify(require('node:child_process').exec);
+    const { stdout, stderr } = await exec( 'dd if=/dev/urandom bs=10 count=1 | sha256sum');
+    var newHashArr = [...stdout.slice(0, 64)];
+    // set signature bytes in order to be able to perform a simple check of the user's input
+    const newHash = newHashArr.join('');
+    if( newHash.length < 64) {
+      throw new Error( 'generateRandomHash: exec error: length( stdout) < 64: ' + stderr);
+    }
+    if( !this.isAlphaNum( newHash)) {
+      throw new Error( 'generateRandomHash: generated hash is not alpha-number');
+    }
+    return newHash;
   }
 
 }
