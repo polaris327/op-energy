@@ -12,6 +12,7 @@ import { RelativeUrlPipe } from 'src/app/shared/pipes/relative-url/relative-url.
 import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 import { SlowFastGuess, TimeStrike } from 'src/app/interfaces/op-energy.interface';
 import { OpEnergyApiService } from 'src/app/services/op-energy.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-strike-detail',
@@ -61,7 +62,7 @@ export class StrikeDetailComponent implements OnInit, OnDestroy {
   }
 
   get energyDiff(): number {
-    return ((this.span * this.strikeElapsedTime - this.timeDiff) / (this.span * this.strikeElapsedTime)) * 100;
+    return ((this.span * 600 - this.timeDiff) / (this.span * 600)) * 100;
   }
 
   get chainworkDiff(): bigint {
@@ -77,6 +78,7 @@ export class StrikeDetailComponent implements OnInit, OnDestroy {
     private location: Location,
     private router: Router,
     private modalService: NgbModal,
+    private toastr: ToastrService,
     private opEnergyApiService: OpEnergyApiService,
     private electrsApiService: ElectrsApiService,
     public stateService: StateService,
@@ -317,6 +319,7 @@ export class StrikeDetailComponent implements OnInit, OnDestroy {
     this.opEnergyApiService.$slowFastGuess(guess, this.strike)
       .subscribe((slowFastGuess: SlowFastGuess) => {
         this.slowFastGuesses = [...this.slowFastGuesses, slowFastGuess];
+        this.toastr.success('Guessed successfully!', 'Success!');
       });
   }
 }

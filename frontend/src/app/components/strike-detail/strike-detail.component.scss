@@ -57,7 +57,7 @@
       align-items: center;
       gap: 50px;
 
-      .blockspan {
+      ::ng-deep .blockspan .tetris-blockspan {
         height: 330px;
       }
 
