@@ -1,4 +1,4 @@
-<div class="tetris-blockspan">
+<a class="tetris-blockspan" [routerLink]="blockspanDetailLink()">
   <div class="fire-block">
     <div>
       <fa-icon *ngFor="let i of flameIconArray" class="left fire" [icon]="['fas', 'fire']" [fixedWidth]="true"></fa-icon>
@@ -6,10 +6,10 @@
     <div>
       <fa-icon *ngFor="let i of flameIconArray" class="left fire" [icon]="['fas', 'fire']" [fixedWidth]="true"></fa-icon>
     </div>
-    <div class="water-block">
+    <a class="water-block" [routerLink]="strikeDetailLink()">
       <fa-icon *ngFor="let i of iconArray" class="left fire" [icon]="['fas', 'tint']" [fixedWidth]="true"></fa-icon>
       <span *ngIf="totalIconCount > maxCount" class="ml-1">+{{ totalIconCount - maxCount }}</span>
-    </div>
+    </a>
   </div>
   <div class="bottom-block">
     <label>{{ elapsedTime }} secs</label>
@@ -19,4 +19,4 @@
     <div class="span-block">{{ span }}</div>
   </div>
   <div class="from-block">{{ fromBlock }}</div>
-</div>
+</a>

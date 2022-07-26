@@ -1,6 +1,8 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, Input } from '@angular/core';
 import { StateService } from 'src/app/services/state.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
+import { RelativeUrlPipe } from 'src/app/shared/pipes/relative-url/relative-url.pipe';
+import { TimeStrike } from 'src/app/interfaces/op-energy.interface';
 
 export const MAX_COUNT = 12;
 @Component({
@@ -13,6 +15,7 @@ export class TetrisBlockspanStrikeComponent implements OnInit, OnDestroy {
   @Input() fromBlock: number;
   @Input() toBlock: number;
   @Input() elapsedTime: number;
+  @Input() strike: TimeStrike;
   maxCount = MAX_COUNT;
   flameIconArray = new Array(MAX_COUNT).fill(1);
 
@@ -39,6 +42,7 @@ export class TetrisBlockspanStrikeComponent implements OnInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
+    private relativeUrlPipe: RelativeUrlPipe,
     public stateService: StateService,
   ) { }
 
@@ -46,6 +50,14 @@ export class TetrisBlockspanStrikeComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+  }
+
+  blockspanDetailLink() {
+    return this.relativeUrlPipe.transform(`/tetris/blockspan/${this.fromBlock}/${this.toBlock}`);
+  }
+
+  strikeDetailLink() {
+    return this.relativeUrlPipe.transform(`/tetris/strike/${this.fromBlock}/${this.toBlock}/${this.strike.blockHeight}/${this.strike.nLockTime}/${this.strike.creationTime}`);
   }
 
 }

@@ -2,7 +2,7 @@
   <div class="observed-blockspan-detail--top">
     <div class="blockspan">
       <!-- <app-tetris-blockspan-water [fromBlock]="fromBlock" [toBlock]="toBlock"></app-tetris-blockspan-water> -->
-      <app-tetris-blockspan-strike [fromBlock]="fromBlock.height" [toBlock]="strike.blockHeight" [elapsedTime]="strike.elapsedTime"></app-tetris-blockspan-strike>
+      <app-tetris-blockspan-strike [fromBlock]="fromBlock.height" [toBlock]="strike.blockHeight" [elapsedTime]="strike.elapsedTime" [strike]="strike"></app-tetris-blockspan-strike>
       <h3>Guess</h3>
       <div class="guess-btns">
         <button type="button" class="btn btn-primary" (click)="guess('fast')">Fast</button>
