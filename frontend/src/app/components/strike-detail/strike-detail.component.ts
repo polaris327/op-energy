@@ -75,7 +75,6 @@ export class StrikeDetailComponent implements OnInit, OnDestroy {
   }
 
   get canGuess(): boolean {
-    console.log(123123, this.stateService.latestBlockHeight, this.strike.blockHeight)
     return this.stateService.latestBlockHeight > 0 && this.strike.blockHeight > this.stateService.latestBlockHeight;
   }
 
@@ -117,7 +116,8 @@ export class StrikeDetailComponent implements OnInit, OnDestroy {
         }
       });
 
-    this.subscription = this.route.paramMap.subscribe((params: ParamMap) => {
+    this.subscription = this.route.paramMap.pipe(
+      switchMap((params: ParamMap) => {
         const fromBlockHash: string = params.get('from') || '';
         const toBlockHash: string = params.get('to') || '';
         this.strike = {
@@ -148,7 +148,6 @@ export class StrikeDetailComponent implements OnInit, OnDestroy {
         if (history.state.data && history.state.data.block) {
           this.blockHeight = history.state.data.block.height;
           return of([history.state.data.block, history.state.data.block]);
-          this.getBlockSpanDetails();
         } else {
           this.isLoadingBlock = true;
 
@@ -166,7 +165,6 @@ export class StrikeDetailComponent implements OnInit, OnDestroy {
             ])
               .pipe(
                 switchMap(([fromHash, toHash]) => {
-                  console.log(22222, fromHash, toHash);
                   this.fromBlockHash = fromHash;
                   this.toBlockHash = toHash;
                   this.location.replaceState(
@@ -179,7 +177,6 @@ export class StrikeDetailComponent implements OnInit, OnDestroy {
                 })
               );
           }
-          console.log(1111111);
 
           fromBlockInCache = this.latestBlocks.find((block) => block.id === this.fromBlockHash);
           toBlockInCache = this.latestBlocks.find((block) => block.id === this.toBlockHash);
@@ -192,7 +189,32 @@ export class StrikeDetailComponent implements OnInit, OnDestroy {
             this.electrsApiService.getBlock$(toBlockHash)
           ]);
         }
-      });
+      }),
+    )
+    .subscribe(([fromBlock, toBlock]: [Block, Block]) => {
+      this.fromBlock = fromBlock;
+      this.toBlock = toBlock;
+      this.blockHeight = fromBlock.height;
+      this.nextBlockHeight = fromBlock.height + 1;
+      this.setNextAndPreviousBlockLink();
+
+      this.seoService.setTitle($localize`:@@block.component.browser-title:Block ${fromBlock.height}:BLOCK_HEIGHT:: ${fromBlock.id}:BLOCK_ID:`);
+      this.isLoadingBlock = false;
+      if (fromBlock.coinbaseTx) {
+        this.coinbaseTx = fromBlock.coinbaseTx;
+      }
+      this.stateService.markBlock$.next({ blockHeight: this.blockHeight });
+      this.isLoadingTransactions = true;
+      this.transactions = null;
+
+      this.stateService.$accountToken.pipe(take(1)).subscribe(res => {
+        this.getGuesses();
+      })
+    }),
+    (error) => {
+      this.error = error;
+      this.isLoadingBlock = false;
+    };
 
     this.networkChangedSubscription = this.stateService.networkChanged$
       .subscribe((network) => this.network = network);
@@ -217,37 +239,6 @@ export class StrikeDetailComponent implements OnInit, OnDestroy {
     this.keyNavigationSubscription.unsubscribe();
     this.blocksSubscription.unsubscribe();
     this.networkChangedSubscription.unsubscribe();
-  }
-
-  getBlockSpanDetails(fromBlockHash, toBlockHash) {
-    combineLatest([
-      this.electrsApiService.getBlock$(fromBlockHash),
-      this.electrsApiService.getBlock$(toBlockHash)
-    ]).subscribe(([fromBlock, toBlock]: [Block, Block]) => {
-      console.log(12345, fromBlock, toBlock);
-      this.fromBlock = fromBlock;
-      this.toBlock = toBlock;
-      this.blockHeight = fromBlock.height;
-      this.nextBlockHeight = fromBlock.height + 1;
-      this.setNextAndPreviousBlockLink();
-
-      this.seoService.setTitle($localize`:@@block.component.browser-title:Block ${fromBlock.height}:BLOCK_HEIGHT:: ${fromBlock.id}:BLOCK_ID:`);
-      this.isLoadingBlock = false;
-      if (fromBlock.coinbaseTx) {
-        this.coinbaseTx = fromBlock.coinbaseTx;
-      }
-      this.stateService.markBlock$.next({ blockHeight: this.blockHeight });
-      this.isLoadingTransactions = true;
-      this.transactions = null;
-
-      this.stateService.$accountToken.pipe(take(1)).subscribe(res => {
-        this.getGuesses();
-      })
-    }),
-    (error) => {
-      this.error = error;
-      this.isLoadingBlock = false;
-    };
   }
 
   getGuesses() {
