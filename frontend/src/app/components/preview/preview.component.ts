@@ -27,7 +27,11 @@ export class PreviewComponent implements OnInit {
     return this.relativeUrlPipe.transform('/tetris/blockspan/89778/89791');
   }
 
-  strikeDetailLink() {
-    return this.relativeUrlPipe.transform('/tetris/strike/89778/89791/1652239330/1652239330/1656641994');
+  pastStrikeDetailLink() {
+    return this.relativeUrlPipe.transform('/tetris/strike/89778/89791/89791/1652239330/1656641994');
+  }
+
+  futureStrikeDetailLink() {
+    return this.relativeUrlPipe.transform('/tetris/strike/89778/120000/120000/1652239330/1656641994');
   }
 }
