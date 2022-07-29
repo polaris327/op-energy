@@ -13,10 +13,44 @@
 
       .guess-btns {
         display: flex;
-        gap: 30px;
+        justify-content: center;
+        gap: 50px;
 
         button {
           flex: 1;
+        }
+
+        &--btn {
+          cursor: pointer;
+          width: 100px;
+          height: 100px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          border-radius: 5px;
+
+          &:hover {
+            opacity: 0.8;
+          }
+
+          &.active {
+            border: 5px solid #0aed0a;
+          }
+
+          &.hot {
+            background-color: red;
+            color: yellow;  
+          }
+
+          &.cold {
+            background-color: #00ffff;
+            color: #18aff6;
+          }
+
+          fa-icon {
+            font-size: 36px;
+          }
         }
       }
     }

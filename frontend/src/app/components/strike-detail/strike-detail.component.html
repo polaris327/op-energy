@@ -3,11 +3,19 @@
     <div class="blockspan">
       <!-- <app-tetris-blockspan-water [fromBlock]="fromBlock" [toBlock]="toBlock"></app-tetris-blockspan-water> -->
       <app-tetris-blockspan-strike [fromBlock]="fromBlock.height" [toBlock]="strike.blockHeight" [elapsedTime]="strikeElapsedTime" [strike]="strike"></app-tetris-blockspan-strike>
-      <h3>Guess</h3>
-      <div class="guess-btns">
-        <button type="button" class="btn btn-primary" (click)="guess('fast')">Fast</button>
-        <button type="button" class="btn btn-secondary" (click)="guess('slow')">Slow</button>
-      </div>
+      <ng-container *ngIf="canGuess">
+        <h3 class="text-center mt-4 mb-4">Guess</h3>
+        <div class="guess-btns">
+          <div class="guess-btns--btn hot" [class.active]="currentActiveGuess === 'fast'" (click)="guess('fast')">
+            <fa-icon [icon]="['fas', 'burn']" [fixedWidth]="true"></fa-icon>
+            <div>Hot</div>
+          </div>
+          <div class="guess-btns--btn cold" [class.active]="currentActiveGuess === 'slow'" (click)="guess('slow')">
+            <fa-icon [icon]="['fas', 'snowflake']" [fixedWidth]="true"></fa-icon>
+            <div>Cold</div>
+          </div>
+        </div>
+      </ng-container>
     </div>
     <div class="blockspan-table">
       <h3>Strike < {{ fromBlock.height }} - {{ toBlock.height }} / {{ strikeElapsedTime }} ></h3>
