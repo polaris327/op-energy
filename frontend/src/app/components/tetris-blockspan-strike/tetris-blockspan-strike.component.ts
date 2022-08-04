@@ -16,6 +16,8 @@ export class TetrisBlockspanStrikeComponent implements OnInit, OnDestroy {
   @Input() toBlock: number;
   @Input() elapsedTime: number;
   @Input() strike: TimeStrike;
+  @Input() showStrike = true;
+  @Input() isEnergyHotterThanStrike: boolean;
   maxCount = MAX_COUNT;
   flameIconArray = new Array(MAX_COUNT).fill(1);
 

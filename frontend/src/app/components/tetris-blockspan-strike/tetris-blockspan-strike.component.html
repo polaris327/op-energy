@@ -6,9 +6,15 @@
     <div>
       <fa-icon *ngFor="let i of flameIconArray" class="left fire" [icon]="['fas', 'fire']" [fixedWidth]="true"></fa-icon>
     </div>
-    <a class="water-block" [routerLink]="strikeDetailLink()">
-      <fa-icon *ngFor="let i of iconArray" class="left fire" [icon]="['fas', 'tint']" [fixedWidth]="true"></fa-icon>
-      <span *ngIf="totalIconCount > maxCount" class="ml-1">+{{ totalIconCount - maxCount }}</span>
+    <a class="water-block" [class.strike]="showStrike" [class.hot]="isEnergyHotterThanStrike" [routerLink]="strikeDetailLink()">
+      <ng-container *ngIf="showStrike">
+        <fa-icon *ngFor="let i of iconArray" class="left fire" [icon]="['fas', 'tint']" [fixedWidth]="true"></fa-icon>
+        <span *ngIf="totalIconCount > maxCount" class="ml-1">+{{ totalIconCount - maxCount }}</span>
+      </ng-container>
+      <ng-container *ngIf="!showStrike">
+        <fa-icon *ngIf="isEnergyHotterThanStrike" [icon]="['fas', 'smoking']" [fixedWidth]="true"></fa-icon>
+        <fa-icon *ngIf="!isEnergyHotterThanStrike" [icon]="['fas', 'snowflake']" [fixedWidth]="true"></fa-icon>
+      </ng-container>
     </a>
   </div>
   <div class="bottom-block">

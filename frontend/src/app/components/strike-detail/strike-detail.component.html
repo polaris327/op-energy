@@ -2,7 +2,7 @@
   <div class="observed-blockspan-detail--top">
     <div class="blockspan">
       <!-- <app-tetris-blockspan-water [fromBlock]="fromBlock" [toBlock]="toBlock"></app-tetris-blockspan-water> -->
-      <app-tetris-blockspan-strike [fromBlock]="fromBlock.height" [toBlock]="strike.blockHeight" [elapsedTime]="strikeElapsedTime" [strike]="strike"></app-tetris-blockspan-strike>
+      <app-tetris-blockspan-strike [fromBlock]="fromBlock.height" [toBlock]="strike.blockHeight" [elapsedTime]="strikeElapsedTime" [strike]="strike" [showStrike]="canGuess" [isEnergyHotterThanStrike]="timeDiff < strikeElapsedTime"></app-tetris-blockspan-strike>
       <ng-container *ngIf="canGuess">
         <h3 class="text-center mt-4 mb-4">Guess</h3>
         <div class="guess-btns">

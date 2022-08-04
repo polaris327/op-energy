@@ -79,11 +79,28 @@
     left: 30%;
     bottom: 0;
     width: 40% !important;
-    background-color: #00ffff !important;
+    text-align: center;
     padding: 10px !important;
+    background-color: #00ffff;
 
     fa-icon {
+      font-size: 20px;
       color: #18aff6 !important;
+    }
+
+    &.hot {
+      background-color: #edecec !important;
+      fa-icon {
+        color: #b0b0b0 !important;
+      }
+    }
+
+    &.strike {
+      background-color: #00ffff !important;
+      fa-icon {
+        font-size: 16px;
+        color: #18aff6 !important;
+      }
     }
   }
 
