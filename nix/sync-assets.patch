@@ -1,0 +1,69 @@
+diff --git a/frontend/sync-assets.js b/frontend/sync-assets.js
+index a6b59bdb..79788d10 100644
+--- a/frontend/sync-assets.js
++++ b/frontend/sync-assets.js
+@@ -22,14 +22,21 @@ try {
+ }
+ 
+ function download(filename, url) {
+-  https.get(url, (response) => {
+-    if (response.statusCode < 200 || response.statusCode > 299) {
+-      throw new Error('HTTP Error ' + response.statusCode + ' while fetching \'' + filename + '\'');
++  fs.open( filename, (err, fd) => {
++    if( err) { // if does not exist yet
++      console.log( 'downloading ' + filename);
++      https.get(url, (response) => {
++          if (response.statusCode < 200 || response.statusCode > 299) {
++              throw new Error('HTTP Error ' + response.statusCode + ' while fetching \'' + filename + '\'');
++          }
++          response.pipe(fs.createWriteStream(filename));
++      })
++      .on('error', function(e) {
++          throw new Error(e);
++      });
++    } else { // filename exists
++      fs.close( fd);
+     }
+-    response.pipe(fs.createWriteStream(filename));
+-  })
+-  .on('error', function(e) {
+-    throw new Error(e);
+   });
+ }
+ 
+@@ -47,7 +54,7 @@ function downloadMiningPoolLogos() {
+     response.on('data', (fragments) => {
+       chunks_of_data.push(fragments);
+     });
+-  
++
+     response.on('end', () => {
+       let response_body = Buffer.concat(chunks_of_data);
+       const poolLogos = JSON.parse(response_body.toString());
+@@ -55,11 +62,18 @@ function downloadMiningPoolLogos() {
+           download(`${PATH}/mining-pools/${poolLogo.name}`, poolLogo.download_url);
+       }
+     });
+-  
++
+     response.on('error', (error) => {
+       throw new Error(error);
+     });
+-  })
++  });
++}
++
++// this procedure is basically a cache awared downloadMiningPoolLogos(): otherwise, it should be identical
++function maybeDownloadMiningPoolLogos() {
++  if( !configContent.WITHOUT_MINING_POOL_LOGOS || configContent.WITHTOUT_MINIG_POOL_LOGOS === false) {
++    downloadMiningPoolLogos();
++  }
+ }
+ 
+ const poolsJsonUrl = 'https://raw.githubusercontent.com/mempool/mining-pools/master/pools.json';
+@@ -85,4 +99,4 @@ download(PATH + 'assets-testnet.json', testnetAssetsJsonUrl);
+ console.log('Downloading testnet assets minimal');
+ download(PATH + 'assets-testnet.minimal.json', testnetAssetsMinimalJsonUrl);
+ console.log('Downloading mining pool logos');
+-downloadMiningPoolLogos();
++maybeDownloadMiningPoolLogos();

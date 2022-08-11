@@ -1,0 +1,16 @@
+diff --git a/backend/src/config.ts b/backend/src/config.ts
+index d4dfc9ed..9d1929b0 100644
+--- a/backend/src/config.ts
++++ b/backend/src/config.ts
+@@ -1,4 +1,10 @@
+-const configFile = require('../mempool-config.json');
++var configFileName: string = '../mempool-config.json';
++
++if( process.env.OP_ENERGY_CONFIG !== undefined) {
++  configFileName = process.env.OP_ENERGY_CONFIG;
++}
++
++const configFile = require(configFileName);
+ 
+ interface IConfig {
+   MEMPOOL: {
