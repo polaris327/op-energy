@@ -88,6 +88,13 @@ export namespace IEsploraApi {
     size: number;
     weight: number;
     previousblockhash: string;
+    chainwork: string;
+    mediantime: number;
+  }
+
+  export interface BlockStats {
+    subsidy: number;
+    totalfee: number;
   }
 
   export interface Address {

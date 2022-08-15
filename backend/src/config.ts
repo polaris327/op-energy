@@ -26,8 +26,9 @@ interface IConfig {
     USER_AGENT: string;
     STDOUT_LOG_MIN_PRIORITY: 'emerg' | 'alert' | 'crit' | 'err' | 'warn' | 'notice' | 'info' | 'debug';
     AUTOMATIC_BLOCK_REINDEXING: boolean;
-    POOLS_JSON_URL: string,
-    POOLS_JSON_TREE_URL: string,
+    POOLS_JSON_URL: string;
+    POOLS_JSON_TREE_URL: string;
+    CHAINSTAT_BATCH_SIZE: number;
   };
   ESPLORA: {
     REST_API_URL: string;
@@ -71,6 +72,8 @@ interface IConfig {
     SOCKET: string,
     PORT: number;
     DATABASE: string;
+    ACCOUNT_DATABASE: string;
+    SECRET_SALT: string;
     USERNAME: string;
     PASSWORD: string;
   };
@@ -143,6 +146,7 @@ const defaults: IConfig = {
     'AUTOMATIC_BLOCK_REINDEXING': false,
     'POOLS_JSON_URL': 'https://raw.githubusercontent.com/mempool/mining-pools/master/pools.json',
     'POOLS_JSON_TREE_URL': 'https://api.github.com/repos/mempool/mining-pools/git/trees/master',
+    'CHAINSTAT_BATCH_SIZE': 10000,
   },
   'ESPLORA': {
     'REST_API_URL': 'http://127.0.0.1:3000',
@@ -170,6 +174,8 @@ const defaults: IConfig = {
     'SOCKET': '',
     'PORT': 3306,
     'DATABASE': 'mempool',
+    'ACCOUNT_DATABASE': 'mempoolacc',
+    'SECRET_SALT': 'changeme',
     'USERNAME': 'mempool',
     'PASSWORD': 'mempool'
   },

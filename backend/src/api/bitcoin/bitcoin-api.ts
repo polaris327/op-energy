@@ -28,6 +28,8 @@ class BitcoinApi implements AbstractBitcoinApi {
       size: block.size,
       weight: block.weight,
       previousblockhash: block.previousblockhash,
+      chainwork: block.chainwork,
+      mediantime: block.mediantime,
     };
   }
 
@@ -62,6 +64,10 @@ class BitcoinApi implements AbstractBitcoinApi {
       .then((result: IBitcoinApi.ChainTips[]) => {
         return result.find(tip => tip.status === 'active')!.height;
       });
+  }
+
+  $getBlockStats( hash: string): Promise<IEsploraApi.BlockStats> {
+    return this.bitcoindClient.getBlockStats( hash, []);
   }
 
   $getBlockHashTip(): Promise<string> {
