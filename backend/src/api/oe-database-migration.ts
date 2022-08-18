@@ -1,5 +1,4 @@
-import { PoolConnection } from 'mysql2/promise';
-import DB  from '../database';
+import { DB } from '../oe-database';
 import logger from '../logger';
 
 class OpEnergyDatabaseMigration {
@@ -55,8 +54,10 @@ class OpEnergyDatabaseMigration {
   }
   private async $increaseRevision( revision: number) {
     try {
+      const connection = await DB.pool.getConnection();
       const query = `UPDATE version set revision=${revision + 1} where revision=${revision};`;
-      await DB.query<any>(query, []);
+      await connection.query<any>(query, []);
+      connection.release();
       logger.info('OE MIGRATION: migrated to databaseSchemaVersion ' + (revision + 1));
     } catch (e) {
       let err_msg = `OE MIGRATION: $createOrMigrateTables error: failed to update version: ${( e instanceof Error ? e.message : e)}`;
@@ -66,9 +67,11 @@ class OpEnergyDatabaseMigration {
   private async $getCurrentRevision():Promise<number> {
     var revision = 0;
     try {
+      const connection = await DB.pool.getConnection();
       const query = 'SELECT revision FROM version ORDER BY revision DESC limit 1;';
-      const [[result]] = await DB.query<any>(query, []);
+      const [[result]] = await connection.query<any>(query, []);
       revision = result.revision;
+      connection.release();
     } catch(e) {
       let err_msg = `OE MIGRATION: $getCurrentRevision error ${( e instanceof Error ? e.message : e)}`;
       throw new Error( err_msg);
@@ -77,12 +80,14 @@ class OpEnergyDatabaseMigration {
   }
   private async $createTableVersion() {
     try {
+      const connection = await DB.pool.getConnection();
       const query = `CREATE TABLE IF NOT EXISTS version (
         revision int(8) NOT NULL,
         PRIMARY KEY(revision)
       ) ENGINE=InnoDB CHARSET=utf8`;
-      await DB.query<any>(query, []);
-      await DB.query<any>('INSERT INTO `version` (`revision`) VALUES(0)', []);
+      await connection.query<any>(query, []);
+      await connection.query<any>('INSERT INTO `version` (`revision`) VALUES(0)', []);
+      connection.release();
     } catch(e) {
       let err_msg = `OE MIGRATION: createTableVersion error ${( e instanceof Error ? e.message : e)}`;
       throw new Error( err_msg);
@@ -90,6 +95,7 @@ class OpEnergyDatabaseMigration {
   }
   private async $createTableChainstats() {
     try {
+      const connection = await DB.pool.getConnection();
       const query = `CREATE TABLE IF NOT EXISTS \`chainstats\` (
         \`block_height\` int(11) NOT NULL,
         \`chain_revenue\` double,
@@ -98,7 +104,8 @@ class OpEnergyDatabaseMigration {
         \`chainwork\` VARCHAR(65),
         PRIMARY KEY(block_height)
       ) ENGINE=InnoDB CHARSET=utf8`;
-      await DB.query<any>(query, []);
+      await connection.query<any>(query, []);
+      connection.release();
     } catch(e) {
       let err_msg = `OE MIGRATION: createTableVersion error ${( e instanceof Error ? e.message : e)}`;
       throw new Error( err_msg);
@@ -115,7 +122,9 @@ class OpEnergyDatabaseMigration {
       PRIMARY KEY(id)
     ) ENGINE=InnoDB CHARSET=utf8`;
     try {
-      await DB.query<any>(query)
+      await DB.$with_accountPool<void>( UUID, async (connection) => {
+        await DB.$accountPool_query<any>(UUID, connection, query, []);
+      });
     } catch(e) {
       let err_msg = `${UUID}: OE MIGRATION: createTableUsers error ${( e instanceof Error ? e.message : e)}`;
       throw new Error( err_msg);
@@ -135,7 +144,9 @@ class OpEnergyDatabaseMigration {
         REFERENCES users(id)
     ) ENGINE=InnoDB CHARSET=utf8`;
     try {
-      await DB.query<any>(query)
+      await DB.$with_accountPool( UUID, async (connection) => {
+        await DB.$accountPool_query( UUID, connection, query, []);
+      });
     } catch(e) {
       let err_msg = `OE MIGRATION: createTableTimeStrikes error ${( e instanceof Error ? e.message : e)}`;
       throw new Error( err_msg);
@@ -145,7 +156,9 @@ class OpEnergyDatabaseMigration {
   private async $alterTableUsersCreateIndex(UUID: string){
     const query = `ALTER TABLE \`users\` ADD UNIQUE INDEX(secret_hash)`;
     try {
-      await DB.query<any>(query)
+      await DB.$with_accountPool( UUID, async (connection) => {
+        await DB.$accountPool_query<any>(UUID, connection, query, []);
+      });
     } catch(e) {
       let err_msg = `OE MIGRATION: ERROR: OpEneryDatabaseMigration.$alterTableUsersCreateIndex ${( e instanceof Error ? e.message : e)}`;
       throw new Error( err_msg);
@@ -167,7 +180,9 @@ class OpEnergyDatabaseMigration {
         REFERENCES timestrikes(id)
     ) ENGINE=InnoDB CHARSET=utf8`;
     try {
-      await DB.query<any>(query)
+      await DB.$with_accountPool( UUID, async (connection) => {
+        await DB.$accountPool_query<any>(UUID, connection, query, []);
+      });
     } catch(e) {
       let err_msg = `OE MIGRATION: createTableSinglePlayerGuesses error ${( e instanceof Error ? e.message : e)}`;
       throw new Error( err_msg);
