@@ -85,8 +85,12 @@ class OEBlocks {
     for( let i = firstDifficultyEpochEndBlockHeight; i <= lastDifficultyEpochEndBlockHeight; i += 2016) {
       const blockHash = await bitcoinApi.$getBlockHash(i);
       const block = await bitcoinApi.$getBlock(blockHash);
-      this.difficultyEpochEndBlocks.push(block);
+      const blockExtended: BlockExtended = Object.assign({ extras: {} }, block);
+      this.difficultyEpochEndBlocks.push(blockExtended);
     }
   }
 
 }
+
+
+export default new OEBlocks();
