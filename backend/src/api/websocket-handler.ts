@@ -24,6 +24,7 @@ import crypto from "crypto-js";
 
 import { TimeStrike, SlowFastGuess } from './interfaces/op-energy.interface';
 import opEnergyApiService from './op-energy.service';
+import oeBlocks from './oe-blocks';
 
 class WebsocketHandler {
   private wss: WebSocket.Server | undefined;
@@ -268,7 +269,7 @@ class WebsocketHandler {
       'transactions': memPool.getLatestTransactions(),
       'backendInfo': backendInfo.getBackendInfo(),
       'loadingIndicators': loadingIndicators.getLoadingIndicators(),
-      'lastDifficultyEpochEndBlocks': blocks.getDifficultyEpochEndBlocks(),
+      'lastDifficultyEpochEndBlocks': oeBlocks.getDifficultyEpochEndBlocks(),
       'da': difficultyAdjustment.getDifficultyAdjustment(),
       'fees': feeApi.getRecommendedFee(),
       ...this.extraInitProperties

@@ -24,6 +24,7 @@ import mining from './mining/mining';
 import DifficultyAdjustmentsRepository from '../repositories/DifficultyAdjustmentsRepository';
 import PricesRepository from '../repositories/PricesRepository';
 import priceUpdater from '../tasks/price-updater';
+import oeBlocks from './oe-blocks';
 
 class Blocks {
   private blocks: BlockExtended[] = [];
@@ -394,6 +395,8 @@ class Blocks {
     } else {
       this.currentBlockHeight = this.blocks[this.blocks.length - 1].height;
     }
+    // this updates the oe side
+    await oeBlocks.$updateBlocks(blockHeightTip);
 
     if (blockHeightTip - this.currentBlockHeight > config.MEMPOOL.INITIAL_BLOCKS_AMOUNT * 2) {
       logger.info(`${blockHeightTip - this.currentBlockHeight} blocks since tip. Fast forwarding to the ${config.MEMPOOL.INITIAL_BLOCKS_AMOUNT} recent blocks`);
@@ -423,6 +426,7 @@ class Blocks {
       }
     }
 
+
     while (this.currentBlockHeight < blockHeightTip) {
       if (this.currentBlockHeight < blockHeightTip - config.MEMPOOL.INITIAL_BLOCKS_AMOUNT) {
         this.currentBlockHeight = blockHeightTip;
@@ -434,10 +438,20 @@ class Blocks {
       const blockHash = await bitcoinApi.$getBlockHash(this.currentBlockHeight);
       const verboseBlock = await bitcoinClient.getBlock(blockHash, 2);
       const block = BitcoinApi.convertBlock(verboseBlock);
-      const txIds: string[] = await bitcoinApi.$getTxIdsForBlock(blockHash);
-      const transactions = await this.$getTransactionsExtended(blockHash, block.height, false);
-      const blockExtended: BlockExtended = await this.$getBlockExtended(block, transactions);
+      let txIds: string[] = await bitcoinApi.$getTxIdsForBlock(blockHash);
+      let transactions = await this.$getTransactionsExtended(blockHash, block.height, false);
+      let blockExtended: BlockExtended = await this.$getBlockExtended(block, transactions);
       const blockSummary: BlockSummary = this.summarizeBlock(verboseBlock);
+
+      let result = await oeBlocks.getExtendedBlocktxIdsTransactionsByBlockHeight$(this.currentBlockHeight);
+      if ( typeof(result) !== 'undefined') {
+        [ blockExtended, txIds, transactions ] = result
+        if (blockExtended.height % 2016 === 0) {
+          this.previousDifficultyRetarget = (blockExtended.difficulty - this.currentDifficulty) / this.currentDifficulty * 100;
+          this.lastDifficultyAdjustmentTime = blockExtended.timestamp;
+          this.currentDifficulty = blockExtended.difficulty;
+        }
+      }
 
       if (Common.indexingEnabled()) {
         if (!fastForwarded) {

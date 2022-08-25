@@ -10,7 +10,7 @@ import { BlockExtended, PoolTag, TransactionExtended, TransactionMinerInfo } fro
 class OEBlocks {
   private difficultyEpochEndBlocks: BlockExtended[] = [];
 
-  private async getExtendedBlocktxIdsTransactionsByBlockHeight$( height: number): Promise<[BlockExtended, string[], TransactionExtended[] ] | undefined> {
+  public async getExtendedBlocktxIdsTransactionsByBlockHeight$( height: number): Promise<[BlockExtended, string[], TransactionExtended[] ] | undefined> {
     const blockHeightTip = await bitcoinApi.$getBlockHeightTip();
     if( height > blockHeightTip){
       return;
