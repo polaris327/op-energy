@@ -21,6 +21,7 @@ import elementsParser from './api/liquid/elements-parser';
 import databaseMigration from './api/database-migration';
 import oedatabaseMigration from './api/oe-database-migration';
 import chainStats from './oe-chainstats';
+import opEnergyRoutes from './api/oe/oe.routes';
 import opEnergyApiService from './api/op-energy.service';
 
 import syncAssets from './sync-assets';
@@ -233,6 +234,7 @@ class Server {
 
   setUpHttpApiRoutes() {
     bitcoinRoutes.initRoutes(this.app);
+    opEnergyRoutes.setUpHttpApiRoutes(this.app);
     if (config.STATISTICS.ENABLED && config.DATABASE.ENABLED) {
       statisticsRoutes.initRoutes(this.app);
     }
