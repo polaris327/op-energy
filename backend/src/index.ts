@@ -23,6 +23,8 @@ import oedatabaseMigration from './api/oe-database-migration';
 import chainStats from './oe-chainstats';
 import opEnergyRoutes from './api/oe/oe.routes';
 import opEnergyApiService from './api/op-energy.service';
+import opEnergyWebSocket from './api/oe/oe-websocket';
+
 
 import syncAssets from './sync-assets';
 import icons from './api/liquid/icons';
@@ -228,6 +230,9 @@ class Server {
     memPool.setMempoolChangedCallback(websocketHandler.handleMempoolChange.bind(websocketHandler));
     fiatConversion.setProgressChangedCallback(websocketHandler.handleNewConversionRates.bind(websocketHandler));
     loadingIndicators.setProgressChangedCallback(websocketHandler.handleLoadingChanged.bind(websocketHandler));
+    if (this.wss) {
+      opEnergyWebSocket.setUpWebsocketHandling(this.wss); // op-energy hook
+    }
     opEnergyApiService.setNewTimeStrikeCallback(websocketHandler.handleNewTimeStrike.bind(websocketHandler));
     opEnergyApiService.setNewTimeSlowFastGuessCallback(websocketHandler.handleNewTimeSlowFastGuess.bind(websocketHandler));
   }
