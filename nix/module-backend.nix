@@ -161,7 +161,7 @@ in
         script = ''
           set -ex
           cd ${pkgs.op-energy-backend}/backend
-          OP_ENERGY_CONFIG="${mempool_config}" npm run start-production
+          MEMPOOL_CONFIG_FILE="${mempool_config}" npm run start-production
         '';
       })) eachInstance);
   };

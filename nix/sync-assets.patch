@@ -55,8 +55,8 @@ index a6b59bdb..79788d10 100644
 +
 +// this procedure is basically a cache awared downloadMiningPoolLogos(): otherwise, it should be identical
 +function maybeDownloadMiningPoolLogos() {
-+  if( !configContent.WITHOUT_MINING_POOL_LOGOS || configContent.WITHTOUT_MINIG_POOL_LOGOS === false) {
-+    downloadMiningPoolLogos();
++  if( !configContent.WITHOUT_MINING_POOL_LOGOS || configContent.WITHOUT_MINING_POOL_LOGOS === false) {
++    console.log(`${configContent.WITHOUT_MINING_POOL_LOGOS}`); downloadMiningPoolLogos();
 +  }
  }
  

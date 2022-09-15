@@ -522,6 +522,7 @@ let
           cd $out/${packageName}
 
           source $includeScriptPath
+
           chmod a+x ./node_modules/node-gyp-build/bin.js
           chmod a+x ./node_modules/node-gyp-build/optional.js
           chmod a+x ./node_modules/node-gyp-build/build-test.js
@@ -550,6 +551,14 @@ let
 
           mv ${packageName} lib
           ln -s $out/lib/node_modules/.bin $out/bin
+          chmod a+x $out/lib/node_modules/.bin/*
+          for FILE in $(find $out/lib/node_modules/.bin/ -exec readlink -f {} \;); do
+            chmod a+x $FILE
+            patchShebangs $FILE
+            if [ "$(basename $FILE)" == "ng.js" ]; then
+              ls -la $FILE
+            fi
+          done
         '';
       } // extraArgs);
 
