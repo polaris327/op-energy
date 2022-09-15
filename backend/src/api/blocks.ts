@@ -426,7 +426,6 @@ class Blocks {
       }
     }
 
-
     while (this.currentBlockHeight < blockHeightTip) {
       if (this.currentBlockHeight < blockHeightTip - config.MEMPOOL.INITIAL_BLOCKS_AMOUNT) {
         this.currentBlockHeight = blockHeightTip;
@@ -438,20 +437,10 @@ class Blocks {
       const blockHash = await bitcoinApi.$getBlockHash(this.currentBlockHeight);
       const verboseBlock = await bitcoinClient.getBlock(blockHash, 2);
       const block = BitcoinApi.convertBlock(verboseBlock);
-      let txIds: string[] = await bitcoinApi.$getTxIdsForBlock(blockHash);
-      let transactions = await this.$getTransactionsExtended(blockHash, block.height, false);
-      let blockExtended: BlockExtended = await this.$getBlockExtended(block, transactions);
+      const txIds: string[] = await bitcoinApi.$getTxIdsForBlock(blockHash);
+      const transactions = await this.$getTransactionsExtended(blockHash, block.height, false);
+      const blockExtended: BlockExtended = await this.$getBlockExtended(block, transactions);
       const blockSummary: BlockSummary = this.summarizeBlock(verboseBlock);
-
-      let result = await oeBlocks.getExtendedBlocktxIdsTransactionsByBlockHeight$(this.currentBlockHeight);
-      if ( typeof(result) !== 'undefined') {
-        [ blockExtended, txIds, transactions ] = result
-        if (blockExtended.height % 2016 === 0) {
-          this.previousDifficultyRetarget = (blockExtended.difficulty - this.currentDifficulty) / this.currentDifficulty * 100;
-          this.lastDifficultyAdjustmentTime = blockExtended.timestamp;
-          this.currentDifficulty = blockExtended.difficulty;
-        }
-      }
 
       if (Common.indexingEnabled()) {
         if (!fastForwarded) {
