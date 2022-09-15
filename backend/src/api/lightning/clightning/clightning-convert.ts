@@ -1,6 +1,7 @@
 import { ILightningApi } from '../lightning-api.interface';
 import FundingTxFetcher from '../../../tasks/lightning/sync-tasks/funding-tx-fetcher';
 import logger from '../../../logger';
+import { Common } from '../../common';
 
 /**
  * Convert a clightning "listnode" entry to a lnd node entry
@@ -12,11 +13,15 @@ export function convertNode(clNode: any): ILightningApi.Node {
     features: [], // TODO parse and return clNode.feature
     pub_key: clNode.nodeid,
     addresses: clNode.addresses?.map((addr) => {
+      let address = addr.address;
+      if (addr.type === 'ipv6') {
+        address = `[${address}]`;
+      }
       return {
         network: addr.type,
-        addr: `${addr.address}:${addr.port}`
+        addr: `${address}:${addr.port}`
       };
-    }),
+    }) ?? [],
     last_update: clNode?.last_timestamp ?? 0,
   };
 }
@@ -70,14 +75,6 @@ export async function convertAndmergeBidirectionalChannels(clChannels: any[]): P
   return consolidatedChannelList;
 }
 
-export function convertChannelId(channelId): string {
-  if (channelId.indexOf('/') !== -1) {
-    channelId = channelId.slice(0, -2);
-  }
-  const s = channelId.split('x').map(part => BigInt(part));
-  return ((s[0] << 40n) | (s[1] << 16n) | s[2]).toString();
-}
-
 /**
  * Convert two clightning "getchannels" entries into a full a lnd "describegraph.edges" format
  * In this case, clightning knows the channel policy for both nodes
@@ -90,7 +87,7 @@ async function buildFullChannel(clChannelA: any, clChannelB: any): Promise<ILigh
   const outputIdx = parts[2];
 
   return {
-    channel_id: clChannelA.short_channel_id,
+    channel_id: Common.channelShortIdToIntegerId(clChannelA.short_channel_id),
     capacity: clChannelA.satoshis,
     last_update: lastUpdate,
     node1_policy: convertPolicy(clChannelA),
@@ -111,7 +108,7 @@ async function buildIncompleteChannel(clChannel: any): Promise<ILightningApi.Cha
   const outputIdx = parts[2];
 
   return {
-    channel_id: clChannel.short_channel_id,
+    channel_id: Common.channelShortIdToIntegerId(clChannel.short_channel_id),
     capacity: clChannel.satoshis,
     last_update: clChannel.last_update ?? 0,
     node1_policy: convertPolicy(clChannel),

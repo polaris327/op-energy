@@ -102,7 +102,9 @@ Below we list all settings from `mempool-config.json` and the corresponding over
     "PRICE_FEED_UPDATE_INTERVAL": 600,
     "USE_SECOND_NODE_FOR_MINFEE": false,
     "EXTERNAL_ASSETS": ["https://raw.githubusercontent.com/mempool/mining-pools/master/pools.json"],
-    "STDOUT_LOG_MIN_PRIORITY": "info"
+    "STDOUT_LOG_MIN_PRIORITY": "info",
+    "POOLS_JSON_URL": "https://raw.githubusercontent.com/mempool/mining-pools/master/pools.json",
+    "POOLS_JSON_TREE_URL": "https://api.github.com/repos/mempool/mining-pools/git/trees/master"
   },
 ```
 
@@ -126,6 +128,8 @@ Corresponding `docker-compose.yml` overrides:
       MEMPOOL_USE_SECOND_NODE_FOR_MINFEE: ""
       MEMPOOL_EXTERNAL_ASSETS: ""
       MEMPOOL_STDOUT_LOG_MIN_PRIORITY: ""
+      MEMPOOL_POOLS_JSON_URL: ""
+      MEMPOOL_POOLS_JSON_TREE_URL: ""
       ...
 ```
 
@@ -344,5 +348,70 @@ Corresponding `docker-compose.yml` overrides:
     environment:
       PRICE_DATA_SERVER_TOR_URL: ""
       PRICE_DATA_SERVER_CLEARNET_URL: ""
+      ...
+```
+
+<br/>
+
+`mempool-config.json`:
+```
+  "LIGHTNING": {
+    "ENABLED": false
+    "BACKEND": "lnd"
+    "TOPOLOGY_FOLDER": ""
+    "STATS_REFRESH_INTERVAL": 600
+    "GRAPH_REFRESH_INTERVAL": 600
+    "LOGGER_UPDATE_INTERVAL": 30
+  }
+```
+
+Corresponding `docker-compose.yml` overrides:
+```
+  api:
+    environment:
+      LIGHTNING_ENABLED: false
+      LIGHTNING_BACKEND: "lnd"
+      LIGHTNING_TOPOLOGY_FOLDER: ""
+      LIGHTNING_STATS_REFRESH_INTERVAL: 600
+      LIGHTNING_GRAPH_REFRESH_INTERVAL: 600
+      LIGHTNING_LOGGER_UPDATE_INTERVAL: 30
+      ...
+```
+
+<br/>
+
+`mempool-config.json`:
+```
+  "LND": {
+    "TLS_CERT_PATH": ""
+    "MACAROON_PATH": ""
+    "REST_API_URL": "https://localhost:8080"
+  }
+```
+
+Corresponding `docker-compose.yml` overrides:
+```
+  api:
+    environment:
+      LND_TLS_CERT_PATH: ""
+      LND_MACAROON_PATH: ""
+      LND_REST_API_URL: "https://localhost:8080"
+      ...
+```
+
+<br/>
+
+`mempool-config.json`:
+```
+  "CLN": {
+    "SOCKET": ""
+  }
+```
+
+Corresponding `docker-compose.yml` overrides:
+```
+  api:
+    environment:
+      CLN_SOCKET: ""
       ...
 ```

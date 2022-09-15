@@ -1,4 +1,6 @@
-const configFile = require('../mempool-config.json');
+const configFromFile = require(
+    process.env.MEMPOOL_CONFIG_FILE ? process.env.MEMPOOL_CONFIG_FILE : '../mempool-config.json'
+);
 
 interface IConfig {
   MEMPOOL: {
@@ -24,6 +26,9 @@ interface IConfig {
     USER_AGENT: string;
     STDOUT_LOG_MIN_PRIORITY: 'emerg' | 'alert' | 'crit' | 'err' | 'warn' | 'notice' | 'info' | 'debug';
     AUTOMATIC_BLOCK_REINDEXING: boolean;
+    POOLS_JSON_URL: string;
+    POOLS_JSON_TREE_URL: string;
+    CHAINSTAT_BATCH_SIZE: number;
   };
   ESPLORA: {
     REST_API_URL: string;
@@ -32,7 +37,9 @@ interface IConfig {
     ENABLED: boolean;
     BACKEND: 'lnd' | 'cln' | 'ldk';
     TOPOLOGY_FOLDER: string;
-    NODE_STATS_REFRESH_INTERVAL: number;
+    STATS_REFRESH_INTERVAL: number;
+    GRAPH_REFRESH_INTERVAL: number;
+    LOGGER_UPDATE_INTERVAL: number;
   };
   LND: {
     TLS_CERT_PATH: string;
@@ -65,6 +72,8 @@ interface IConfig {
     SOCKET: string,
     PORT: number;
     DATABASE: string;
+    ACCOUNT_DATABASE: string;
+    SECRET_SALT: string;
     USERNAME: string;
     PASSWORD: string;
   };
@@ -135,6 +144,9 @@ const defaults: IConfig = {
     'USER_AGENT': 'mempool',
     'STDOUT_LOG_MIN_PRIORITY': 'debug',
     'AUTOMATIC_BLOCK_REINDEXING': false,
+    'POOLS_JSON_URL': 'https://raw.githubusercontent.com/mempool/mining-pools/master/pools.json',
+    'POOLS_JSON_TREE_URL': 'https://api.github.com/repos/mempool/mining-pools/git/trees/master',
+    'CHAINSTAT_BATCH_SIZE': 10000,
   },
   'ESPLORA': {
     'REST_API_URL': 'http://127.0.0.1:3000',
@@ -162,6 +174,8 @@ const defaults: IConfig = {
     'SOCKET': '',
     'PORT': 3306,
     'DATABASE': 'mempool',
+    'ACCOUNT_DATABASE': 'mempoolacc',
+    'SECRET_SALT': 'changeme',
     'USERNAME': 'mempool',
     'PASSWORD': 'mempool'
   },
@@ -184,7 +198,9 @@ const defaults: IConfig = {
     'ENABLED': false,
     'BACKEND': 'lnd',
     'TOPOLOGY_FOLDER': '',
-    'NODE_STATS_REFRESH_INTERVAL': 600,
+    'STATS_REFRESH_INTERVAL': 600,
+    'GRAPH_REFRESH_INTERVAL': 600,
+    'LOGGER_UPDATE_INTERVAL': 30,
   },
   'LND': {
     'TLS_CERT_PATH': '',
@@ -241,7 +257,7 @@ class Config implements IConfig {
   MAXMIND: IConfig['MAXMIND'];
 
   constructor() {
-    const configs = this.merge(configFile, defaults);
+    const configs = this.merge(configFromFile, defaults);
     this.MEMPOOL = configs.MEMPOOL;
     this.ESPLORA = configs.ESPLORA;
     this.ELECTRUM = configs.ELECTRUM;

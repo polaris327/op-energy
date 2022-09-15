@@ -1,11 +1,12 @@
-import { ChangeDetectionStrategy, Component, OnInit, HostBinding, NgZone } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, HostBinding, NgZone, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { EChartsOption, PieSeriesOption } from 'echarts';
-import { combineLatest, map, Observable, share, Subject, switchMap, tap } from 'rxjs';
+import { combineLatest, map, Observable, share, startWith, Subject, switchMap, tap } from 'rxjs';
 import { chartColors } from 'src/app/app.constants';
 import { ApiService } from 'src/app/services/api.service';
 import { SeoService } from 'src/app/services/seo.service';
 import { StateService } from 'src/app/services/state.service';
+import { isMobile } from 'src/app/shared/common.utils';
 import { download } from 'src/app/shared/graphs.utils';
 import { AmountShortenerPipe } from 'src/app/shared/pipes/amount-shortener.pipe';
 import { RelativeUrlPipe } from 'src/app/shared/pipes/relative-url/relative-url.pipe';
@@ -17,20 +18,23 @@ import { RelativeUrlPipe } from 'src/app/shared/pipes/relative-url/relative-url.
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NodesPerISPChartComponent implements OnInit {
+  @Input() widget: boolean = false;
+
   isLoading = true;
   chartOptions: EChartsOption = {};
   chartInitOptions = {
     renderer: 'svg',
   };
   timespan = '';
+  sortBy = 'capacity';
+  showUnknown = false;
   chartInstance = undefined;
 
   @HostBinding('attr.dir') dir = 'ltr';
 
   nodesPerAsObservable$: Observable<any>;
-  showTorObservable$: Observable<boolean>;
-  groupBySubject = new Subject<boolean>();
-  showTorSubject = new Subject<boolean>();
+  sortBySubject = new Subject<boolean>();
+  showUnknownSubject = new Subject<boolean>();
 
   constructor(
     private apiService: ApiService,
@@ -43,64 +47,107 @@ export class NodesPerISPChartComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.seoService.setTitle($localize`Lightning nodes per ISP`);
+    if (!this.widget) {
+      this.seoService.setTitle($localize`Lightning nodes per ISP`);
+    }
 
-    this.showTorObservable$ = this.showTorSubject.asObservable();
-    this.nodesPerAsObservable$ = combineLatest([this.groupBySubject, this.showTorSubject])
+    this.nodesPerAsObservable$ = combineLatest([
+      this.sortBySubject.pipe(startWith(true)),
+    ])
       .pipe(
         switchMap((selectedFilters) => {
-          return this.apiService.getNodesPerAs(
-            selectedFilters[0] ? 'capacity' : 'node-count',
-            selectedFilters[1] // Show Tor nodes
-          )
+          this.sortBy = selectedFilters[0] ? 'capacity' : 'node-count';
+          return this.apiService.getNodesPerIsp()
             .pipe(
-              tap(data => {
+              tap(() => {
                 this.isLoading = false;
-                this.prepareChartOptions(data);
               }),
               map(data => {
-                for (let i = 0; i < data.length; ++i) {
-                  data[i].rank = i + 1;
+                let nodeCount = 0;
+                let totalCapacity = 0;
+
+                for (let i = 0; i < data.ispRanking.length; ++i) {
+                  nodeCount += data.ispRanking[i][4];
+                  totalCapacity += data.ispRanking[i][2];
+                  data.ispRanking[i][5] = i;
                 }
-                return data.slice(0, 100);
+                for (let i = 0; i < data.ispRanking.length; ++i) {
+                  data.ispRanking[i][6] = Math.round(data.ispRanking[i][4] / nodeCount * 10000) / 100;
+                  data.ispRanking[i][7] = Math.round(data.ispRanking[i][2] / totalCapacity * 10000) / 100;
+                }
+
+                if (selectedFilters[0] === true) {
+                  data.ispRanking.sort((a, b) => b[7] - a[7]);
+                } else {
+                  data.ispRanking.sort((a, b) => b[6] - a[6]);
+                }
+
+                for (let i = 0; i < data.ispRanking.length; ++i) {
+                  data.ispRanking[i][5] = i + 1;
+                }
+
+                this.prepareChartOptions(data.ispRanking);
+
+                return {
+                  taggedISP: data.ispRanking.length,
+                  clearnetCapacity: data.clearnetCapacity,
+                  unknownCapacity: data.unknownCapacity,
+                  torCapacity: data.torCapacity,
+                  ispRanking: data.ispRanking.slice(0, 100),
+                };
               })
             );
         }),
         share()
       );
+
+    if (this.widget) {
+      this.sortBySubject.next(false);  
+    }
   }
 
-  generateChartSerieData(as): PieSeriesOption[] {
-    const shareThreshold = this.isMobile() ? 2 : 0.5;
-    const data: object[] = [];
-    let totalShareOther = 0;
-    let totalNodeOther = 0;
-
-    let edgeDistance: string | number = '10%';
-    if (this.isMobile()) {
-      edgeDistance = 0;
+  generateChartSerieData(ispRanking): PieSeriesOption[] {
+    let shareThreshold = 0.4;
+    if (this.widget && isMobile() || isMobile()) {
+      shareThreshold = 1;
+    } else if (this.widget) {
+      shareThreshold = 0.75;
     }
 
-    as.forEach((as) => {
-      if (as.share < shareThreshold) {
-        totalShareOther += as.share;
-        totalNodeOther += as.count;
+    const data: object[] = [];
+    let totalShareOther = 0;
+    let nodeCountOther = 0;
+    let capacityOther = 0;
+
+    let edgeDistance: string | number = '10%';
+    if (isMobile() && this.widget) {
+      edgeDistance = 0;
+    } else if (isMobile() && !this.widget || this.widget) {
+      edgeDistance = 10;
+    }
+
+    ispRanking.forEach((isp) => {
+      if ((this.sortBy === 'capacity' ? isp[7] : isp[6]) < shareThreshold) {
+        totalShareOther += this.sortBy === 'capacity' ? isp[7] : isp[6];
+        nodeCountOther += isp[4];
+        capacityOther += isp[2];
         return;
       }
       data.push({
         itemStyle: {
-          color: as.ispId === null ? '#7D4698' : undefined,
+          color: isp[0] === null ? '#7D4698' : undefined,
         },
-        value: as.share,
-        name: as.name + (this.isMobile() ? `` : ` (${as.share}%)`),
+        value: this.sortBy === 'capacity' ? isp[7] : isp[6],
+        name: isp[1].replace('&', '') + (isMobile() || this.widget ? `` : ` (${this.sortBy === 'capacity' ? isp[7] : isp[6]}%)`),
         label: {
           overflow: 'truncate',
+          width: isMobile() ? 75 : this.widget ? 125 : 250,
           color: '#b1b1b1',
           alignTo: 'edge',
           edgeDistance: edgeDistance,
         },
         tooltip: {
-          show: !this.isMobile(),
+          show: !isMobile(),
           backgroundColor: 'rgba(17, 19, 31, 1)',
           borderRadius: 4,
           shadowColor: 'rgba(0, 0, 0, 0.5)',
@@ -109,13 +156,13 @@ export class NodesPerISPChartComponent implements OnInit {
           },
           borderColor: '#000',
           formatter: () => {
-            return `<b style="color: white">${as.name} (${as.share}%)</b><br>` +
-              $localize`${as.count.toString()} nodes<br>` +
-              $localize`${this.amountShortenerPipe.transform(as.capacity / 100000000, 2)} BTC capacity`
+            return `<b style="color: white">${isp[1]} (${this.sortBy === 'capacity' ? isp[7] : isp[6]}%)</b><br>` +
+              $localize`${isp[4].toString()} nodes<br>` +
+              $localize`${this.amountShortenerPipe.transform(isp[2] / 100000000, 2)} BTC`
             ;
           }
         },
-        data: as.ispId,
+        data: isp[0],
       } as PieSeriesOption);
     });
 
@@ -125,7 +172,7 @@ export class NodesPerISPChartComponent implements OnInit {
         color: 'grey',
       },
       value: totalShareOther,
-      name: 'Other' + (this.isMobile() ? `` : ` (${totalShareOther.toFixed(2)}%)`),
+      name: 'Other' + (isMobile() || this.widget ? `` : ` (${totalShareOther.toFixed(2)}%)`),
       label: {
         overflow: 'truncate',
         color: '#b1b1b1',
@@ -141,8 +188,9 @@ export class NodesPerISPChartComponent implements OnInit {
         },
         borderColor: '#000',
         formatter: () => {
-          return `<b style="color: white">${'Other'} (${totalShareOther.toFixed(2)}%)</b><br>` +
-            totalNodeOther.toString() + ` nodes`;
+          return `<b style="color: white">Other (${totalShareOther.toFixed(2)}%)</b><br>` +
+            $localize`${nodeCountOther.toString()} nodes<br>` +
+            $localize`${this.amountShortenerPipe.transform(capacityOther / 100000000, 2)} BTC`;
         }
       },
       data: 9999 as any,
@@ -151,9 +199,9 @@ export class NodesPerISPChartComponent implements OnInit {
     return data;
   }
 
-  prepareChartOptions(as): void {
+  prepareChartOptions(ispRanking): void {
     let pieSize = ['20%', '80%']; // Desktop
-    if (this.isMobile()) {
+    if (isMobile() && !this.widget) {
       pieSize = ['15%', '60%'];
     }
 
@@ -168,17 +216,17 @@ export class NodesPerISPChartComponent implements OnInit {
       series: [
         {
           zlevel: 0,
-          minShowLabelAngle: 1.8,
+          minShowLabelAngle: 0.9,
           name: 'Lightning nodes',
           type: 'pie',
           radius: pieSize,
-          data: this.generateChartSerieData(as),
+          data: this.generateChartSerieData(ispRanking),
           labelLine: {
             lineStyle: {
               width: 2,
             },
-            length: this.isMobile() ? 1 : 20,
-            length2: this.isMobile() ? 1 : undefined,
+            length: isMobile() ? 1 : 20,
+            length2: isMobile() ? 1 : undefined,
           },
           label: {
             fontSize: 14,
@@ -202,10 +250,6 @@ export class NodesPerISPChartComponent implements OnInit {
         }
       ],
     };
-  }
-
-  isMobile(): boolean {
-    return (window.innerWidth <= 767.98);
   }
 
   onChartInit(ec): void {
@@ -237,12 +281,8 @@ export class NodesPerISPChartComponent implements OnInit {
     this.chartInstance.setOption(this.chartOptions);
   }
 
-  onTorToggleStatusChanged(e): void {
-    this.showTorSubject.next(e);
-  }
-
   onGroupToggleStatusChanged(e): void {
-    this.groupBySubject.next(e);
+    this.sortBySubject.next(e);
   }
 }
 

@@ -19,6 +19,13 @@ import loadingIndicators from './api/loading-indicators';
 import mempool from './api/mempool';
 import elementsParser from './api/liquid/elements-parser';
 import databaseMigration from './api/database-migration';
+import oedatabaseMigration from './api/oe-database-migration';
+import chainStats from './oe-chainstats';
+import opEnergyRoutes from './api/oe/oe.routes';
+import opEnergyApiService from './api/op-energy.service';
+import opEnergyWebSocket from './api/oe/oe-websocket';
+
+
 import syncAssets from './sync-assets';
 import icons from './api/liquid/icons';
 import { Common } from './api/common';
@@ -84,6 +91,7 @@ class Server {
       })
       .use(express.urlencoded({ extended: true }))
       .use(express.text())
+      .use(express.json())
       ;
 
     this.server = http.createServer(this.app);
@@ -104,6 +112,7 @@ class Server {
           await databaseMigration.$truncateIndexedData(tables);
         }
         await databaseMigration.$initializeOrMigrateDatabase();
+        await oedatabaseMigration.$initializeOrMigrateDatabase('mainloop');
         if (Common.indexingEnabled()) {
           await indexer.$resetHashratesIndexingState();
         }
@@ -164,7 +173,14 @@ class Server {
       await poolsUpdater.updatePoolsJson();
       await blocks.$updateBlocks();
       await memPool.$updateMempool();
+      // this runs blocks.$generateBlockDatabase();
       indexer.$run();
+
+      try {
+        await chainStats.$updateChainstats();
+      } catch (e) {
+        logger.debug( '$updateChainstats error: ${( e instanceof Error ? e.message : e)}');
+      }
 
       setTimeout(this.runMainUpdateLoop.bind(this), config.MEMPOOL.POLL_RATE_MS);
       this.currentBackendRetryInterval = 5;
@@ -189,7 +205,7 @@ class Server {
       await networkSyncService.$startService();
       await lightningStatsUpdater.$startService();
     } catch(e) {
-      logger.err(`Lightning backend crashed. Restarting in 1 minute. Reason: ${(e instanceof Error ? e.message : e)}`);
+      logger.err(`Nodejs lightning backend crashed. Restarting in 1 minute. Reason: ${(e instanceof Error ? e.message : e)}`);
       await Common.sleep$(1000 * 60);
       this.$runLightningBackend();
     };
@@ -214,10 +230,16 @@ class Server {
     memPool.setMempoolChangedCallback(websocketHandler.handleMempoolChange.bind(websocketHandler));
     fiatConversion.setProgressChangedCallback(websocketHandler.handleNewConversionRates.bind(websocketHandler));
     loadingIndicators.setProgressChangedCallback(websocketHandler.handleLoadingChanged.bind(websocketHandler));
+    if (this.wss) {
+      opEnergyWebSocket.setUpWebsocketHandling(this.wss); // op-energy hook
+    }
+    opEnergyApiService.setNewTimeStrikeCallback(websocketHandler.handleNewTimeStrike.bind(websocketHandler));
+    opEnergyApiService.setNewTimeSlowFastGuessCallback(websocketHandler.handleNewTimeSlowFastGuess.bind(websocketHandler));
   }
 
   setUpHttpApiRoutes() {
     bitcoinRoutes.initRoutes(this.app);
+    opEnergyRoutes.setUpHttpApiRoutes(this.app);
     if (config.STATISTICS.ENABLED && config.DATABASE.ENABLED) {
       statisticsRoutes.initRoutes(this.app);
     }

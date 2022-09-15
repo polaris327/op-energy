@@ -1,7 +1,7 @@
 import { Component, Inject, Input, LOCALE_ID, OnInit, HostBinding } from '@angular/core';
 import { EChartsOption, graphic } from 'echarts';
 import { Observable } from 'rxjs';
-import { map, startWith, switchMap, tap } from 'rxjs/operators';
+import { map, share, startWith, switchMap, tap } from 'rxjs/operators';
 import { SeoService } from 'src/app/services/seo.service';
 import { formatNumber } from '@angular/common';
 import { FormBuilder, FormGroup } from '@angular/forms';
@@ -9,6 +9,8 @@ import { StorageService } from 'src/app/services/storage.service';
 import { MiningService } from 'src/app/services/mining.service';
 import { download } from 'src/app/shared/graphs.utils';
 import { LightningApiService } from '../lightning-api.service';
+import { AmountShortenerPipe } from 'src/app/shared/pipes/amount-shortener.pipe';
+import { isMobile } from 'src/app/shared/common.utils';
 
 @Component({
   selector: 'app-lightning-statistics-chart',
@@ -25,7 +27,7 @@ import { LightningApiService } from '../lightning-api.service';
 })
 export class LightningStatisticsChartComponent implements OnInit {
   @Input() right: number | string = 45;
-  @Input() left: number | string = 55;
+  @Input() left: number | string = 45;
   @Input() widget = false;
 
   miningWindowPreference: string;
@@ -51,6 +53,7 @@ export class LightningStatisticsChartComponent implements OnInit {
     private formBuilder: FormBuilder,
     private storageService: StorageService,
     private miningService: MiningService,
+    private amountShortenerPipe: AmountShortenerPipe,
   ) {
   }
 
@@ -94,20 +97,32 @@ export class LightningStatisticsChartComponent implements OnInit {
               }),
             );
         }),
-      )
+        share(),
+      );
   }
 
-  prepareChartOptions(data) {
+  prepareChartOptions(data): void {
     let title: object;
-    if (data.channel_count.length === 0) {
+    if (!this.widget && data.channel_count.length === 0) {
       title = {
         textStyle: {
           color: 'grey',
           fontSize: 15
         },
-        text: `Indexing in progess`,
+        text: $localize`Indexing in progess`,
         left: 'center',
         top: 'center'
+      };
+    } else if (this.widget && data.channel_count.length > 0) {
+      title = {
+        textStyle: {
+          color: 'grey',
+          fontSize: 11
+        },
+        text: $localize`Channels & Capacity`,
+        left: 'center',
+        top: 11,
+        zlevel: 10,
       };
     }
 
@@ -115,17 +130,21 @@ export class LightningStatisticsChartComponent implements OnInit {
       title: title,
       animation: false,
       color: [
-        '#FDD835',
-        '#D81B60',
+        '#FFB300',
+        new graphic.LinearGradient(0, 0.75, 0, 1, [
+          { offset: 0, color: '#D81B60' },
+          { offset: 1, color: '#D81B60AA' },
+        ]),
       ],
       grid: {
-        top: 40,
-        bottom: this.widget ? 30 : 70,
-        right: this.right,
-        left: this.left,
+        height: this.widget ? 100 : undefined,
+        top: this.widget ? 10 : 40,
+        bottom: this.widget ? 0 : 70,
+        right: (isMobile() && this.widget) ? 35 : this.right,
+        left: (isMobile() && this.widget) ? 40 :this.left,
       },
       tooltip: {
-        show: !this.isMobile(),
+        show: !isMobile(),
         trigger: 'axis',
         axisPointer: {
           type: 'line'
@@ -138,7 +157,7 @@ export class LightningStatisticsChartComponent implements OnInit {
           align: 'left',
         },
         borderColor: '#000',
-        formatter: (ticks) => {
+        formatter: (ticks): string => {
           let sizeString = '';
           let weightString = '';
 
@@ -152,21 +171,23 @@ export class LightningStatisticsChartComponent implements OnInit {
 
           const date = new Date(ticks[0].data[0]).toLocaleDateString(this.locale, { year: 'numeric', month: 'short', day: 'numeric' });
 
-          let tooltip = `<b style="color: white; margin-left: 18px">${date}</b><br>
+          const tooltip = `
+            <b style="color: white; margin-left: 18px">${date}</b><br>
             <span>${sizeString}</span><br>
-            <span>${weightString}</span>`;
+            <span>${weightString}</span>
+          `;
 
           return tooltip;
         }
       },
       xAxis: data.channel_count.length === 0 ? undefined : {
         type: 'time',
-        splitNumber: (this.isMobile() || this.widget) ? 5 : 10,
+        splitNumber: (isMobile() || this.widget) ? 5 : 10,
         axisLabel: {
           hideOverlap: true,
         }
       },
-      legend: data.channel_count.length === 0 ? undefined : {
+      legend: this.widget || data.channel_count.length === 0 ? undefined : {
         padding: 10,
         data: [
           {
@@ -178,7 +199,7 @@ export class LightningStatisticsChartComponent implements OnInit {
             icon: 'roundRect',
           },
           {
-            name: 'Capacity (BTC)',
+            name: 'Capacity',
             inactiveColor: 'rgb(110, 112, 121)',
             textStyle: {
               color: 'white',
@@ -188,17 +209,20 @@ export class LightningStatisticsChartComponent implements OnInit {
         ],
         selected: JSON.parse(this.storageService.getValue('sizes_ln_legend'))  ?? {
           'Channels': true,
-          'Capacity (BTC)': true,
+          'Capacity': true,
         }
       },
       yAxis: data.channel_count.length === 0 ? undefined : [
         {
-          min: 0,
           type: 'value',
           axisLabel: {
             color: 'rgb(110, 112, 121)',
-            formatter: (val) => {
-              return `${formatNumber(Math.round(val), this.locale, '1.0-0')}`;
+            formatter: (val: number): string => {
+              if (this.widget) {
+                return `${this.amountShortenerPipe.transform(val, 0)}`;
+              } else {
+                return `${formatNumber(Math.round(val), this.locale, '1.0-0')}`;
+              }
             }
           },
           splitLine: {
@@ -208,6 +232,7 @@ export class LightningStatisticsChartComponent implements OnInit {
               opacity: 0.25,
             }
           },
+          minInterval: this.widget ? 20000 : undefined,
         },
         {
           min: 0,
@@ -215,8 +240,12 @@ export class LightningStatisticsChartComponent implements OnInit {
           position: 'right',
           axisLabel: {
             color: 'rgb(110, 112, 121)',
-            formatter: (val) => {
-              return `${formatNumber(Math.round(val / 100000000), this.locale, '1.0-0')}`;
+            formatter: (val: number): string => {
+              if (this.widget) {
+                return `${this.amountShortenerPipe.transform(Math.round(val / 100000000), 0)}`;
+              } else {
+                return `${formatNumber(Math.round(val / 100000000), this.locale, '1.0-0')}`;
+              }
             }
           },
           splitLine: {
@@ -244,24 +273,53 @@ export class LightningStatisticsChartComponent implements OnInit {
               opacity: 1,
               width: 1,
             },
-          }
+          },
+          smooth: false,
         },
         {
           zlevel: 0,
           yAxisIndex: 1,
-          name: 'Capacity (BTC)',
+          name: $localize`Capacity`,
           showSymbol: false,
           symbol: 'none',
           stack: 'Total',
           data: data.capacity,
-          areaStyle: {},
+          areaStyle: {
+            opacity: 0.5,
+          },
           type: 'line',
+          smooth: false,
         }
       ],
+      dataZoom: this.widget ? null : [{
+        type: 'inside',
+        realtime: true,
+        zoomLock: true,
+        maxSpan: 100,
+        minSpan: 5,
+        moveOnMouseMove: false,
+      }, {
+        showDetail: false,
+        show: true,
+        type: 'slider',
+        brushSelect: false,
+        realtime: true,
+        left: 20,
+        right: 15,
+        selectedDataBackground: {
+          lineStyle: {
+            color: '#fff',
+            opacity: 0.45,
+          },
+          areaStyle: {
+            opacity: 0,
+          }
+        },
+      }],
     };
   }
 
-  onChartInit(ec) {
+  onChartInit(ec): void {
     if (this.chartInstance !== undefined) {
       return;
     }
@@ -273,11 +331,7 @@ export class LightningStatisticsChartComponent implements OnInit {
     });
   }
 
-  isMobile() {
-    return (window.innerWidth <= 767.98);
-  }
-
-  onSaveChart() {
+  onSaveChart(): void {
     // @ts-ignore
     const prevBottom = this.chartOptions.grid.bottom;
     const now = new Date();
