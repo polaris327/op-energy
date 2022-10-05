@@ -1,11 +1,11 @@
-import bitcoinApi from './bitcoin/bitcoin-api-factory';
-import config from '../config';
-import logger from '../logger';
-import { Common } from './common';
-import memPool from './mempool';
-import transactionUtils from './transaction-utils';
-import { IEsploraApi } from './bitcoin/esplora-api.interface';
-import { BlockExtended, PoolTag, TransactionExtended, TransactionMinerInfo } from '../mempool.interfaces';
+import bitcoinApi from './../../api/bitcoin/bitcoin-api-factory';
+import config from '../../config';
+import logger from '../../logger';
+import { Common } from './../../api/common';
+import memPool from './../../api/mempool';
+import transactionUtils from './../../api/transaction-utils';
+import { IEsploraApi } from './../../api/bitcoin/esplora-api.interface';
+import { BlockExtended, PoolTag, TransactionExtended, TransactionMinerInfo } from './../../mempool.interfaces';
 
 class OEBlocks {
   private difficultyEpochEndBlocks: BlockExtended[] = [];

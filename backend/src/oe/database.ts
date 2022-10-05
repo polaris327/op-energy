@@ -1,6 +1,6 @@
-import config from './config';
+import config from '../config';
 import { createPool, PoolConnection, RowDataPacket, OkPacket, ResultSetHeader, FieldPacket} from 'mysql2/promise';
-import logger from './logger';
+import logger from '../logger';
 
 interface PrivatePoolConnection {
   value: PoolConnection;

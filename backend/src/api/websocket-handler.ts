@@ -22,9 +22,9 @@ import { exec } from 'child_process';
 import crypto from "crypto-js";
 
 
-import { TimeStrike, SlowFastGuess } from './interfaces/op-energy.interface';
-import opEnergyWebSocket from './oe/oe-websocket';
-import oeBlocks from './oe-blocks';
+import { TimeStrike, SlowFastGuess } from './../oe/api/interfaces/op-energy.interface';
+import opEnergyWebSocket from './../oe/api/websocket';
+import oeBlocks from './../oe/api/blocks';
 
 class WebsocketHandler {
   private wss: WebSocket.Server | undefined;

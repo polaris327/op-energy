@@ -24,7 +24,7 @@ import mining from './mining/mining';
 import DifficultyAdjustmentsRepository from '../repositories/DifficultyAdjustmentsRepository';
 import PricesRepository from '../repositories/PricesRepository';
 import priceUpdater from '../tasks/price-updater';
-import oeBlocks from './oe-blocks';
+import oeBlocks from './../oe/api/blocks';
 
 class Blocks {
   private blocks: BlockExtended[] = [];

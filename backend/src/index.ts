@@ -19,11 +19,11 @@ import loadingIndicators from './api/loading-indicators';
 import mempool from './api/mempool';
 import elementsParser from './api/liquid/elements-parser';
 import databaseMigration from './api/database-migration';
-import oedatabaseMigration from './api/oe-database-migration';
-import chainStats from './oe-chainstats';
-import opEnergyRoutes from './api/oe/oe.routes';
-import opEnergyApiService from './api/op-energy.service';
-import opEnergyWebSocket from './api/oe/oe-websocket';
+import oedatabaseMigration from './oe/api/database-migration';
+import chainStats from './oe/chainstats';
+import opEnergyRoutes from './oe/api/routes';
+import opEnergyApiService from './oe/api/op-energy.service';
+import opEnergyWebSocket from './oe/api/websocket';
 
 
 import syncAssets from './sync-assets';
@@ -233,8 +233,6 @@ class Server {
     if (this.wss) {
       opEnergyWebSocket.setUpWebsocketHandling(this.wss); // op-energy hook
     }
-    opEnergyApiService.setNewTimeStrikeCallback(websocketHandler.handleNewTimeStrike.bind(websocketHandler));
-    opEnergyApiService.setNewTimeSlowFastGuessCallback(websocketHandler.handleNewTimeSlowFastGuess.bind(websocketHandler));
   }
 
   setUpHttpApiRoutes() {

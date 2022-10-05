@@ -8,9 +8,9 @@ import {
 import { exec } from 'child_process';
 import crypto from "crypto-js";
 
-import { TimeStrike, SlowFastGuess } from '../interfaces/op-energy.interface';
+import { TimeStrike, SlowFastGuess } from './interfaces/op-energy.interface';
 
-import opEnergyApiService from '../op-energy.service';
+import opEnergyApiService from './op-energy.service';
 
 class OpEnergyWebsocket {
 

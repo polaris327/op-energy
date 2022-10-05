@@ -1,5 +1,5 @@
-import { DB } from '../oe-database';
-import logger from '../logger';
+import { DB } from '../database';
+import logger from '../../logger';
 
 class OpEnergyDatabaseMigration {
   private static currentVersion = 6;

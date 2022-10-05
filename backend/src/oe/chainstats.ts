@@ -1,9 +1,9 @@
-import config from './config';
-import bitcoinApi from './api/bitcoin/bitcoin-api-factory';
-import logger from './logger';
-import blocks from './api/blocks';
+import config from '../config';
+import bitcoinApi from '../api/bitcoin/bitcoin-api-factory';
+import logger from '../logger';
+import blocks from '../api/blocks';
 
-import DB  from './database';
+import DB  from '../database';
 
 interface IChainStat {
   blockHeight: number;
@@ -85,7 +85,7 @@ class Chainstats {
       }
     }
   }
-  
+
 }
 
 export default new Chainstats();

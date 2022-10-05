@@ -4,11 +4,14 @@ import config from '../../config';
 import logger from '../../logger';
 import * as express from 'express';
 
-import opEnergyApiService from '../op-energy.service';
+import websocketHandler from '../../api/websocket-handler';
+import opEnergyApiService from './op-energy.service';
 
 class OpEnergyRoutes {
   public setUpHttpApiRoutes(app) {
     logger.info(`setUpHttpApiRoutes`);
+    opEnergyApiService.setNewTimeStrikeCallback(websocketHandler.handleNewTimeStrike.bind(websocketHandler));
+    opEnergyApiService.setNewTimeSlowFastGuessCallback(websocketHandler.handleNewTimeSlowFastGuess.bind(websocketHandler));
     app
       .get(config.MEMPOOL.API_URL_PREFIX + 'strike/block/mediantime', this.$getTimeStrikesByBlock)
       .get(config.MEMPOOL.API_URL_PREFIX + 'strike/mediantime', this.$getTimeStrikes)

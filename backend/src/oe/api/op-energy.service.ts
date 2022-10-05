@@ -1,4 +1,4 @@
-import {DB} from '../oe-database';
+import {DB} from '../database';
 import crypto from "crypto-js";
 
 
