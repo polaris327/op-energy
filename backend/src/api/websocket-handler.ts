@@ -22,7 +22,6 @@ import { exec } from 'child_process';
 import crypto from "crypto-js";
 
 
-import { TimeStrike, SlowFastGuess } from './../oe/api/interfaces/op-energy.interface';
 import opEnergyWebSocket from './../oe/api/websocket';
 import oeBlocks from './../oe/api/blocks';
 
@@ -585,50 +584,6 @@ class WebsocketHandler {
       }
 
       client.send(JSON.stringify(response));
-    });
-  }
-
-  // sends notifications to all the WebSockets' clients about new TimeStrike value
-  handleNewTimeStrike(timeStrike: TimeStrike) {
-    if (!this.wss) {
-      throw new Error('WebSocket.Server is not set');
-    }
-    const value = {
-      'blockHeight': timeStrike.blockHeight,
-      'nLockTime': timeStrike.nLockTime,
-    };
-
-    this.wss.clients.forEach((client) => {
-      if (client.readyState !== WebSocket.OPEN) {
-        return;
-      }
-
-      if (!client['want-time-strikes']) {
-        return;
-      }
-
-      client.send(JSON.stringify({ timeStrike: timeStrike }));
-    });
-  }
-  // sends notifications to all the WebSockets' clients about new SlowFastGuess value
-  handleNewTimeSlowFastGuess(timeSlowFastGuess: SlowFastGuess) {
-    if (!this.wss) {
-      throw new Error('WebSocket.Server is not set');
-    }
-    const ts = {
-      'blockHeight': timeSlowFastGuess.blockHeight,
-      'nLockTime': timeSlowFastGuess.nLockTime,
-    };
-
-    this.wss.clients.forEach((client) => {
-      if (client.readyState !== WebSocket.OPEN) {
-        return;
-      }
-
-      if (client['track-time-strikes'] === undefined || client['track-time-strikes'].filter((element, index, array) => element.blockHeight === ts.blockHeight && element.nLockTime === ts.nLockTime).length < 1) {
-        return;
-      }
-      client.send(JSON.stringify({ timeSlowFastGuess: timeSlowFastGuess }));
     });
   }
 }
