@@ -21,9 +21,7 @@ import elementsParser from './api/liquid/elements-parser';
 import databaseMigration from './api/database-migration';
 import oedatabaseMigration from './oe/api/database-migration';
 import chainStats from './oe/chainstats';
-import opEnergyRoutes from './oe/api/routes';
-import opEnergyApiService from './oe/api/op-energy.service';
-import opEnergyWebSocket from './oe/api/websocket';
+import opEnergyIndex from './oe/index';
 
 
 import syncAssets from './sync-assets';
@@ -176,11 +174,7 @@ class Server {
       // this runs blocks.$generateBlockDatabase();
       indexer.$run();
 
-      try {
-        await chainStats.$updateChainstats();
-      } catch (e) {
-        logger.debug( '$updateChainstats error: ${( e instanceof Error ? e.message : e)}');
-      }
+      await opEnergyIndex.runMainUpdateLoop();
 
       setTimeout(this.runMainUpdateLoop.bind(this), config.MEMPOOL.POLL_RATE_MS);
       this.currentBackendRetryInterval = 5;
@@ -231,13 +225,13 @@ class Server {
     fiatConversion.setProgressChangedCallback(websocketHandler.handleNewConversionRates.bind(websocketHandler));
     loadingIndicators.setProgressChangedCallback(websocketHandler.handleLoadingChanged.bind(websocketHandler));
     if (this.wss) {
-      opEnergyWebSocket.setUpWebsocketHandling(this.wss); // op-energy hook
+      opEnergyIndex.setUpWebsocketHandling(this.wss); // op-energy hook
     }
   }
 
   setUpHttpApiRoutes() {
     bitcoinRoutes.initRoutes(this.app);
-    opEnergyRoutes.setUpHttpApiRoutes(this.app);
+    opEnergyIndex.setUpHttpApiRoutes(this.app);
     if (config.STATISTICS.ENABLED && config.DATABASE.ENABLED) {
       statisticsRoutes.initRoutes(this.app);
     }
