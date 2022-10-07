@@ -5,6 +5,18 @@ export interface TimeStrike {
   creationTime: number;
 };
 
+export interface TimeStrikesHistory {
+  owner: string;
+  blockHeight: number;
+  nLockTime: number;
+  mediantime: number;
+  creationTime: number;
+  archiveTime: number;
+  wrongResults: number;
+  rightResults: number;
+};
+
+
 export interface TimeStrikeId {
   value: number;
 };
@@ -21,6 +33,14 @@ export interface SlowFastGuess {
   creationTime: number;
   userName: string;
   userId: number;
+}
+
+export interface SlowFastResult {
+  guess : "slow" | "fast";
+  result: "wrong" | "right";
+  blockHeight: number;
+  nLockTime: number;
+  creationTime: number;
 }
 
 export interface AccountToken {

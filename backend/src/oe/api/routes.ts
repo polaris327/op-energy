@@ -7,6 +7,7 @@ import * as express from 'express';
 import websocketHandler from '../../api/websocket-handler';
 import opEnergyApiService from './op-energy.service';
 import opEnergyWebsocket from './websocket';
+import opStatisticService from './op-statistics.service';
 
 class OpEnergyRoutes {
   public setUpHttpApiRoutes(app) {
@@ -19,7 +20,10 @@ class OpEnergyRoutes {
       .post(config.MEMPOOL.API_URL_PREFIX + 'strike/mediantime', this.$postTimeStrike)
       .get(config.MEMPOOL.API_URL_PREFIX + 'slowfastguess/mediantime', this.$getSlowFastGuesses)
       .post(config.MEMPOOL.API_URL_PREFIX + 'slowfastguess/mediantime', this.$postSlowFastGuess)
+      .get(config.MEMPOOL.API_URL_PREFIX + 'strikeshistory/mediantime', this.$getTimeStrikesHistory)
+      .get(config.MEMPOOL.API_URL_PREFIX + 'slowfastresults/mediantime', this.$getSlowFastResults)
       .post(config.MEMPOOL.API_URL_PREFIX + 'user/displayname', this.$postUserDisplayName)
+      .get(config.MEMPOOL.API_URL_PREFIX + 'statistics/:blockheight/:span', this.$getBlockSpanStatistics)
    ;
   }
   private async $getTimeStrikes(req: Request, res: Response) {
@@ -40,6 +44,7 @@ class OpEnergyRoutes {
     }
     logger.info( `${UUID}: PROFILE: end: $getTimeStrikes`);
   }
+
   private async $postTimeStrike(req: Request, res: Response) {
     const UUID = await opEnergyApiService.$generateRandomHash();
     try {
@@ -62,6 +67,7 @@ class OpEnergyRoutes {
     }
     logger.info( `${UUID}: PROFILE: end: $postTimeStrike`);
   }
+
   private async $getSlowFastGuesses(req: Request, res: Response) {
     const UUID = await opEnergyApiService.$generateRandomHash();
     try {
@@ -84,6 +90,7 @@ class OpEnergyRoutes {
     }
     logger.info( `${UUID}: PROFILE: end: $getSlowFastGuesses`);
   }
+
   private async $postSlowFastGuess(req: Request, res: Response) {
     const UUID = await opEnergyApiService.$generateRandomHash();
     try {
@@ -110,6 +117,7 @@ class OpEnergyRoutes {
     }
     logger.info( `${UUID}: PROFILE: end: $postSlowFastGuess`);
   }
+
   private async $postUserDisplayName(req: Request, res: Response) {
     const UUID = await opEnergyApiService.$generateRandomHash();
     try {
@@ -148,6 +156,56 @@ class OpEnergyRoutes {
       res.status(404).send(`${UUID}: ${e instanceof Error? e.message : e}`);
     }
     logger.info( `${UUID}: PROFILE: end: $getTimeStrikesByBlock`);
+  }
+
+  private async $getSlowFastResults(req: Request, res: Response) {
+    const UUID = await opEnergyApiService.$generateRandomHash();
+    try {
+      logger.info( `${UUID}: PROFILE: start: $getSlowFastResults`);
+      if( typeof req.query.account_token !== "string") {
+        throw new Error( 'ERROR: req.query.account_token is not a string');
+      }
+      if( typeof req.query.nlocktime !== "string" || req.query.nlocktime.length < 1) {
+        throw new Error( 'ERROR: req.query.nlocktime is missing');
+      }
+      if( typeof req.query.block_height !== "string" || req.query.block_height.length < 1) {
+        throw new Error( 'ERROR: req.query.block_height is missing');
+      }
+
+      const result = await opEnergyApiService.$getSlowFastResult( UUID, opEnergyApiService.verifyAccountToken( req.query.account_token), opEnergyApiService.verifyBlockHeight( Number(req.query.block_height)), opEnergyApiService.verifyNLockTime( Number( req.query.nlocktime)));
+      res.json( result);
+    } catch(e) {
+      logger.err( `ERROR: ${UUID}: OpEnergyApiService.$getSlowFastResults: ${e instanceof Error ? e.message: e}`);
+      res.status(404).send(`${UUID}: ${e instanceof Error? e.message : e}`);
+    }
+    logger.info( `${UUID}: PROFILE: end: $getSlowFastResults`);
+  }
+
+  private async $getTimeStrikesHistory(req: Request, res: Response) {
+    const UUID = await opEnergyApiService.$generateRandomHash();
+    try {
+      logger.info( `${UUID}: PROFILE: start: $getTimeStrikesHistory`);
+      const result = await opEnergyApiService.$getTimeStrikesHistory( UUID);
+      res.json( result);
+    } catch(e) {
+      logger.err( `ERROR: ${UUID}: OpEnergyApiService.$getTimeStrikesHistory: ${e instanceof Error ? e.message: e}`);
+      res.status(404).send(`${UUID}: ${e instanceof Error? e.message : e}`);
+    }
+    logger.info( `${UUID}: PROFILE: end: $getTimeStrikesHistory`);
+  }
+
+  private async $getBlockSpanStatistics(req: Request, res: Response) {
+    const UUID = await opEnergyApiService.$generateRandomHash();
+    try {
+      logger.info( `${UUID}: PROFILE: start: $getBlockSpanStatistics`);
+      const { blockheight, span } = req.params;
+      const statistics = await opStatisticService.calculateStatistics(opEnergyApiService.verifyBlockHeight(parseInt(blockheight)), parseInt(span));
+      res.json(statistics);
+    } catch(e) {
+      logger.err( `ERROR: ${UUID}: OpEnergyApiService.$getBlockSpanStatistics: ${e instanceof Error ? e.message: e}`);
+      res.status(404).send(`${UUID}: ${e instanceof Error? e.message : e}`);
+    }
+    logger.info( `${UUID}: PROFILE: end: $getBlockSpanStatistics`);
   }
 };
 

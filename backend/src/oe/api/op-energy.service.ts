@@ -2,7 +2,7 @@ import {DB} from '../database';
 import crypto from "crypto-js";
 
 
-import { SlowFastGuessValue, BlockHeight, NLockTime, UserId, TimeStrikeDB, AlphaNumString, TimeStrikeId, AccountToken, TimeStrike, SlowFastGuess } from './interfaces/op-energy.interface';
+import { SlowFastGuessValue, BlockHeight, NLockTime, UserId, TimeStrikeDB, AlphaNumString, TimeStrikeId, AccountToken, TimeStrike, SlowFastGuess, TimeStrikesHistory, SlowFastResult } from './interfaces/op-energy.interface';
 
 export class OpEnergyApiService {
   // those arrays contains callbacks, which will be called when appropriate entity will be created
@@ -312,6 +312,58 @@ export class OpEnergyApiService {
       throw new Error( 'generateRandomHash: generated hash is not alpha-number');
     }
     return newHash;
+  }
+
+  public async $getTimeStrikesHistory( UUID: string): Promise<TimeStrikesHistory[]> {
+    const query = 'SELECT timestrikeshistory.id,user_id,users.display_name,block_height,nlocktime,mediantime,UNIX_TIMESTAMP(timestrikeshistory.creation_time) as creation_time,UNIX_TIMESTAMP(archivetime) as archivetime\
+                   FROM timestrikeshistory INNER JOIN users ON timestrikeshistory.user_id = users.id';
+    try {
+      return await DB.$with_accountPool( UUID, async (connection) => {
+        const [result] = await DB.$accountPool_query<any>( UUID, connection, query, [ ]);
+        return result.map( (record) => {
+          return ({
+            'owner': record.display_name,
+            'blockHeight': record.block_height,
+            'nLockTime': record.nlocktime,
+            'mediantime': record.mediantime,
+            'creationTime': record.creation_time,
+            'archiveTime': record.archivetime,
+            'wrongResults': record.wrongResults,
+            'rightResults': record.rightResults,
+          } as TimeStrikesHistory)
+        });
+      });
+    } catch(e) {
+      throw new Error(`OpEnergyApiService.$getTimeStrikesHistory: failed to query DB: ${e instanceof Error? e.message : e}`);
+    }
+  }
+
+  public async $getSlowFastResult( UUID: string, accountToken: AccountToken, blockHeight: BlockHeight, nlockTime: NLockTime): Promise<SlowFastResult | null> {
+    const userId = await this.$getUserIdByAccountToken( UUID, accountToken);
+    const query = 'SELECT slowfastresults.id,timestrikeshistory.block_height,timestrikeshistory.nlocktime,guess,result,slowfastresults.user_id,users.display_name,UNIX_TIMESTAMP(slowfastresults.creation_time) as creation_time\
+                   FROM slowfastresults\
+                   INNER JOIN timestrikeshistory ON slowfastresults.timestrikehistory_id = timestrikeshistory.id\
+                   INNER JOIN users ON slowfastresults.user_id = users.id\
+                   WHERE slowfastresults.user_id = ? AND timestrikeshistory.block_height = ? AND timestrikeshistory.nlocktime = ?';
+    try {
+      return await DB.$with_accountPool( UUID, async (connection) => {
+        const [results] = await DB.$accountPool_query<any>( UUID, connection, query, [ userId.userId, blockHeight.value, nlockTime.value ]);
+        if (results.length < 1) {
+          return null;
+        } else {
+          let [record] = results;
+          return ({
+            'guess': record.guess == 0? "slow" : "fast",
+            'result': record.result == 0? "wrong" : "right",
+            'blockHeight': record.block_height,
+            'nLockTime': record.nlocktime,
+            'creationTime': record.creation_time,
+          } as SlowFastResult);
+        }
+      });
+    } catch(e) {
+      throw new Error(`OpEnergyApiService.$getSlowFastResult: failed to query DB: ${e instanceof Error? e.message : e}`);
+    }
   }
 
 }

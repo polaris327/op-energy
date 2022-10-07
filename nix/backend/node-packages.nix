@@ -355,6 +355,15 @@ let
         sha512 = "I994pGt9cL5s5OA6mkv1e8IuYcsKN2ORXnWbkqAXLNGvEnOHBhKBSvCjFl7YC2uVoJnfr/iwq7JMrq575SYO5w==";
       };
     };
+    "bluebird-3.7.2" = {
+      name = "bluebird";
+      packageName = "bluebird";
+      version = "3.7.2";
+      src = fetchurl {
+        url = "https://registry.npmjs.org/bluebird/-/bluebird-3.7.2.tgz";
+        sha512 = "XpNj6GDQzdfW+r2Wnn7xiSAd7TM3jzkxGXBGTtWKuSXv1xUV+azxAm8jdWZN06QTQk+2N2XB9jRDkvbmQmcRtg==";
+      };
+    };
     "body-parser-1.20.0" = {
       name = "body-parser";
       packageName = "body-parser";
@@ -1536,6 +1545,7 @@ let
       sources."bech32-2.0.0"
       sources."bip174-2.0.1"
       sources."bitcoinjs-lib-6.0.2"
+      sources."bluebird-3.7.2"
       sources."body-parser-1.20.0"
       sources."browserslist-4.21.1"
       sources."bs58-4.0.1"
