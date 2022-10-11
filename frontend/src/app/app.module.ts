@@ -12,6 +12,7 @@ import { AudioService } from './services/audio.service';
 import { SeoService } from './services/seo.service';
 import { OpenGraphService } from './services/opengraph.service';
 import { SharedModule } from './shared/shared.module';
+import { OpEnergyModule } from './oe/oe.module';
 import { StorageService } from './services/storage.service';
 import { HttpCacheInterceptor } from './services/http-cache.interceptor';
 import { LanguageService } from './services/language.service';
@@ -31,6 +32,7 @@ import { AppPreloadingStrategy } from './app.preloading-strategy';
     HttpClientModule,
     BrowserAnimationsModule,
     SharedModule,
+    OpEnergyModule,
   ],
   providers: [
     ElectrsApiService,
