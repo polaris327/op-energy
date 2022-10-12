@@ -6,7 +6,6 @@ import { StateService } from '../../services/state.service';
 
 import { WebsocketResponse, IBackendInfo } from '../../interfaces/websocket.interface';
 import { OpEnergyWebsocketResponse } from '../interfaces/websocket.interface';
-import { WebsocketService } from '../../services/websocket.service';
 
 
 @Injectable({
@@ -27,7 +26,6 @@ export class OpEnergyApiService {
   constructor(
     private httpClient: HttpClient,
     private stateService: StateService,
-    private websocketService: WebsocketService,
   ) {
     this.apiBaseUrl = ''; // use relative URL by default
     if (!stateService.isBrowser) { // except when inside AU SSR process
@@ -48,9 +46,6 @@ export class OpEnergyApiService {
       this.accountTokenState = 'checked';
       this.$accountToken.next( response.checkedAccountToken);
       this.$showAccountURLWarning.next( false);
-    }
-    if( response.declinedAccountSecret) {
-      this.websocketService.want(['generatedaccounttoken']);
     }
     if( response.generatedAccountSecret  && response.generatedAccountToken) {
       this.accountTokenState = 'generated';

@@ -227,6 +227,9 @@ export class WebsocketService {
   handleResponse(response: OpEnergyWebsocketResponse) {
     // op-energy hook
     this.opEnergyApiService.handleWebsocketResponse( response);
+    if( response.declinedAccountSecret) {
+      this.want(['generatedaccounttoken']);
+    }
 
     if (response.blocks && response.blocks.length) {
       const blocks = response.blocks;
