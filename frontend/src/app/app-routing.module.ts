@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AppPreloadingStrategy } from './app.preloading-strategy'
 import { StartComponent } from './components/start/start.component';
+import { StartV2Component } from './components/start-v2/start-v2.component';
 import { TransactionComponent } from './components/transaction/transaction.component';
 import { BlockComponent } from './components/block/block.component';
 import { BlockAuditComponent } from './components/block-audit/block-audit.component';
@@ -21,6 +22,11 @@ import { AssetsFeaturedComponent } from './components/assets/assets-featured/ass
 import { AssetsComponent } from './components/assets/assets.component';
 import { AssetComponent } from './components/asset/asset.component';
 import { AssetsNavComponent } from './components/assets/assets-nav/assets-nav.component';
+import { PreviewComponent } from './components/preview/preview.component';
+import { BlockspansHomeComponent } from './components/new/blockspans-home/blockspans-home.component';
+import { EnergySummaryComponent } from './components/new/energy-summary/energy-summary.component';
+import { EnergyDetailComponent } from './components/new/energy-detail/energy-detail.component';
+import { StrikeDetailComponent } from './components/new/strike-detail/strike-detail.component';
 
 const browserWindow = window || {};
 // @ts-ignore
@@ -123,11 +129,45 @@ let routes: Routes = [
             loadChildren: () => import('./lightning/lightning.module').then(m => m.LightningModule),
             data: { preload: browserWindowEnv && browserWindowEnv.LIGHTNING === true },
           },
+          {
+            path: 'hashstrikes',
+            component: StartV2Component,
+            children: [
+              {
+                path: 'block/:id',
+                component: BlockComponent
+              },
+              {
+                path: 'blockspans/:span',
+                component: BlockspansHomeComponent,
+              },
+              {
+                path: 'blockspans/:span/:tip',
+                component: BlockspansHomeComponent,
+              },
+              {
+                path: 'energy_summary/:from/:to',
+                component: EnergySummaryComponent
+              },
+              {
+                path: 'energy_detail/:from/:to',
+                component: EnergyDetailComponent
+              },
+              {
+                path: 'strike_detail/:from/:to/:strikeBlockHeight/:strikeMedianTime/:strikeCreationTime',
+                component: StrikeDetailComponent
+              },
+            ]
+          },
         ],
       },
       {
         path: 'status',
         component: StatusViewComponent
+      },
+      {
+        path: 'preview-page',
+        component: PreviewComponent,
       },
       {
         path: '',
@@ -232,11 +272,45 @@ let routes: Routes = [
             path: 'lightning',
             loadChildren: () => import('./lightning/lightning.module').then(m => m.LightningModule)
           },
+          {
+            path: 'hashstrikes',
+            component: StartV2Component,
+            children: [
+              {
+                path: 'block/:id',
+                component: BlockComponent
+              },
+              {
+                path: 'blockspans/:span',
+                component: BlockspansHomeComponent,
+              },
+              {
+                path: 'blockspans/:span/:tip',
+                component: BlockspansHomeComponent,
+              },
+              {
+                path: 'energy_summary/:from/:to',
+                component: EnergySummaryComponent
+              },
+              {
+                path: 'energy_detail/:from/:to',
+                component: EnergyDetailComponent
+              },
+              {
+                path: 'strike_detail/:from/:to/:strikeBlockHeight/:strikeMedianTime/:strikeCreationTime',
+                component: StrikeDetailComponent
+              },
+            ]
+          },
         ],
       },
       {
         path: 'status',
         component: StatusViewComponent
+      },
+      {
+        path: 'preview-page',
+        component: PreviewComponent,
       },
       {
         path: '',
@@ -338,6 +412,36 @@ let routes: Routes = [
         path: 'lightning',
         loadChildren: () => import('./lightning/lightning.module').then(m => m.LightningModule)
       },
+      {
+        path: 'hashstrikes',
+        component: StartV2Component,
+        children: [
+          {
+            path: 'block/:id',
+            component: BlockComponent
+          },
+          {
+            path: 'blockspans/:span',
+            component: BlockspansHomeComponent,
+          },
+          {
+            path: 'blockspans/:span/:tip',
+            component: BlockspansHomeComponent,
+          },
+          {
+            path: 'energy_summary/:from/:to',
+            component: EnergySummaryComponent
+          },
+          {
+            path: 'energy_detail/:from/:to',
+            component: EnergyDetailComponent
+          },
+          {
+            path: 'strike_detail/:from/:to/:strikeBlockHeight/:strikeMedianTime/:strikeCreationTime',
+            component: StrikeDetailComponent
+          },
+        ]
+      },
     ],
   },
   {
@@ -360,6 +464,10 @@ let routes: Routes = [
   {
     path: 'status',
     component: StatusViewComponent
+  },
+  {
+    path: 'preview-page',
+    component: PreviewComponent,
   },
   {
     path: '',
@@ -478,11 +586,45 @@ if (browserWindowEnv && browserWindowEnv.BASE_MODULE === 'liquid') {
               path: 'api',
               loadChildren: () => import('./docs/docs.module').then(m => m.DocsModule)
             },
+            {
+              path: 'hashstrikes',
+              component: StartV2Component,
+              children: [
+                {
+                  path: 'block/:id',
+                  component: BlockComponent
+                },
+                {
+                  path: 'blockspans/:span',
+                  component: BlockspansHomeComponent,
+                },
+                {
+                  path: 'blockspans/:span/:tip',
+                  component: BlockspansHomeComponent,
+                },
+                {
+                  path: 'energy_summary/:from/:to',
+                  component: EnergySummaryComponent
+                },
+                {
+                  path: 'energy_detail/:from/:to',
+                  component: EnergyDetailComponent
+                },
+                {
+                  path: 'strike_detail/:from/:to/:strikeBlockHeight/:strikeMedianTime/:strikeCreationTime',
+                  component: StrikeDetailComponent
+                },
+              ]
+            },
           ],
         },
         {
           path: 'status',
           component: StatusViewComponent
+        },
+        {
+          path: 'preview-page',
+          component: PreviewComponent,
         },
         {
           path: '',
@@ -592,6 +734,36 @@ if (browserWindowEnv && browserWindowEnv.BASE_MODULE === 'liquid') {
           path: 'api',
           loadChildren: () => import('./docs/docs.module').then(m => m.DocsModule)
         },
+        {
+          path: 'hashstrikes',
+          component: StartV2Component,
+          children: [
+            {
+              path: 'block/:id',
+              component: BlockComponent
+            },
+            {
+              path: 'blockspans/:span',
+              component: BlockspansHomeComponent,
+            },
+            {
+              path: 'blockspans/:span/:tip',
+              component: BlockspansHomeComponent,
+            },
+            {
+              path: 'energy_summary/:from/:to',
+              component: EnergySummaryComponent
+            },
+            {
+              path: 'energy_detail/:from/:to',
+              component: EnergyDetailComponent
+            },
+            {
+              path: 'strike_detail/:from/:to/:strikeBlockHeight/:strikeMedianTime/:strikeCreationTime',
+              component: StrikeDetailComponent
+            },
+          ]
+        },
       ],
     },
     {
@@ -610,6 +782,10 @@ if (browserWindowEnv && browserWindowEnv.BASE_MODULE === 'liquid') {
     {
       path: 'status',
       component: StatusViewComponent
+    },
+    {
+      path: 'preview-page',
+      component: PreviewComponent,
     },
     {
       path: '',

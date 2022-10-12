@@ -1,0 +1,89 @@
+.observed-blockspan-detail {
+  margin-top: 100px;
+
+  &--top {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 350px;
+
+    .blockspan {
+      min-width: 250px;
+      max-width: 400px;
+
+      > div {
+        height: 200px;
+
+        .show-strikes {
+          cursor: pointer;
+          text-align: center;
+          text-decoration: underline;
+          color: #00e7ff;
+          margin-top: 20px;
+        }
+      }
+
+      .app-strike {
+        margin: 80px 0;
+      }
+    }
+
+    .energy-container {
+      display: flex;
+      align-items: flex-end;
+      min-width: 250px;
+      height: 100%;
+    }
+
+    .blockspan-table {
+      background-color: red;
+      min-width: 250px;
+      height: 200px;
+
+      > div:first-child {
+        border: 1px solid black;
+        margin: auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        color: black;
+        font-weight: 700;
+        height: 100%;
+        padding: 30px;
+      }
+
+      .footer {
+        background-color: red;
+        color: black;
+        text-align: center;
+        font-weight: bold;
+        border: 1px solid black;
+      }
+    }
+
+    .energy-statistics {
+      background-color: red;
+
+      .energy-font {
+        color: yellow;
+      }
+
+      .border-2 {
+        border-width:2px !important;
+      }
+    }
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      align-items: center;
+      gap: 50px;
+
+      .blockspan {
+        overflow: auto !important;
+      }
+
+      .blockspan-table {
+      }
+    }
+  }
+}

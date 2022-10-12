@@ -75,6 +75,7 @@ export class StateService {
   blockVSize: number;
   env: Env;
   latestBlockHeight = -1;
+  $accountToken: ReplaySubject<string> = new ReplaySubject(1); // this value is an API token
 
   networkChanged$ = new ReplaySubject<string>(1);
   lightningChanged$ = new ReplaySubject<boolean>(1);

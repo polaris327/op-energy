@@ -1,0 +1,15 @@
+<div class="observed-blockspan-detail">
+  <div class="observed-blockspan-detail--top" *ngIf="fromBlock && toBlock">
+    <div class="blockspan">
+      <div style="margin-bottom: 110px;">
+        <app-energy [fromBlock]="fromBlock" [toBlock]="toBlock"></app-energy>
+        <div class="show-strikes" (click)="toggleStrikes()">{{ showStrikes ? 'Hide' : 'Show'}} Strikes</div>
+      </div>
+      <ng-container *ngIf="showStrikes">
+        <div class="app-strike" *ngFor="let strike of timeStrikes">
+          <app-strike [fromBlock]="fromBlock" [toBlock]="toBlock" [strike]="strike"></app-strike>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>

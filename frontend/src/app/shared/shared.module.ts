@@ -6,6 +6,8 @@ import { faFilter, faAngleDown, faAngleUp, faAngleRight, faAngleLeft, faBolt, fa
   faLink, faList, faSearch, faCaretUp, faCaretDown, faTachometerAlt, faThList, faTint, faTv, faAngleDoubleDown, faSortUp, faAngleDoubleUp, faChevronDown,
   faFileAlt, faRedoAlt, faArrowAltCircleRight, faExternalLinkAlt, faBook, faListUl, faDownload, faQrcode, faArrowRightArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { AngularSvgIconModule } from 'angular-svg-icon';
+import { ToastrModule } from 'ngx-toastr';
 import { MasterPageComponent } from '../components/master-page/master-page.component';
 import { PreviewTitleComponent } from '../components/master-page-preview/preview-title.component';
 import { BisqMasterPageComponent } from '../components/bisq-master-page/bisq-master-page.component';
@@ -32,7 +34,7 @@ import { FiatComponent } from '../fiat/fiat.component';
 import { NgbNavModule, NgbTooltipModule, NgbButtonsModule, NgbPaginationModule, NgbDropdownModule, NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
 import { TxFeaturesComponent } from '../components/tx-features/tx-features.component';
 import { TxFeeRatingComponent } from '../components/tx-fee-rating/tx-fee-rating.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LanguageSelectorComponent } from '../components/language-selector/language-selector.component';
 import { ColoredPriceDirective } from './directives/colored-price.directive';
 import { NoSanitizePipe } from './pipes/no-sanitize.pipe';
@@ -81,6 +83,19 @@ import { SearchResultsComponent } from '../components/search-form/search-results
 import { TimestampComponent } from './components/timestamp/timestamp.component';
 import { ToggleComponent } from './components/toggle/toggle.component';
 import { GeolocationComponent } from '../shared/components/geolocation/geolocation.component';
+import { PreviewComponent } from '../components/preview/preview.component';
+import { StartV2Component } from '../components/start-v2/start-v2.component';
+import { BlockspanNavigatorComponent } from '../components/new/blockspan-navigator/blockspan-navigator.component';
+import { BlockspansHomeComponent } from '../components/new/blockspans-home/blockspans-home.component';
+import { BaseBoxComponent } from '../components/new/base-box/base-box.component';
+import { BaseBoxV2Component } from '../components/new/base-box-v2/base-box-v2.component';
+import { BlockspanComponent } from '../components/new/blockspan/blockspan.component';
+import { ChainworkBoxComponent } from '../components/new/chainwork-box/chainwork-box.component';
+import { EnergyComponent } from '../components/new/energy/energy.component';
+import { StrikeComponent } from '../components/new/strike/strike.component';
+import { EnergySummaryComponent } from '../components/new/energy-summary/energy-summary.component';
+import { EnergyDetailComponent } from '../components/new/energy-detail/energy-detail.component';
+import { StrikeDetailComponent } from '../components/new/strike-detail/strike-detail.component';
 
 @NgModule({
   declarations: [
@@ -156,10 +171,24 @@ import { GeolocationComponent } from '../shared/components/geolocation/geolocati
     TimestampComponent,
     ToggleComponent,
     GeolocationComponent,
+    PreviewComponent,
+    StartV2Component,
+    BlockspanNavigatorComponent,
+    BlockspansHomeComponent,
+    BaseBoxComponent,
+    BaseBoxV2Component,
+    BlockspanComponent,
+    ChainworkBoxComponent,
+    EnergyComponent,
+    StrikeComponent,
+    EnergySummaryComponent,
+    EnergyDetailComponent,
+    StrikeDetailComponent,
   ],
   imports: [
     CommonModule,
     RouterModule,
+    FormsModule,
     ReactiveFormsModule,
     NgbNavModule,
     NgbTooltipModule,
@@ -170,6 +199,8 @@ import { GeolocationComponent } from '../shared/components/geolocation/geolocati
     NgbCollapseModule,
     InfiniteScrollModule,
     FontAwesomeModule,
+    AngularSvgIconModule.forRoot(),
+    ToastrModule.forRoot(),
   ],
   providers: [
     VbytesPipe,
@@ -181,6 +212,7 @@ import { GeolocationComponent } from '../shared/components/geolocation/geolocati
   ],
   exports: [
     RouterModule,
+    FormsModule,
     ReactiveFormsModule,
     NgbNavModule,
     NgbTooltipModule,
@@ -190,6 +222,8 @@ import { GeolocationComponent } from '../shared/components/geolocation/geolocati
     NgbDropdownModule,
     NgbCollapseModule,
     InfiniteScrollModule,
+    AngularSvgIconModule,
+    ToastrModule,
     FontAwesomeModule,
     TimeSinceComponent,
     TimeUntilComponent,
@@ -259,6 +293,19 @@ import { GeolocationComponent } from '../shared/components/geolocation/geolocati
     ToggleComponent,
     GeolocationComponent,
     PreviewTitleComponent,
+    PreviewComponent,
+    StartV2Component,
+    BlockspanNavigatorComponent,
+    BlockspansHomeComponent,
+    BaseBoxComponent,
+    BaseBoxV2Component,
+    BlockspanComponent,
+    ChainworkBoxComponent,
+    EnergyComponent,
+    StrikeComponent,
+    EnergySummaryComponent,
+    EnergyDetailComponent,
+    StrikeDetailComponent,
   ]
 })
 export class SharedModule {

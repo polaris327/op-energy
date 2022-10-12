@@ -1,0 +1,10 @@
+.energy-container {
+  display: flex;
+  align-items: flex-end;
+  min-width: 250px;
+  height: 100%;
+
+  app-blockspan {
+    height: 50% !important;
+  }
+}
