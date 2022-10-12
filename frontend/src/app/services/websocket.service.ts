@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 import { WebsocketResponse, IBackendInfo } from '../interfaces/websocket.interface';
 import { StateService } from './state.service';
+import { OpEnergyWebsocketResponse } from '../oe/interfaces/websocket.interface';
+import { OpEnergyApiService } from '../oe/services/op-energy.service';
 import { Transaction } from '../interfaces/electrs.interface';
 import { Subscription } from 'rxjs';
 import { ApiService } from './api.service';
@@ -36,6 +38,7 @@ export class WebsocketService {
   private network = '';
 
   constructor(
+    private opEnergyApiService: OpEnergyApiService,
     private stateService: StateService,
     private apiService: ApiService,
     private transferState: TransferState,
@@ -221,7 +224,10 @@ export class WebsocketService {
     }, OFFLINE_PING_CHECK_AFTER_MS);
   }
 
-  handleResponse(response: WebsocketResponse) {
+  handleResponse(response: OpEnergyWebsocketResponse) {
+    // op-energy hook
+    this.opEnergyApiService.handleWebsocketResponse( response);
+
     if (response.blocks && response.blocks.length) {
       const blocks = response.blocks;
       blocks.forEach((block: BlockExtended) => {
