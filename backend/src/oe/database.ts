@@ -19,7 +19,8 @@ export class DB {
   private static async $accountPool_getConnection(UUID: string): Promise<PrivatePoolConnection> {
     logger.info( `${UUID} PROFILE: start: accountPool.getConnection`);
     var connection = await private_DB.accountPool.getConnection();
-    logger.info( `${UUID} PROFILE: end: accountPool.getConnection`);
+    private_DB.connections_count++;
+    logger.info( `${UUID} PROFILE: end: accountPool.getConnection, current connections count ${private_DB.connections_count}`);
     return ({ value: connection} as PrivatePoolConnection);
   }
 
@@ -33,7 +34,8 @@ export class DB {
   private static accountPool_release(UUID: string, connection: PrivatePoolConnection) {
     logger.info( `${UUID} PROFILE: start: accountPool.release`);
     connection.value.release();
-    logger.info( `${UUID} PROFILE: end: accountPool.release`);
+    private_DB.connections_count--;
+    logger.info( `${UUID} PROFILE: end: accountPool.release, current connections count ${private_DB.connections_count}`);
   }
   public static async $with_accountPool<T>(UUID: string, fn: ((conn: PrivatePoolConnection) => Promise<T>)): Promise<T> {
     const connection = await DB.$accountPool_getConnection( UUID);
@@ -53,10 +55,11 @@ export class DB {
 }
 
 class private_DB {
+  static connections_count: number = 0; // for profiling purposes
   static accountPool = createPool({
     host: config.DATABASE.HOST,
     port: config.DATABASE.PORT,
-    database: config.DATABASE.DATABASE,
+    database: config.DATABASE.ACCOUNT_DATABASE,
     user: config.DATABASE.USERNAME,
     password: config.DATABASE.PASSWORD,
     connectionLimit: 10,
