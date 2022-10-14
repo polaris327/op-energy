@@ -10,11 +10,17 @@ import { NgbNavModule, NgbTooltipModule, NgbButtonsModule, NgbPaginationModule, 
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { OpEnergyApiService } from './services/op-energy.service';
+import { OeMasterPageComponent } from './components/oe-master-page/oe-master-page.component';
+import { SharedModule } from '../shared/shared.module';
+
 
 @NgModule({
   declarations: [
+    OeMasterPageComponent,
   ],
   imports: [
+    CommonModule,
+    SharedModule,
   ],
   providers: [
     OpEnergyApiService,
