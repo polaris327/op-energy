@@ -1,13 +1,11 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { DOCUMENT } from '@angular/common';
-import { WebsocketService } from 'src/app/services/websocket.service';
-
+import { Component, Inject, OnInit } from '@angular/core';
 import { Env, StateService } from '../../../services/state.service';
+import { WebsocketService } from '../../../services/websocket.service';
 import { OpEnergyApiService } from '../../services/op-energy.service';
 import { Observable, merge, of } from 'rxjs';
 import { LanguageService } from 'src/app/services/language.service';
 import { EnterpriseService } from 'src/app/services/enterprise.service';
+import { DOCUMENT } from '@angular/common';
 
 @Component({
   selector: 'app-oe-master-page',
@@ -25,12 +23,12 @@ export class OeMasterPageComponent implements OnInit {
   subdomain = '';
 
   constructor(
-    public stateService: StateService,
     public opEnergyApiService: OpEnergyApiService,
-    private languageService: LanguageService,
-    private enterpriseService: EnterpriseService,
     private websocketService: WebsocketService,
     @Inject(DOCUMENT) public document: Document,
+    public stateService: StateService,
+    private languageService: LanguageService,
+    private enterpriseService: EnterpriseService,
   ) { }
 
   ngOnInit() {
@@ -46,7 +44,6 @@ export class OeMasterPageComponent implements OnInit {
       this.websocketService.want(['generatedaccounttoken']);
     }
   }
-
   collapse(): void {
     this.navCollapsed = !this.navCollapsed;
   }
@@ -58,5 +55,4 @@ export class OeMasterPageComponent implements OnInit {
     this.opEnergyApiService.$accountSecret.next(''); // clean secret value
     this.opEnergyApiService.$showAccountURLWarning.next( false);
   }
-
 }

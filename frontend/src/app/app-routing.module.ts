@@ -193,6 +193,42 @@ let routes: Routes = [
         loadChildren: () => import('./graphs/graphs.module').then(m => m.GraphsModule)
       },
       {
+        path: 'hashstrikes',
+        component: OeMasterPageComponent,
+        children: [
+          {
+            path: '',
+            component: StartV2Component,
+            children: [
+              {
+                path: 'block/:id',
+                component: BlockComponent
+              },
+              {
+                path: 'blockspans/:span',
+                component: BlockspansHomeComponent,
+              },
+              {
+                path: 'blockspans/:span/:tip',
+                component: BlockspansHomeComponent,
+              },
+              {
+                path: 'energy_summary/:from/:to',
+                component: EnergySummaryComponent
+              },
+              {
+                path: 'energy_detail/:from/:to',
+                component: EnergyDetailComponent
+              },
+              {
+                path: 'strike_detail/:from/:to/:strikeBlockHeight/:strikeMedianTime/:strikeCreationTime',
+                component: StrikeDetailComponent
+              },
+            ]
+          },
+        ]
+      },
+      {
         path: '',
         component: MasterPageComponent,
         children: [
@@ -271,36 +307,6 @@ let routes: Routes = [
           {
             path: 'lightning',
             loadChildren: () => import('./lightning/lightning.module').then(m => m.LightningModule)
-          },
-          {
-            path: 'hashstrikes',
-            component: StartV2Component,
-            children: [
-              {
-                path: 'block/:id',
-                component: BlockComponent
-              },
-              {
-                path: 'blockspans/:span',
-                component: BlockspansHomeComponent,
-              },
-              {
-                path: 'blockspans/:span/:tip',
-                component: BlockspansHomeComponent,
-              },
-              {
-                path: 'energy_summary/:from/:to',
-                component: EnergySummaryComponent
-              },
-              {
-                path: 'energy_detail/:from/:to',
-                component: EnergyDetailComponent
-              },
-              {
-                path: 'strike_detail/:from/:to/:strikeBlockHeight/:strikeMedianTime/:strikeCreationTime',
-                component: StrikeDetailComponent
-              },
-            ]
           },
         ],
       },
