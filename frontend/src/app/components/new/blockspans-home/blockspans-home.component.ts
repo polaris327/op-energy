@@ -9,8 +9,8 @@ import { specialBlocks } from 'src/app/app.constants';
 import { ElectrsApiService } from 'src/app/services/electrs-api.service';
 import { switchMap, skip, map } from 'rxjs/operators';
 import { RelativeUrlPipe } from 'src/app/shared/pipes/relative-url/relative-url.pipe';
-import { OpEnergyApiService } from 'src/app/services/op-energy.service';
-import { TimeStrike } from 'src/app/interfaces/op-energy.interface';
+import { OpEnergyApiService } from 'src/app/oe/services/op-energy.service';
+import { TimeStrike } from 'src/app/oe/interfaces/op-energy.interface';
 
 interface PastBlock extends Block {
   mediantimeDiff: number;
@@ -45,7 +45,7 @@ export class BlockspansHomeComponent implements OnInit, OnDestroy {
   blocksFilled = false;
   transition = '1s';
 
-  span = 1;  
+  span = 1;
 
   gradientColors = {
     '': ['#9339f4', '#105fb0'],
@@ -103,11 +103,11 @@ export class BlockspansHomeComponent implements OnInit, OnDestroy {
 
     for (let i = 0; i < this.indexArray.length; i++) {
       this.blockStyles.push(this.getStyleForBlock(i));
-    }            
+    }
 
     this.subscription = this.route.paramMap.pipe(
       switchMap((params: ParamMap) =>
-        params.get('tip') 
+        params.get('tip')
         ? of({...params})
         : this.stateService.blocks$.pipe(
             skip(11),
@@ -122,7 +122,7 @@ export class BlockspansHomeComponent implements OnInit, OnDestroy {
       this.blockspanChange({
         tipBlock: +tip,
         span: +span
-      });  
+      });
     });
   }
 
