@@ -21,6 +21,7 @@ import { AssetsFeaturedComponent } from './components/assets/assets-featured/ass
 import { AssetsComponent } from './components/assets/assets.component';
 import { AssetComponent } from './components/asset/asset.component';
 import { AssetsNavComponent } from './components/assets/assets-nav/assets-nav.component';
+import { OeMasterPageComponent } from './oe/components/oe-master-page/oe-master-page.component';
 import { PreviewComponent } from './oe/components/preview/preview.component';
 import { BlockspansHomeComponent } from './oe/components/blockspans-home/blockspans-home.component';
 import { EnergySummaryComponent } from './oe/components/energy-summary/energy-summary.component';
@@ -40,6 +41,36 @@ let routes: Routes = [
         pathMatch: 'full',
         loadChildren: () => import('./graphs/graphs.module').then(m => m.GraphsModule),
         data: { preload: true },
+      },
+      {
+        path: 'hashstrikes',
+        component: OeMasterPageComponent,
+        children: [
+          {
+            path: 'block/:id',
+            component: BlockComponent
+          },
+          {
+            path: 'blockspans/:span',
+            component: BlockspansHomeComponent,
+          },
+          {
+            path: 'blockspans/:span/:tip',
+            component: BlockspansHomeComponent,
+          },
+          {
+            path: 'energy_summary/:from/:to',
+            component: EnergySummaryComponent
+          },
+          {
+            path: 'energy_detail/:from/:to',
+            component: EnergyDetailComponent
+          },
+          {
+            path: 'strike_detail/:from/:to/:strikeBlockHeight/:strikeMedianTime/:strikeCreationTime',
+            component: StrikeDetailComponent
+          },
+        ]
       },
       {
         path: '',
@@ -127,36 +158,6 @@ let routes: Routes = [
             path: 'lightning',
             loadChildren: () => import('./lightning/lightning.module').then(m => m.LightningModule),
             data: { preload: browserWindowEnv && browserWindowEnv.LIGHTNING === true },
-          },
-          {
-            path: 'hashstrikes',
-            component: StartV2Component,
-            children: [
-              {
-                path: 'block/:id',
-                component: BlockComponent
-              },
-              {
-                path: 'blockspans/:span',
-                component: BlockspansHomeComponent,
-              },
-              {
-                path: 'blockspans/:span/:tip',
-                component: BlockspansHomeComponent,
-              },
-              {
-                path: 'energy_summary/:from/:to',
-                component: EnergySummaryComponent
-              },
-              {
-                path: 'energy_detail/:from/:to',
-                component: EnergyDetailComponent
-              },
-              {
-                path: 'strike_detail/:from/:to/:strikeBlockHeight/:strikeMedianTime/:strikeCreationTime',
-                component: StrikeDetailComponent
-              },
-            ]
           },
         ],
       },
@@ -327,6 +328,36 @@ let routes: Routes = [
     loadChildren: () => import('./graphs/graphs.module').then(m => m.GraphsModule)
   },
   {
+    path: 'hashstrikes',
+    component: OeMasterPageComponent,
+    children: [
+      {
+        path: 'block/:id',
+        component: BlockComponent
+      },
+      {
+        path: 'blockspans/:span',
+        component: BlockspansHomeComponent,
+      },
+      {
+        path: 'blockspans/:span/:tip',
+        component: BlockspansHomeComponent,
+      },
+      {
+        path: 'energy_summary/:from/:to',
+        component: EnergySummaryComponent
+      },
+      {
+        path: 'energy_detail/:from/:to',
+        component: EnergyDetailComponent
+      },
+      {
+        path: 'strike_detail/:from/:to/:strikeBlockHeight/:strikeMedianTime/:strikeCreationTime',
+        component: StrikeDetailComponent
+      },
+    ]
+  },
+  {
     path: '',
     component: MasterPageComponent,
     children: [
@@ -410,36 +441,6 @@ let routes: Routes = [
       {
         path: 'lightning',
         loadChildren: () => import('./lightning/lightning.module').then(m => m.LightningModule)
-      },
-      {
-        path: 'hashstrikes',
-        component: StartV2Component,
-        children: [
-          {
-            path: 'block/:id',
-            component: BlockComponent
-          },
-          {
-            path: 'blockspans/:span',
-            component: BlockspansHomeComponent,
-          },
-          {
-            path: 'blockspans/:span/:tip',
-            component: BlockspansHomeComponent,
-          },
-          {
-            path: 'energy_summary/:from/:to',
-            component: EnergySummaryComponent
-          },
-          {
-            path: 'energy_detail/:from/:to',
-            component: EnergyDetailComponent
-          },
-          {
-            path: 'strike_detail/:from/:to/:strikeBlockHeight/:strikeMedianTime/:strikeCreationTime',
-            component: StrikeDetailComponent
-          },
-        ]
       },
     ],
   },
@@ -585,36 +586,6 @@ if (browserWindowEnv && browserWindowEnv.BASE_MODULE === 'liquid') {
               path: 'api',
               loadChildren: () => import('./docs/docs.module').then(m => m.DocsModule)
             },
-            {
-              path: 'hashstrikes',
-              component: StartV2Component,
-              children: [
-                {
-                  path: 'block/:id',
-                  component: BlockComponent
-                },
-                {
-                  path: 'blockspans/:span',
-                  component: BlockspansHomeComponent,
-                },
-                {
-                  path: 'blockspans/:span/:tip',
-                  component: BlockspansHomeComponent,
-                },
-                {
-                  path: 'energy_summary/:from/:to',
-                  component: EnergySummaryComponent
-                },
-                {
-                  path: 'energy_detail/:from/:to',
-                  component: EnergyDetailComponent
-                },
-                {
-                  path: 'strike_detail/:from/:to/:strikeBlockHeight/:strikeMedianTime/:strikeCreationTime',
-                  component: StrikeDetailComponent
-                },
-              ]
-            },
           ],
         },
         {
@@ -732,36 +703,6 @@ if (browserWindowEnv && browserWindowEnv.BASE_MODULE === 'liquid') {
         {
           path: 'api',
           loadChildren: () => import('./docs/docs.module').then(m => m.DocsModule)
-        },
-        {
-          path: 'hashstrikes',
-          component: StartV2Component,
-          children: [
-            {
-              path: 'block/:id',
-              component: BlockComponent
-            },
-            {
-              path: 'blockspans/:span',
-              component: BlockspansHomeComponent,
-            },
-            {
-              path: 'blockspans/:span/:tip',
-              component: BlockspansHomeComponent,
-            },
-            {
-              path: 'energy_summary/:from/:to',
-              component: EnergySummaryComponent
-            },
-            {
-              path: 'energy_detail/:from/:to',
-              component: EnergyDetailComponent
-            },
-            {
-              path: 'strike_detail/:from/:to/:strikeBlockHeight/:strikeMedianTime/:strikeCreationTime',
-              component: StrikeDetailComponent
-            },
-          ]
         },
       ],
     },
