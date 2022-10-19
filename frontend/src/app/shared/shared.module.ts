@@ -84,7 +84,6 @@ import { TimestampComponent } from './components/timestamp/timestamp.component';
 import { ToggleComponent } from './components/toggle/toggle.component';
 import { GeolocationComponent } from '../shared/components/geolocation/geolocation.component';
 import { PreviewComponent } from '../components/preview/preview.component';
-import { StartV2Component } from '../components/start-v2/start-v2.component';
 import { BlockspanNavigatorComponent } from '../components/new/blockspan-navigator/blockspan-navigator.component';
 import { BlockspansHomeComponent } from '../components/new/blockspans-home/blockspans-home.component';
 import { BaseBoxComponent } from '../components/new/base-box/base-box.component';
@@ -172,7 +171,6 @@ import { StrikeDetailComponent } from '../components/new/strike-detail/strike-de
     ToggleComponent,
     GeolocationComponent,
     PreviewComponent,
-    StartV2Component,
     BlockspanNavigatorComponent,
     BlockspansHomeComponent,
     BaseBoxComponent,
@@ -294,7 +292,6 @@ import { StrikeDetailComponent } from '../components/new/strike-detail/strike-de
     GeolocationComponent,
     PreviewTitleComponent,
     PreviewComponent,
-    StartV2Component,
     BlockspanNavigatorComponent,
     BlockspansHomeComponent,
     BaseBoxComponent,

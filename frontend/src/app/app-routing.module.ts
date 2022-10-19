@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AppPreloadingStrategy } from './app.preloading-strategy'
 import { StartComponent } from './components/start/start.component';
-import { StartV2Component } from './components/start-v2/start-v2.component';
 import { TransactionComponent } from './components/transaction/transaction.component';
 import { BlockComponent } from './components/block/block.component';
 import { BlockAuditComponent } from './components/block-audit/block-audit.component';
@@ -197,34 +196,28 @@ let routes: Routes = [
         component: OeMasterPageComponent,
         children: [
           {
-            path: '',
-            component: StartV2Component,
-            children: [
-              {
-                path: 'block/:id',
-                component: BlockComponent
-              },
-              {
-                path: 'blockspans/:span',
-                component: BlockspansHomeComponent,
-              },
-              {
-                path: 'blockspans/:span/:tip',
-                component: BlockspansHomeComponent,
-              },
-              {
-                path: 'energy_summary/:from/:to',
-                component: EnergySummaryComponent
-              },
-              {
-                path: 'energy_detail/:from/:to',
-                component: EnergyDetailComponent
-              },
-              {
-                path: 'strike_detail/:from/:to/:strikeBlockHeight/:strikeMedianTime/:strikeCreationTime',
-                component: StrikeDetailComponent
-              },
-            ]
+            path: 'block/:id',
+            component: BlockComponent
+          },
+          {
+            path: 'blockspans/:span',
+            component: BlockspansHomeComponent,
+          },
+          {
+            path: 'blockspans/:span/:tip',
+            component: BlockspansHomeComponent,
+          },
+          {
+            path: 'energy_summary/:from/:to',
+            component: EnergySummaryComponent
+          },
+          {
+            path: 'energy_detail/:from/:to',
+            component: EnergyDetailComponent
+          },
+          {
+            path: 'strike_detail/:from/:to/:strikeBlockHeight/:strikeMedianTime/:strikeCreationTime',
+            component: StrikeDetailComponent
           },
         ]
       },
