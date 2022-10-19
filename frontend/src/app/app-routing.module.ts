@@ -21,11 +21,11 @@ import { AssetsFeaturedComponent } from './components/assets/assets-featured/ass
 import { AssetsComponent } from './components/assets/assets.component';
 import { AssetComponent } from './components/asset/asset.component';
 import { AssetsNavComponent } from './components/assets/assets-nav/assets-nav.component';
-import { PreviewComponent } from './components/preview/preview.component';
-import { BlockspansHomeComponent } from './components/new/blockspans-home/blockspans-home.component';
-import { EnergySummaryComponent } from './components/new/energy-summary/energy-summary.component';
-import { EnergyDetailComponent } from './components/new/energy-detail/energy-detail.component';
-import { StrikeDetailComponent } from './components/new/strike-detail/strike-detail.component';
+import { PreviewComponent } from './oe/components/preview/preview.component';
+import { BlockspansHomeComponent } from './oe/components/blockspans-home/blockspans-home.component';
+import { EnergySummaryComponent } from './oe/components/energy-summary/energy-summary.component';
+import { EnergyDetailComponent } from './oe/components/energy-detail/energy-detail.component';
+import { StrikeDetailComponent } from './oe/components/strike-detail/strike-detail.component';
 
 const browserWindow = window || {};
 // @ts-ignore

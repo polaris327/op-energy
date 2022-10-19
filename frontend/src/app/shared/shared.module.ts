@@ -83,18 +83,18 @@ import { SearchResultsComponent } from '../components/search-form/search-results
 import { TimestampComponent } from './components/timestamp/timestamp.component';
 import { ToggleComponent } from './components/toggle/toggle.component';
 import { GeolocationComponent } from '../shared/components/geolocation/geolocation.component';
-import { PreviewComponent } from '../components/preview/preview.component';
-import { BlockspanNavigatorComponent } from '../components/new/blockspan-navigator/blockspan-navigator.component';
-import { BlockspansHomeComponent } from '../components/new/blockspans-home/blockspans-home.component';
-import { BaseBoxComponent } from '../components/new/base-box/base-box.component';
-import { BaseBoxV2Component } from '../components/new/base-box-v2/base-box-v2.component';
-import { BlockspanComponent } from '../components/new/blockspan/blockspan.component';
-import { ChainworkBoxComponent } from '../components/new/chainwork-box/chainwork-box.component';
-import { EnergyComponent } from '../components/new/energy/energy.component';
-import { StrikeComponent } from '../components/new/strike/strike.component';
-import { EnergySummaryComponent } from '../components/new/energy-summary/energy-summary.component';
-import { EnergyDetailComponent } from '../components/new/energy-detail/energy-detail.component';
-import { StrikeDetailComponent } from '../components/new/strike-detail/strike-detail.component';
+import { PreviewComponent } from '../oe/components/preview/preview.component';
+import { BlockspanNavigatorComponent } from '../oe/components/blockspan-navigator/blockspan-navigator.component';
+import { BlockspansHomeComponent } from '../oe/components/blockspans-home/blockspans-home.component';
+import { BaseBoxComponent } from '../oe/components/base-box/base-box.component';
+import { BaseBoxV2Component } from '../oe/components/base-box-v2/base-box-v2.component';
+import { BlockspanComponent } from '../oe/components/blockspan/blockspan.component';
+import { ChainworkBoxComponent } from '../oe/components/chainwork-box/chainwork-box.component';
+import { EnergyComponent } from '../oe/components/energy/energy.component';
+import { StrikeComponent } from '../oe/components/strike/strike.component';
+import { EnergySummaryComponent } from '../oe/components/energy-summary/energy-summary.component';
+import { EnergyDetailComponent } from '../oe/components/energy-detail/energy-detail.component';
+import { StrikeDetailComponent } from '../oe/components/strike-detail/strike-detail.component';
 
 @NgModule({
   declarations: [

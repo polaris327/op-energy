@@ -3,7 +3,7 @@ import { StateService } from 'src/app/services/state.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { RelativeUrlPipe } from 'src/app/shared/pipes/relative-url/relative-url.pipe';
 import { Block } from '../../../interfaces/electrs.interface';
-import { TimeStrike } from 'src/app/interfaces/op-energy.interface';
+import { TimeStrike } from 'src/app/oe/interfaces/op-energy.interface';
 
 export const MAX_COUNT = 14;
 

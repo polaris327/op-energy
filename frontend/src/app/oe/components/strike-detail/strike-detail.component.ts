@@ -10,9 +10,9 @@ import { SeoService } from 'src/app/services/seo.service';
 import { WebsocketService } from 'src/app/services/websocket.service';
 import { RelativeUrlPipe } from 'src/app/shared/pipes/relative-url/relative-url.pipe';
 import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
-import { SlowFastGuess, TimeStrike } from 'src/app/interfaces/op-energy.interface';
-import { OpEnergyApiService } from 'src/app/services/op-energy.service';
 import { ToastrService } from 'ngx-toastr';
+import { SlowFastGuess, TimeStrike } from 'src/app/oe/interfaces/op-energy.interface';
+import { OpEnergyApiService } from 'src/app/oe/services/op-energy.service';
 
 @Component({
   selector: 'app-strike-detail',
