@@ -63,9 +63,6 @@ export class OpEnergyApiService {
     if( num < 0) {
       throw new Error('verifyBlockHeight: negative');
     }
-    if( num > 500000) {
-      throw new Error( 'verifyBlockHeight: accordingly to nlocktime docs, block height should not exceed 500000');
-    }
     return {
       'value': num,
     };
