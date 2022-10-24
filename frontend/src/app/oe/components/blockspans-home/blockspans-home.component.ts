@@ -110,7 +110,6 @@ export class BlockspansHomeComponent implements OnInit, OnDestroy {
         params.get('tip')
         ? of({...params})
         : this.stateService.blocks$.pipe(
-            skip(11),
             map(block => ({
               ...params,
               tip: block[0].height
