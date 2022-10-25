@@ -62,7 +62,7 @@
   </div>
   <div class="navbar-nav" *ngIf="( this.opEnergyApiService.$showAccountURLWarning | async) === true" >
     <div>
-      WARNING: store your secret account URL<app-clipboard [text]="(document.location.href) + '/account/' + (this.opEnergyApiService.$accountSecret | async)"></app-clipboard> and use it to access op-energy later
+      WARNING: store your secret account URL<app-clipboard [text]="(this.baseUrl + this.basePath) + '/account/' + (this.opEnergyApiService.$accountSecret | async)"></app-clipboard> and use it to access op-energy later
     </div>
     <button type="button" class="btn close-account-id-warning" style="width: 60px;" (click)="closeAccountURLWarning()">
       X
