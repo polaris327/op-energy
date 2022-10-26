@@ -22,6 +22,7 @@ import { AssetsComponent } from './components/assets/assets.component';
 import { AssetComponent } from './components/asset/asset.component';
 import { AssetsNavComponent } from './components/assets/assets-nav/assets-nav.component';
 import { OeMasterPageComponent } from './oe/components/oe-master-page/oe-master-page.component';
+import { OeAccountComponent, } from './oe/components/oe-account/oe-account.component';
 import { PreviewComponent } from './oe/components/preview/preview.component';
 import { BlockspansHomeComponent } from './oe/components/blockspans-home/blockspans-home.component';
 import { EnergySummaryComponent } from './oe/components/energy-summary/energy-summary.component';
@@ -167,7 +168,17 @@ let routes: Routes = [
       },
       {
         path: 'preview-page',
-        component: PreviewComponent,
+        component: OeMasterPageComponent,
+        children: [
+          {
+            path: '',
+            component: PreviewComponent,
+          }
+        ],
+      },
+      {
+        path: 'account/:accountsecret',
+        component: OeAccountComponent,
       },
       {
         path: '',
@@ -310,7 +321,17 @@ let routes: Routes = [
       },
       {
         path: 'preview-page',
-        component: PreviewComponent,
+        component: OeMasterPageComponent,
+        children: [
+          {
+            path: '',
+            component: PreviewComponent,
+          }
+        ],
+      },
+      {
+        path: 'account/:accountsecret',
+        component: OeAccountComponent,
       },
       {
         path: '',
@@ -467,7 +488,17 @@ let routes: Routes = [
   },
   {
     path: 'preview-page',
-    component: PreviewComponent,
+    component: OeMasterPageComponent,
+    children: [
+      {
+        path: '',
+        component: PreviewComponent,
+      }
+    ],
+  },
+  {
+    path: 'account/:accountsecret',
+    component: OeAccountComponent,
   },
   {
     path: '',
@@ -594,7 +625,17 @@ if (browserWindowEnv && browserWindowEnv.BASE_MODULE === 'liquid') {
         },
         {
           path: 'preview-page',
-          component: PreviewComponent,
+          component: OeMasterPageComponent,
+          children: [
+            {
+              path: '',
+              component: PreviewComponent,
+            }
+          ],
+        },
+        {
+          path: 'account/:accountsecret',
+          component: OeAccountComponent,
         },
         {
           path: '',
@@ -725,7 +766,17 @@ if (browserWindowEnv && browserWindowEnv.BASE_MODULE === 'liquid') {
     },
     {
       path: 'preview-page',
-      component: PreviewComponent,
+      component: OeMasterPageComponent,
+      children: [
+        {
+          path: '',
+          component: PreviewComponent,
+        }
+      ],
+    },
+    {
+      path: 'account/:accountsecret',
+      component: OeAccountComponent,
     },
     {
       path: '',
