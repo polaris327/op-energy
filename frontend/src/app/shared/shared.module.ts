@@ -89,7 +89,6 @@ import { BlockspansHomeComponent } from '../oe/components/blockspans-home/blocks
 import { BaseBoxComponent } from '../oe/components/base-box/base-box.component';
 import { BaseBoxV2Component } from '../oe/components/base-box-v2/base-box-v2.component';
 import { BlockspanComponent } from '../oe/components/blockspan/blockspan.component';
-import { ChainworkBoxComponent } from '../oe/components/chainwork-box/chainwork-box.component';
 import { EnergyComponent } from '../oe/components/energy/energy.component';
 import { StrikeComponent } from '../oe/components/strike/strike.component';
 import { EnergySummaryComponent } from '../oe/components/energy-summary/energy-summary.component';
@@ -176,7 +175,6 @@ import { StrikeDetailComponent } from '../oe/components/strike-detail/strike-det
     BaseBoxComponent,
     BaseBoxV2Component,
     BlockspanComponent,
-    ChainworkBoxComponent,
     EnergyComponent,
     StrikeComponent,
     EnergySummaryComponent,
@@ -297,7 +295,6 @@ import { StrikeDetailComponent } from '../oe/components/strike-detail/strike-det
     BaseBoxComponent,
     BaseBoxV2Component,
     BlockspanComponent,
-    ChainworkBoxComponent,
     EnergyComponent,
     StrikeComponent,
     EnergySummaryComponent,
