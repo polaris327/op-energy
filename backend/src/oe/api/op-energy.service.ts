@@ -136,8 +136,7 @@ export class OpEnergyApiService {
       throw new Error( 'ERROR: OpEnergyApiService.verifyAlphaNum: not alpha num');
     }
   }
-  public async $getTimeStrikes( UUID: string, accountToken: AccountToken): Promise<TimeStrikeDB[]> {
-    const userId = await this.$getUserIdByAccountTokenCreateIfMissing( UUID, accountToken);
+  public async $getTimeStrikes( UUID: string): Promise<TimeStrikeDB[]> {
     const query = 'SELECT id,block_height,nlocktime,UNIX_TIMESTAMP(creation_time) as creation_time FROM timestrikes';
     try {
       return await DB.$with_accountPool( UUID, async (connection) => {
@@ -181,8 +180,7 @@ export class OpEnergyApiService {
       throw new Error(`OpEnergyApiService.$addTimeStrikes: failed to query DB: ${e instanceof Error? e.message : e}`);
     }
   }
-  public async $getSlowFastGuesses( UUID: string, accountToken: AccountToken, blockHeight: BlockHeight, nlockTime: NLockTime): Promise<SlowFastGuess[]> {
-    const userId = await this.$getUserIdByAccountTokenCreateIfMissing( UUID, accountToken);
+  public async $getSlowFastGuesses( UUID: string, blockHeight: BlockHeight, nlockTime: NLockTime): Promise<SlowFastGuess[]> {
     const query = 'SELECT slowfastguesses.id,timestrikes.block_height,timestrikes.nlocktime,guess,slowfastguesses.user_id,users.display_name,UNIX_TIMESTAMP(slowfastguesses.creation_time) as creation_time\
                    FROM slowfastguesses\
                    INNER JOIN timestrikes ON slowfastguesses.timestrike_id = timestrikes.id\
@@ -266,8 +264,7 @@ export class OpEnergyApiService {
       throw new Error(`OpEnergyApiService.$updateUserDisplayName: failed to query DB: ${e instanceof Error? e.message : e}`);
     }
   }
-  public async $getTimeStrikesByBlock( UUID: string, accountToken: AccountToken, blockHeight: BlockHeight): Promise<TimeStrikeDB[]> {
-    const userId = await this.$getUserIdByAccountTokenCreateIfMissing( UUID, accountToken);
+  public async $getTimeStrikesByBlock( UUID: string, blockHeight: BlockHeight): Promise<TimeStrikeDB[]> {
     const query = 'SELECT id,block_height,nlocktime,UNIX_TIMESTAMP(creation_time) as creation_time FROM timestrikes WHERE block_height=?';
 
     try {

@@ -21,6 +21,8 @@ export class OeMasterPageComponent implements OnInit {
   officialMempoolSpace = this.stateService.env.OFFICIAL_MEMPOOL_SPACE;
   urlLanguage: string;
   subdomain = '';
+  public baseUrl: string; // base URL is protocol, hostname, and port
+  public basePath: string; // network path is /testnet, etc. or '' for mainnet
 
   constructor(
     public opEnergyApiService: OpEnergyApiService,
@@ -29,7 +31,16 @@ export class OeMasterPageComponent implements OnInit {
     public stateService: StateService,
     private languageService: LanguageService,
     private enterpriseService: EnterpriseService,
-  ) { }
+  ) {
+    this.baseUrl = document.location.protocol + '//' + document.location.host;
+    this.basePath = ''; // assume mainnet by default
+    this.stateService.networkChanged$.subscribe((network) => {
+      if (network === 'bisq') {
+        network = '';
+      }
+      this.basePath = network ? '/' + network : '';
+    });
+  }
 
   ngOnInit() {
     this.env = this.stateService.env;

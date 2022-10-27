@@ -30,14 +30,10 @@ class OpEnergyRoutes {
     const UUID = await opEnergyApiService.$generateRandomHash();
     try {
       logger.info( `${UUID}: PROFILE: start: $getTimeStrikes`);
-      if( typeof req.query.account_token === "string" ) {
-        const result = await opEnergyApiService.$getTimeStrikes( UUID, opEnergyApiService.verifyAccountToken( req.query.account_token));
-        res.json( result.map( (blocksid) => {
-          return blocksid.value;
-        }));
-      } else {
-        throw new Error( 'ERROR: req.query.account_token is not a string');
-      }
+      const result = await opEnergyApiService.$getTimeStrikes( UUID);
+      res.json( result.map( (blocksid) => {
+        return blocksid.value;
+      }));
     } catch(e) {
       logger.err( `ERROR: ${UUID}: OpEnergyApiService.$getTimeStrikes: ${e instanceof Error ? e.message: e}`);
       res.status(404).send(`${UUID}: ${e instanceof Error? e.message : e}`);
@@ -72,9 +68,6 @@ class OpEnergyRoutes {
     const UUID = await opEnergyApiService.$generateRandomHash();
     try {
       logger.info( `${UUID}: PROFILE: start: $getSlowFastGuesses`);
-      if( typeof req.query.account_token !== "string") {
-        throw new Error( 'ERROR: req.query.account_token is not a string');
-      }
       if( typeof req.query.nlocktime !== "string" || req.query.nlocktime.length < 1) {
         throw new Error( 'ERROR: req.query.nlocktime is missing');
       }
@@ -82,7 +75,7 @@ class OpEnergyRoutes {
         throw new Error( 'ERROR: req.query.block_height is missing');
       }
 
-      const result = await opEnergyApiService.$getSlowFastGuesses( UUID, opEnergyApiService.verifyAccountToken( req.query.account_token), opEnergyApiService.verifyBlockHeight( Number(req.query.block_height)), opEnergyApiService.verifyNLockTime( Number( req.query.nlocktime)));
+      const result = await opEnergyApiService.$getSlowFastGuesses( UUID, opEnergyApiService.verifyBlockHeight( Number(req.query.block_height)), opEnergyApiService.verifyNLockTime( Number( req.query.nlocktime)));
       res.json( result);
     } catch(e) {
       logger.err( `ERROR: ${UUID}: OpEnergyApiService.$getSlowFastGuesses: ${e instanceof Error ? e.message: e}`);
@@ -141,13 +134,10 @@ class OpEnergyRoutes {
     const UUID = await opEnergyApiService.$generateRandomHash();
     try {
       logger.info( `${UUID}: PROFILE: start: $getTimeStrikesByBlock`);
-      if( typeof req.query.account_token !== "string"  || req.query.account_token.length < 1) {
-        throw new Error( 'ERROR: req.query.account_token is not a string');
-      }
       if( typeof req.query.block_height !== "string" || req.query.block_height.length < 1) {
         throw new Error( 'ERROR: req.query.block_height is missing');
       }
-      const result = await opEnergyApiService.$getTimeStrikesByBlock( UUID, opEnergyApiService.verifyAccountToken( req.query.account_token), opEnergyApiService.verifyBlockHeight( Number(req.query.block_height)));
+      const result = await opEnergyApiService.$getTimeStrikesByBlock( UUID, opEnergyApiService.verifyBlockHeight( Number(req.query.block_height)));
       res.json( result.map( (blocksid) => {
         return blocksid.value;
       }));

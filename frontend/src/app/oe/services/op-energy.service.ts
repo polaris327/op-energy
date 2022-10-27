@@ -94,24 +94,18 @@ export class OpEnergyApiService {
   }
   // returns list of available locked blocks or throws error in case of failure
   $listTimeStrikes( ): Observable<TimeStrike[]> {
-    return this.$accountToken.pipe( take(1)).pipe( switchMap( newAccountToken => {
-      let params = {
-        account_token: newAccountToken,
-      };
+    let params = {
+    };
 
-      return this.httpClient.get<TimeStrike[]>(this.apiBaseUrl + this.apiBasePath + '/api/v1/strike/mediantime', {params});
-    }));
+    return this.httpClient.get<TimeStrike[]>(this.apiBaseUrl + this.apiBasePath + '/api/v1/strike/mediantime', {params});
   }
   // returns list of available locked blocks for a given block height or throws error in case of failure
   $listTimeStrikesByBlockHeight( blockHeight: number): Observable<TimeStrike[]> {
-    return this.$accountToken.pipe( take(1)).pipe( switchMap( newAccountToken => {
-      let params = {
-        account_token: newAccountToken,
-        block_height: blockHeight,
-      };
+    let params = {
+      block_height: blockHeight,
+    };
 
-      return this.httpClient.get<TimeStrike[]>(this.apiBaseUrl + this.apiBasePath + '/api/v1/strike/block/mediantime', {params});
-    }));
+    return this.httpClient.get<TimeStrike[]>(this.apiBaseUrl + this.apiBasePath + '/api/v1/strike/block/mediantime', {params});
   }
   // this function returns an observable with value of type SlowFastGuess, meaning, that the guess had been persisted in the DB
   // params:
@@ -135,16 +129,12 @@ export class OpEnergyApiService {
   }
   // returns list of the guesses for a given timelocked block
   $listSlowFastGuesses( timeStrike: TimeStrike): Observable<SlowFastGuess[]> {
-    return this.$accountToken.pipe( take(1)).pipe( switchMap( newAccountToken => {
+    let params = {
+      block_height: timeStrike.blockHeight,
+      nlocktime: timeStrike.nLockTime,
+    };
 
-      let params = {
-        account_token: newAccountToken,
-        block_height: timeStrike.blockHeight,
-        nlocktime: timeStrike.nLockTime,
-      };
-
-      return this.httpClient.get<SlowFastGuess[]>(this.apiBaseUrl + this.apiBasePath + '/api/v1/slowfastguess/mediantime', {params});
-    }));
+    return this.httpClient.get<SlowFastGuess[]>(this.apiBaseUrl + this.apiBasePath + '/api/v1/slowfastguess/mediantime', {params});
   }
 
   // updates displayable user name for a current user
