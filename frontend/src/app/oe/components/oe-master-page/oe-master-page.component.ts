@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { Env, StateService } from '../../../services/state.service';
 import { WebsocketService } from '../../../services/websocket.service';
-import { OpEnergyApiService } from '../../services/op-energy.service';
+import { OeStateService } from '../../services/state.service';
 import { Observable, merge, of } from 'rxjs';
 import { LanguageService } from 'src/app/services/language.service';
 import { EnterpriseService } from 'src/app/services/enterprise.service';
@@ -25,7 +25,7 @@ export class OeMasterPageComponent implements OnInit {
   public basePath: string; // network path is /testnet, etc. or '' for mainnet
 
   constructor(
-    public opEnergyApiService: OpEnergyApiService,
+    public opEnergyStateService: OeStateService,
     private websocketService: WebsocketService,
     @Inject(DOCUMENT) public document: Document,
     public stateService: StateService,
@@ -51,7 +51,7 @@ export class OeMasterPageComponent implements OnInit {
   }
 
   ngAfterContentInit() {
-    if( this.opEnergyApiService.accountTokenState == 'init') {
+    if( this.opEnergyStateService.accountTokenState == 'init') {
       this.websocketService.want(['generatedaccounttoken']);
     }
   }
@@ -63,7 +63,7 @@ export class OeMasterPageComponent implements OnInit {
     this.isMobile = window.innerWidth <= 767.98;
   }
   closeAccountURLWarning() {
-    this.opEnergyApiService.$accountSecret.next(''); // clean secret value
-    this.opEnergyApiService.$showAccountURLWarning.next( false);
+    this.opEnergyStateService.$accountSecret.next(''); // clean secret value
+    this.opEnergyStateService.$showAccountURLWarning.next( false);
   }
 }

@@ -3,7 +3,7 @@ import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 import { WebsocketResponse, IBackendInfo } from '../interfaces/websocket.interface';
 import { StateService } from './state.service';
 import { OpEnergyWebsocketResponse } from '../oe/interfaces/websocket.interface';
-import { OpEnergyApiService } from '../oe/services/op-energy.service';
+import { OeStateService } from '../oe/services/state.service';
 import { Transaction } from '../interfaces/electrs.interface';
 import { Subscription } from 'rxjs';
 import { ApiService } from './api.service';
@@ -38,7 +38,7 @@ export class WebsocketService {
   private network = '';
 
   constructor(
-    private opEnergyApiService: OpEnergyApiService,
+    private opEnergyStateService: OeStateService,
     private stateService: StateService,
     private apiService: ApiService,
     private transferState: TransferState,
@@ -226,10 +226,7 @@ export class WebsocketService {
 
   handleResponse(response: OpEnergyWebsocketResponse) {
     // op-energy hook
-    this.opEnergyApiService.handleWebsocketResponse( response);
-    if( response.declinedAccountSecret) {
-      this.want(['generatedaccounttoken']);
-    }
+    this.opEnergyStateService.handleWebsocketResponse( this, response);
 
     if (response.blocks && response.blocks.length) {
       const blocks = response.blocks;
@@ -289,7 +286,7 @@ export class WebsocketService {
     }
 
     if (response.fees) {
-     this.stateService.recommendedFees$.next(response.fees); 
+     this.stateService.recommendedFees$.next(response.fees);
     }
 
     if (response.backendInfo) {
@@ -351,5 +348,8 @@ export class WebsocketService {
     if (response['git-commit']) {
       this.stateService.backendInfo$.next(response['git-commit']);
     }
+  }
+  customMessage( data: any) {
+    this.websocketSubject.next( data);
   }
 }
