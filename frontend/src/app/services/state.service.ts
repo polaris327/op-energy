@@ -41,8 +41,8 @@ export interface Env {
 }
 
 const defaultEnv: Env = {
-  'TESTNET_ENABLED': false,
-  'SIGNET_ENABLED': false,
+  'TESTNET_ENABLED': true,
+  'SIGNET_ENABLED': true,
   'LIQUID_ENABLED': false,
   'LIQUID_TESTNET_ENABLED': false,
   'BASE_MODULE': 'mempool',
