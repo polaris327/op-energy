@@ -2,16 +2,16 @@
   margin-top: 100px;
 
   &--top {
-    min-height: 600px;
     display: flex;
     justify-content: center;
     gap: 250px;
 
     .blockspan {
+      display: flex;
       position: relative;
       min-width: 250px;
       max-width: 400px;
-      max-height: 400px;
+      height: 600px;
 
       svg-icon.smoke {
         position: absolute;
@@ -24,13 +24,6 @@
         top: 70px;
         right: -31px;
         transform: rotate(90deg);
-      }
-
-      app-base-box {
-        position: absolute;
-        top: 0;
-        right: -150px;
-        width: 60%;
       }
     }
 
@@ -124,10 +117,6 @@
         .content {
           width: 100%;
           overflow: auto;
-
-          .table td {
-            min-width: 150px;
-          }
         }
       }
     }

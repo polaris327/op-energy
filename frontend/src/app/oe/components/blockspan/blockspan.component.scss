@@ -7,9 +7,15 @@
   position: relative;
   height: 100%;
 
+  .to-block.dummy {
+    top: 0;
+    height: 30%;
+    visibility: hidden;
+  }
+
   .to-block,
   .from-block {
-    height: 50%;
+    height: 15%;
     background-color: yellow;
     border: 1px solid black;
     margin: auto;
@@ -28,9 +34,9 @@
     font-weight: bold;
     position: absolute;
     width: 50%;
-    height: 30%;
+    height: 9%;
     background-color: orange;
-    top: 50%;
+    top: 45%;
     left: 50%;
     transform: translateX(-50%) translateY(-50%);
     z-index: 1;

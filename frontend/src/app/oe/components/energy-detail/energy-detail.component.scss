@@ -5,12 +5,8 @@
     display: flex;
     justify-content: center;
     align-items: flex-end;
-    gap: 350px;
 
     .blockspan {
-      min-width: 250px;
-      max-width: 400px;
-
       > div {
         height: 200px;
 
@@ -33,6 +29,25 @@
       align-items: flex-end;
       min-width: 250px;
       height: 100%;
+
+      ::ng-deep {
+        app-blockspan {
+          .blockspan {
+            .to-block.dummy {
+              display: none;
+            }
+
+            .to-block,
+            .from-block {
+              height: 50%;
+            }
+
+            .span-block {
+              height: 30%;
+            }
+          }
+        }
+      }
     }
 
     .blockspan-table {
@@ -77,10 +92,6 @@
       flex-direction: column;
       align-items: center;
       gap: 50px;
-
-      .blockspan {
-        overflow: auto !important;
-      }
 
       .blockspan-table {
       }

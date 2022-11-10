@@ -1,5 +1,4 @@
 :host {
-  width: 100%;
   height: 100%;
 }
 
@@ -15,7 +14,7 @@
     justify-content: center;
     flex-wrap: wrap;
     width: 60%;
-    height: 50%;
+    height: 30%;
     background-color: red;
     margin: auto;
     padding: 10px;
@@ -28,7 +27,7 @@
 
   &--middle {
     position: relative;
-    height: 50%;
+    height: 30%;
 
     .to-block,
     .from-block {
