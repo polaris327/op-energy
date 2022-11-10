@@ -1,9 +1,10 @@
 import {DB} from '../database';
 import crypto from "crypto-js";
 import bitcoinApi from '../../api/bitcoin/bitcoin-api-factory';
+import { IEsploraApi } from '../../api/bitcoin/esplora-api.interface';
 
 
-import { SlowFastGuessValue, BlockHeight, NLockTime, UserId, TimeStrikeDB, AlphaNumString, TimeStrikeId, AccountToken, TimeStrike, SlowFastGuess, TimeStrikesHistory, SlowFastResult } from './interfaces/op-energy.interface';
+import { SlowFastGuessValue, BlockHeight, NLockTime, UserId, TimeStrikeDB, AlphaNumString, TimeStrikeId, AccountToken, TimeStrike, SlowFastGuess, TimeStrikesHistory, SlowFastResult, BlockHash } from './interfaces/op-energy.interface';
 
 export class OpEnergyApiService {
   // those arrays contains callbacks, which will be called when appropriate entity will be created
@@ -84,6 +85,17 @@ export class OpEnergyApiService {
       'accountToken': rawString,
     };
   }
+
+  public verifyBlockHash( rawString: string): BlockHash {
+    const hash = rawString.substring( 0, 64);
+    if( hash.length < 64) {
+      throw new Error( `verifyBlockHash: wrong length: ${hash}`);
+    }
+    return {
+      'value': hash,
+    }
+  }
+
   public async $getUserIdByAccountToken( UUID: string, accountToken: AccountToken): Promise<UserId> {
     const query = "SELECT id,display_name FROM users WHERE secret_hash=?";
     const query1 = 'UPDATE users SET last_log_time=NOW() WHERE id = ?';
@@ -425,6 +437,11 @@ export class OpEnergyApiService {
     // currently, it is assumed, that timestrikes and timestrikeshistory tables are only being used by slow/fast game.
     // NOTE: in the future, it maybe that other games will be using those tables. In this case, we will need to move cleanup of the timestrike table here instead of doing it in the $slowFastGamePersistOutcome
     await this.$slowFastGamePersistOutcome( UUID); // persist outcome for slow fast game
+  }
+
+  public async $getBlockByHash( hash: BlockHash): Promise<IEsploraApi.Block> {
+    // using our own block cache goes here
+    return await bitcoinApi.$getBlock(hash.value);
   }
 
 }

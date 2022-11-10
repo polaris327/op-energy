@@ -165,10 +165,10 @@ export class EnergyDetailComponent implements OnInit, OnDestroy {
                     this.router.createUrlTree([(this.network ? '/' + this.network : '') + `/hashstrikes/energy_detail/`, fromHash, toHash]).toString()
                   );
                   return combineLatest([
-                    this.electrsApiService.getBlock$(fromHash).pipe(
+                    this.opEnergyApiService.$getBlock(fromHash).pipe(
                       catchError(() => of(fromHash)),
                     ),
-                    this.electrsApiService.getBlock$(toHash).pipe(
+                    this.opEnergyApiService.$getBlock(toHash).pipe(
                       catchError(() => of(toHash)),
                     )
                   ]);
@@ -183,10 +183,10 @@ export class EnergyDetailComponent implements OnInit, OnDestroy {
           }
 
           return combineLatest([
-            this.electrsApiService.getBlock$(fromBlockHash).pipe(
+            this.opEnergyApiService.$getBlock(fromBlockHash).pipe(
               catchError(() => of(fromBlockHash)),
             ),
-            this.electrsApiService.getBlock$(toBlockHash).pipe(
+            this.opEnergyApiService.$getBlock(toBlockHash).pipe(
               catchError(() => of(toBlockHash)),
             )
           ]);

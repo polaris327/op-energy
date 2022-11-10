@@ -69,3 +69,7 @@ export interface NLockTime {
 export interface SlowFastGuessValue {
   value: number;
 }
+
+export interface BlockHash {
+  value: string;
+}

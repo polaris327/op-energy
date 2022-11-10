@@ -144,7 +144,7 @@ export class BlockspansHomeComponent implements OnInit, OnDestroy {
     forkJoin(
       blockNumbers.map(
         blockNo => this.electrsApiService.getBlockHashFromHeight$(blockNo).pipe(
-          switchMap(hash => this.electrsApiService.getBlock$(hash))
+          switchMap(hash => this.opEnergyApiService.$getBlock(hash))
         )
       )
     ).subscribe((blocks: any[]) => {

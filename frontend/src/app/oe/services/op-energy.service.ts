@@ -4,6 +4,7 @@ import { HttpParams, HttpClient } from '@angular/common/http';
 import { TimeStrike, SlowFastGuess, SlowFastGuessOutcome, TimeStrikesHistory, SlowFastResult } from '../interfaces/op-energy.interface';
 import { StateService } from '../../services/state.service';
 import { WebsocketService } from 'src/app/services/websocket.service';
+import { Block } from 'src/app/interfaces/electrs.interface';
 
 import { WebsocketResponse, IBackendInfo } from '../../interfaces/websocket.interface';
 import { OpEnergyWebsocketResponse } from '../interfaces/websocket.interface';
@@ -147,6 +148,10 @@ export class OpEnergyApiService {
       return;
     }
     this.websocketService.customMessage( {action: 'checkAccountSecret', data: [ accountSecret] });
+  }
+
+  $getBlock( hash: string): Observable<Block> {
+    return this.httpClient.get<Block>(this.apiBaseUrl + this.apiBasePath + '/api/oe/block/' + hash);
   }
 
 }

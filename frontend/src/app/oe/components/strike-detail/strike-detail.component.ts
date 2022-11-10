@@ -199,10 +199,10 @@ export class StrikeDetailComponent implements OnInit, OnDestroy {
                     this.router.createUrlTree([(this.network ? '/' + this.network : '') + `/hashstrikes/strike_detail/`, fromHash, toHash, this.strike.blockHeight, this.strike.nLockTime, this.strike.creationTime]).toString()
                   );
                   return combineLatest([
-                    this.electrsApiService.getBlock$(fromHash).pipe(
+                    this.opEnergyApiService.$getBlock(fromHash).pipe(
                       catchError(() => of(fromHash)),
                     ),
-                    this.electrsApiService.getBlock$(toHash).pipe(
+                    this.opEnergyApiService.$getBlock(toHash).pipe(
                       catchError(() => of(toHash)),
                     )
                   ]);
@@ -217,10 +217,10 @@ export class StrikeDetailComponent implements OnInit, OnDestroy {
           }
 
           return combineLatest([
-            this.electrsApiService.getBlock$(fromBlockHash).pipe(
+            this.opEnergyApiService.$getBlock(fromBlockHash).pipe(
               catchError(() => of(fromBlockHash)),
             ),
-            this.electrsApiService.getBlock$(toBlockHash).pipe(
+            this.opEnergyApiService.$getBlock(toBlockHash).pipe(
               catchError(() => of(toBlockHash)),
             )
           ]);
