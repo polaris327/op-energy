@@ -48,6 +48,32 @@
       }
     }
 
+    ::ng-deep {
+      app-blockspan {
+        height: 50%!important;
+
+        .to-block.dummy {
+          display: none;
+        }
+
+        .to-block,
+        .from-block {
+          height: 50% !important;
+        }
+
+        .span-block {
+          height: 30% !important;
+          top: 50% !important;
+        }
+      }
+
+      app-base-box {
+        .tank-box--top {
+          height: 50%;
+        }
+      }
+    }
+
     @media (max-width: 768px) {
       flex-direction: column;
       align-items: center;
