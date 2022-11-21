@@ -331,4 +331,3 @@ after that, appropriate development instance will fetch changes, update and rebu
 Here goes an association list betweeb `op-energy-development` branches and appropriate development instances:
 
 1. `op-energy-dev-instance-dev-exchange` - `dev-exchange.op-energy.info`;
-2. `op-energy-dev-instance-198.211.107.192` - `198.211.107.192`;
