@@ -229,7 +229,7 @@ npm run start
 4 (NOTE: this option is not needed in case if you are using local backend instance running from the part below) start ssh session into some existing instance of op-energy. In this example, I will use development instance running signet backend:
 
 ```
-ssh root@<dropletIP> -L8889:127.0.0.1:8995 "while true; do sleep 10s; echo ping; done"
+ssh root@<dropletIP> -L8999:127.0.0.1:8995 "while true; do sleep 10s; echo ping; done"
 ```
 
 5 open browser and navigate to "http://localhost:4200"
@@ -256,7 +256,7 @@ ssh root@<dropletIP> -L38332:127.0.0.1:38332 -L60601:127.0.0.1:60601 -L3306:127.
 
 ```
 cd backend
-scp root@<dropletIP>:$(ssh root@<dropletIP> "cat \$(cat /etc/systemd/system/op-energy-backend-signet.service | grep ExecStart | awk 'BEGIN{FS=\"=\"}{print \$2}') | grep json | awk '{print \$6}' | awk 'BEGIN{FS=\"\\\"\"}{print \$2}'") ./mempool-config.json
+scp root@<dropletIP>:$(ssh root@<dropletIP> "cat \$(cat /etc/systemd/system/op-energy-backend-signet.service | grep ExecStart | awk 'BEGIN{FS=\"=\"}{print \$2}') | grep CONFIG | awk 'BEGIN{FS=\"\\\"\"}{print \$2}'") ./mempool-config.json
 ```
 
 6 replace listen port with 8999:
