@@ -198,6 +198,50 @@ git commit -a -m op-energy-some-feature-branch
 nixos-rebuild switch
 ```
 
+# Development topics
+
+## Changing dependencies for deployments' environments
+
+As soon as we are using NixOS for deployments and NixOS is using isolated builds, there is no network connection available for build process. This means, that all the dependencies have to be described in Nix-derivation to let the nix build system to download all the dependencies as a preparation to the build step. This means, that NPM will not have any network connection to download packages from and when you add new library as npm dependency additional steps should be made to let nix to know about such new library.
+Let's assume that you:
+1. are running not NixOS on your local host;
+2. are developing in some feature branch, say `op-energy-new-feature`;
+4. added some new npm dependency in the `package.json` file;
+5. issued `npm install` command and tested your changes in the local environment with `npm run build`;
+6. committed your changes into your branch;
+
+Then you need to ssh to any NixOS instance (development or production):
+
+```
+ssh root@<dropletIP>
+git clone ssh://git@github.com/dambaev/op-energy.git
+cd op-energy
+git config user.email "YOUR USER HERE"
+git config user.name "YOUR NAME HERE"
+git checkout op-energy-new-feature
+cd nix
+nix-shell ./shell.nix
+./build-nix-from-node.sh
+```
+
+then, dependently on which part you had updated (backend/frontend):
+
+```
+git commit backend/package.json backend/package-lock.json backend/node-packages.nix -m "feat: add library your-library-name"
+```
+
+and/or:
+
+```
+git commit frontend/package.json frontend/package-lock.json frontend/node-packages.nix -m "feat: add library your-library-name"
+```
+
+```
+git push
+```
+
+after those steps, your branch will be able to be deployed with updated environment setup in NixOS. See "Managing Op-Energy instances" for reference how to change branh for development instance.
+
 ## Frontend development. The fast flow
 
 General development flow can be considered as slow because it should provide reproducible environment.
