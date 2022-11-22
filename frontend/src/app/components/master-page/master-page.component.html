@@ -34,6 +34,9 @@
 
   <div class="navbar-collapse" id="navbarCollapse">
     <ul class="navbar-nav {{ network.val }}">
+      <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" id="btn-preview-page">
+        <a class="nav-link" [routerLink]="['/preview-page' | relativeUrl]" (click)="collapse()"><img src="/resources/op-energy-toolbox.png" i18n-title="op-energy.preview-page" title="Preview page" style="width: 22px"></a>
+      </li>
       <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" id="btn-home">
         <a class="nav-link" [routerLink]="['/' | relativeUrl]" (click)="collapse()"><fa-icon [icon]="['fas', 'tachometer-alt']" [fixedWidth]="true" i18n-title="master-page.dashboard" title="Dashboard"></fa-icon></a>
       </li>
