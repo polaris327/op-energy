@@ -15,6 +15,7 @@ Mempool can be self-hosted on a wide variety of your own hardware, ranging from 
 <a id="one-click-installation"></a>
 ## One-Click Installation
 
+
 Mempool can be conveniently installed on the following full-node distros: 
 - [Umbrel](https://github.com/getumbrel/umbrel)
 - [RaspiBlitz](https://github.com/rootzoll/raspiblitz)
