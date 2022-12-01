@@ -63,7 +63,7 @@
     </ul>
     <app-search-form class="search-form-container" location="top" (searchTriggered)="collapse()"></app-search-form>
   </div>
-  <div class="navbar-nav" *ngIf="( this.opEnergyStateService.$showAccountURLWarning | async) === true" >
+  <div class="navbar-nav account-token-popup" *ngIf="( this.opEnergyStateService.$showAccountURLWarning | async) === true" >
     <div>
       WARNING: store your secret account URL<app-clipboard [text]="(this.baseUrl + this.basePath) + '/account/' + (this.opEnergyStateService.$accountSecret | async)"></app-clipboard> and use it to access op-energy later
     </div>

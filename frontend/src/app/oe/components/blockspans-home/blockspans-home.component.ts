@@ -7,7 +7,7 @@ import { StateService } from 'src/app/services/state.service';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { specialBlocks } from 'src/app/app.constants';
 import { ElectrsApiService } from 'src/app/services/electrs-api.service';
-import { switchMap, skip, map } from 'rxjs/operators';
+import { switchMap, map, take } from 'rxjs/operators';
 import { RelativeUrlPipe } from 'src/app/shared/pipes/relative-url/relative-url.pipe';
 import { OpEnergyApiService } from 'src/app/oe/services/op-energy.service';
 import { TimeStrike } from 'src/app/oe/interfaces/op-energy.interface';
@@ -27,7 +27,7 @@ export class BlockspansHomeComponent implements OnInit, OnDestroy {
   network = '';
   allBlocks: PastBlock[] = [];
   pastBlocks: PastBlock[] = [];
-  indexArray = [1, 3, 5, 7, 9, 11];
+  indexArray = [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21];
   lastPastBlock: PastBlock;
   emptyBlocks: Block[] = this.mountEmptyBlocks();
   markHeight: number;
@@ -147,7 +147,9 @@ export class BlockspansHomeComponent implements OnInit, OnDestroy {
           switchMap(hash => this.opEnergyApiService.$getBlock(hash))
         )
       )
-    ).subscribe((blocks: any[]) => {
+    )
+    .pipe(take(1))
+    .subscribe((blocks: any[]) => {
       this.pastBlocks = blocks;
       this.cd.markForCheck();
       console.log('pastBlocks...', this.pastBlocks)

@@ -49,7 +49,7 @@ const defaultEnv: Env = {
   'BISQ_ENABLED': false,
   'BISQ_SEPARATE_BACKEND': false,
   'ITEMS_PER_PAGE': 10,
-  'KEEP_BLOCKS_AMOUNT': 8,
+  'KEEP_BLOCKS_AMOUNT': 22,
   'OFFICIAL_MEMPOOL_SPACE': false,
   'NGINX_PROTOCOL': 'http',
   'NGINX_HOSTNAME': '127.0.0.1',

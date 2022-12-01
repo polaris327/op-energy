@@ -60,6 +60,14 @@ li.nav-item {
       font-size: 1em;
     }
   }
+
+  &.account-token-popup {
+    bottom: 0px;
+
+    @media (max-width: 420px) {
+      bottom: 56px;
+    }
+  }
 }
 
 
