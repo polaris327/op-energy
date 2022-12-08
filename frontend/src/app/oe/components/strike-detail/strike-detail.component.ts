@@ -365,6 +365,10 @@ export class StrikeDetailComponent implements OnInit, OnDestroy {
       });
   }
 
+  energyDetailLink() {
+    return this.relativeUrlPipe.transform(`/hashstrikes/energy_detail/${this.fromBlock.height}/${this.toBlock.height}`);
+  }
+
   strikeDetailLink() {
     return this.relativeUrlPipe.transform(`/hashstrikes/strike_detail/${this.fromBlock.height}/${this.toBlock.height}/${this.strike.blockHeight}/${this.strike.nLockTime}/${this.strike.creationTime}`);
   }

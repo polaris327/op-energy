@@ -87,6 +87,7 @@ import { PreviewComponent } from '../oe/components/preview/preview.component';
 import { BlockspanNavigatorComponent } from '../oe/components/blockspan-navigator/blockspan-navigator.component';
 import { BlockspansHomeComponent } from '../oe/components/blockspans-home/blockspans-home.component';
 import { BaseBoxComponent } from '../oe/components/base-box/base-box.component';
+import { BaseBoxHorComponent } from '../oe/components/base-box-hor/base-box-hor.component';
 import { BaseBoxV2Component } from '../oe/components/base-box-v2/base-box-v2.component';
 import { BlockspanComponent } from '../oe/components/blockspan/blockspan.component';
 import { EnergyComponent } from '../oe/components/energy/energy.component';
@@ -173,6 +174,7 @@ import { StrikeDetailComponent } from '../oe/components/strike-detail/strike-det
     BlockspanNavigatorComponent,
     BlockspansHomeComponent,
     BaseBoxComponent,
+    BaseBoxHorComponent,
     BaseBoxV2Component,
     BlockspanComponent,
     EnergyComponent,
@@ -293,6 +295,7 @@ import { StrikeDetailComponent } from '../oe/components/strike-detail/strike-det
     BlockspanNavigatorComponent,
     BlockspansHomeComponent,
     BaseBoxComponent,
+    BaseBoxHorComponent,
     BaseBoxV2Component,
     BlockspanComponent,
     EnergyComponent,

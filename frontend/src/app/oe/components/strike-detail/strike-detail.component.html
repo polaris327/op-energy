@@ -1,20 +1,11 @@
 <div *ngIf="fromBlock && toBlock" class="observed-blockspan-detail">
   <div class="observed-blockspan-detail--top">
     <div class="blockspan">
-      <!-- <app-tetris-blockspan-strike [fromBlock]="fromBlock.height" [toBlock]="strike.blockHeight" [elapsedTime]="strikeElapsedTime" [strike]="strike" [showStrike]="canGuess" [isEnergyHotterThanStrike]="timeDiff < strikeElapsedTime"></app-tetris-blockspan-strike> -->
-      <app-energy [fromBlock]="fromBlock" [toBlock]="toBlock" [isDetailed]="true"></app-energy>
-      <svg-icon
-        *ngIf="strikeType === 'Strike_Boiling'"
-        class="smoke"
-        src="./resources/smoke.svg"
-        [svgStyle]="{'width.px':40,'height.px':40,'fill':'#e0e0e0'}">
-      </svg-icon>
-      <svg-icon
-        class="pipe"
-        src="./resources/pipe.svg"
-        [svgStyle]="{'width.px':60,'height.px':60,'fill':'#e0e0e0'}">
-      </svg-icon>
-      <app-base-box footerText="Strike" [type]="strikeType" [totalIconCount]="totalIconCountWithStrike" [fromTime]="fromBlock.mediantime" [toTime]="strike.nLockTime" [isDetailed]="true" color="#eeeeee" [link]="strikeDetailLink()"></app-base-box>      
+      <app-blockspan *ngIf="fromBlock && toBlock" [fromBlock]="fromBlock" [toBlock]="toBlock"></app-blockspan>
+      <div>
+        <app-base-box-hor [span]="span" [fromTime]="fromBlock.mediantime" [toTime]="toBlock.mediantime" [link]="energyDetailLink()"></app-base-box-hor>
+        <app-base-box-hor [span]="span" [type]="strikeType" [fromTime]="fromBlock.mediantime" [toTime]="strike.nLockTime" color="#eeeeee" [link]="strikeDetailLink()"></app-base-box-hor>      
+      </div>
     </div>
     <div class="blockspan-table">
       <div *ngIf="canGuess">
